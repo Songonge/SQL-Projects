@@ -32,7 +32,7 @@ FROM [Learn SQL].dbo.layoffs;
 ```
 
 ## 𝐓𝐚𝐬𝐤 𝟐: 𝐂𝐨𝐩𝐢𝐞𝐝 𝐭𝐡𝐞 𝐑𝐚𝐰 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐚 𝐍𝐞𝐰 𝐓𝐚𝐛𝐥𝐞
-> [!𝐍𝐨𝐭𝐞]
+> [!Note]
 > Always create a copy of your raw data before starting the cleaning process. This ensures you have the original data to refer back to if you make a mistake or need to validate your changes later. It's a simple but essential practice for maintaining data integrity!
 
 In SQL server, the command to create a table from an existing one is different from that in MySQL. To copy the table to a new one, I used the following query in SQL Server:
@@ -53,7 +53,7 @@ FROM (
 	FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
 WHERE dup_row_num > 1;
 ```
-> [!𝐍𝐨𝐭𝐞]
+> [!Note]
 > I first wrote the query without the `ORDER BY` clause and this generated an error after executing it. Therefore, I realized that it is necessary when using the `ROW_NUMBER()` function in SQL Server. 
 
 In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing query with the `WHERE` clause for each of those duplicate to verify if those were actually duplicates. Doing this save you from deleting rows that are not duplicates.
@@ -183,7 +183,7 @@ JOIN [Learn SQL].dbo.layoffs_working2 l2
 WHERE l1.industry IS NULL
   AND l2.industry IS NOT NULL;
 ```
-> [!𝐍𝐨𝐭𝐞]
+> [!Note]
 > The queries in steps 1, 2 and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
 
 ## 𝐓𝐚𝐬𝐤 𝟔: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲 𝐑𝐨𝐰𝐬 𝐚𝐧𝐝 𝐂𝐨𝐥𝐮𝐦𝐧𝐬 
