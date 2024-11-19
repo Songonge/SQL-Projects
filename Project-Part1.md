@@ -10,7 +10,6 @@
 7. [Task 4: Standardized the Data by Checking for Incorrect Spellings and Fixing them to Make all Data Consistent](#𝐓𝐚𝐬𝐤-𝟒-𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝-𝐭𝐡𝐞-𝐃𝐚𝐭𝐚-𝐛𝐲-𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠-𝐟𝐨𝐫-𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭-𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬-𝐚𝐧𝐝-𝐟𝐢𝐱𝐢𝐧𝐠-𝐭𝐡𝐞𝐦-𝐭𝐨-𝐦𝐚𝐤𝐞-𝐚𝐥𝐥-𝐝𝐚𝐭𝐚-𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭)
 8. [Task 5: Looked at NULL and Blank Values](#𝐓𝐚𝐬𝐤-𝟓-𝐋𝐨𝐨𝐤𝐞𝐝-𝐚𝐭-𝐍𝐔𝐋𝐋-𝐚𝐧𝐝-𝐁𝐥𝐚𝐧𝐤-𝐕𝐚𝐥𝐮𝐞𝐬)
 9. [Task 6: Removed Unnecessary Rows and Columns](#𝐓𝐚𝐬𝐤-𝟔-𝐑𝐞𝐦𝐨𝐯𝐞𝐝-𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲-𝐑𝐨𝐰𝐬-𝐚𝐧𝐝-𝐂𝐨𝐥𝐮𝐦𝐧𝐬)
-10. [Step 4: Designing an Interactive Dashboard](#𝐬𝐭𝐞𝐩-𝟒-𝐝𝐞𝐬𝐢𝐠𝐧𝐢𝐧𝐠-𝐚𝐧-𝐢𝐧𝐭𝐞𝐫𝐚𝐜𝐭𝐢𝐯𝐞-𝐝𝐚𝐬𝐡𝐛𝐨𝐚𝐫𝐝)
 
 ## 𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧
 This project focuses on data cleaning, a crucial step in preparing data for analysis. Mastering this process is essential for identifying trends and patterns in the data. It also simplifies the creation of dashboards and the development of reports to effectively communicate findings.
