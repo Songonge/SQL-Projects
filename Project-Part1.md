@@ -1,16 +1,16 @@
 # 𝐏𝐫𝐨𝐣𝐞𝐜𝐭: 𝐃𝐚𝐭𝐚 𝐂𝐥𝐞𝐚𝐧𝐢𝐧𝐠 𝐢𝐧 𝐒𝐐𝐋 𝐒𝐞𝐫𝐯𝐞𝐫
 
 ## 𝐓𝐚𝐛𝐥𝐞 𝐨𝐟 𝐂𝐨𝐧𝐭𝐞𝐧𝐭𝐬  
-1. [Introduction](#introduction)
+1. [Introduction](#𝐢𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Importance of the Project](#𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐜𝐞-𝐨𝐟-𝐭𝐡𝐞-𝐏𝐫𝐨𝐣𝐞𝐜𝐭)
-3. [Data Information](#Data-Information)
+3. [Data Information](#𝐃𝐚𝐭𝐚-𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧)
 4. [Task 1: Downloaded and Imported Data into SQL Server](#𝐓𝐚𝐬𝐤-𝟏-𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝-𝐚𝐧𝐝-𝐈𝐦𝐩𝐨𝐫𝐭𝐞𝐝-𝐃𝐚𝐭𝐚-𝐢𝐧𝐭𝐨-𝐒𝐐𝐋-𝐒𝐞𝐫𝐯𝐞𝐫)
-5. [Task 2: Copied the Raw Data to a New Table](#Task-2-Copied-the-Raw-Data-to-a-New-Table)
-6. [Task 3: Checked and Removed Duplicates](#Task-3-Checked-and-Removed-Duplicates)
-7. [Task 4: Standardized the Data by Checking for Incorrect Spellings and Fixing them to Make all Data Consistent](#Task-4-Standardized-the-Data-by-checking-for-incorrect-spellings-and-fixing-them-to-make-all-data-consistent)
-8. [Task 5: Looked at NULL and Blank Values](#Task-5-Looked-at-NULL-and-Blank-Values)
-9. [Task 6: Removed Unnecessary Rows and Columns](#Task-6-Removed-Unnecessary-Rows-and-Columns)
-10. [Step 4: Designing an Interactive Dashboard](#step-4-designing-an-interactive-dashboard)
+5. [Task 2: Copied the Raw Data to a New Table](#𝐓𝐚𝐬𝐤-𝟐-𝐂𝐨𝐩𝐢𝐞𝐝-𝐭𝐡𝐞-𝐑𝐚𝐰-𝐃𝐚𝐭𝐚-𝐭𝐨-𝐚-𝐍𝐞𝐰-𝐓𝐚𝐛𝐥𝐞)
+6. [Task 3: Checked and Removed Duplicates](#𝐓𝐚𝐬𝐤-𝟑-𝐂𝐡𝐞𝐜𝐤𝐞𝐝-𝐚𝐧𝐝-𝐑𝐞𝐦𝐨𝐯𝐞𝐝-𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬)
+7. [Task 4: Standardized the Data by Checking for Incorrect Spellings and Fixing them to Make all Data Consistent](#𝐓𝐚𝐬𝐤-𝟒-𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝-𝐭𝐡𝐞-𝐃𝐚𝐭𝐚-𝐛𝐲-𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠-𝐟𝐨𝐫-𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭-𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬-𝐚𝐧𝐝-𝐟𝐢𝐱𝐢𝐧𝐠-𝐭𝐡𝐞𝐦-𝐭𝐨-𝐦𝐚𝐤𝐞-𝐚𝐥𝐥-𝐝𝐚𝐭𝐚-𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭)
+8. [Task 5: Looked at NULL and Blank Values](#𝐓𝐚𝐬𝐤-𝟓-𝐋𝐨𝐨𝐤𝐞𝐝-𝐚𝐭-𝐍𝐔𝐋𝐋-𝐚𝐧𝐝-𝐁𝐥𝐚𝐧𝐤-𝐕𝐚𝐥𝐮𝐞𝐬)
+9. [Task 6: Removed Unnecessary Rows and Columns](#𝐓𝐚𝐬𝐤-𝟔-𝐑𝐞𝐦𝐨𝐯𝐞𝐝-𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲-𝐑𝐨𝐰𝐬-𝐚𝐧𝐝-𝐂𝐨𝐥𝐮𝐦𝐧𝐬)
+10. [Step 4: Designing an Interactive Dashboard](#𝐬𝐭𝐞𝐩-𝟒-𝐝𝐞𝐬𝐢𝐠𝐧𝐢𝐧𝐠-𝐚𝐧-𝐢𝐧𝐭𝐞𝐫𝐚𝐜𝐭𝐢𝐯𝐞-𝐝𝐚𝐬𝐡𝐛𝐨𝐚𝐫𝐝)
 
 ## 𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧
 This project focuses on data cleaning, a crucial step in preparing data for analysis. Mastering this process is essential for identifying trends and patterns in the data. It also simplifies the creation of dashboards and the development of reports to effectively communicate findings.
