@@ -2,7 +2,7 @@
 
 ## 𝐓𝐚𝐛𝐥𝐞 𝐨𝐟 𝐂𝐨𝐧𝐭𝐞𝐧𝐭𝐬  
 1. [Introduction](#introduction)
-2. [Importance of the Project](#Importance-of-the-Project)
+2. [Importance of the Project](#𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐜𝐞-𝐨𝐟-𝐭𝐡𝐞-𝐏𝐫𝐨𝐣𝐞𝐜𝐭)
 3. [Data Information](#Data-Information)
 4. [Task 1: Downloaded and Imported Data into SQL Server](#𝐓𝐚𝐬𝐤-𝟏-𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝-𝐚𝐧𝐝-𝐈𝐦𝐩𝐨𝐫𝐭𝐞𝐝-𝐃𝐚𝐭𝐚-𝐢𝐧𝐭𝐨-𝐒𝐐𝐋-𝐒𝐞𝐫𝐯𝐞𝐫)
 5. [Task 2: Copied the Raw Data to a New Table](#Task-2-Copied-the-Raw-Data-to-a-New-Table)
