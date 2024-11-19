@@ -14,7 +14,11 @@ The data was downloaded from the link provided by [Alex the Analyst](https://www
 * Number of columns: 9 columns
 
 ## 𝐓𝐚𝐬𝐤 𝟏: 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝 𝐚𝐧𝐝 𝐈𝐦𝐩𝐨𝐫𝐭𝐞𝐝 𝐃𝐚𝐭𝐚 𝐢𝐧𝐭𝐨 𝐒𝐐𝐋 𝐒𝐞𝐫𝐯𝐞𝐫 
-Initially, I used the Import Flat File option in SQL Server to import the data I downloaded from Alex Freberg's link, but I encountered an error I hadn't seen before. To troubleshoot, I watched a detailed YouTube tutorial by [𝐓𝐚𝐢𝐊𝐮𝐩](https://lnkd.in/gBbXR8Rz), which demonstrated how to use the Import Data option instead. Following the clear steps in the video, I successfully imported the data without any issues. During this first step, I previewed the data to have a broad idea of what needs to be done.
+Initially, I used the Import Flat File option in SQL Server to import the data I downloaded from Alex Freberg's link, but I encountered an error I hadn't seen before. To troubleshoot, I watched a detailed YouTube tutorial by [𝐓𝐚𝐢𝐊𝐮𝐩](https://lnkd.in/gBbXR8Rz), which demonstrated how to use the Import Data option instead. Following the clear steps in the video, I successfully imported the data without any issues. During this first step, I previewed the data to have a broad idea of what needs to be done using:
+```
+SELECT * 
+FROM [Learn SQL].dbo.layoffs;
+```
 
 ## 𝐓𝐚𝐬𝐤 𝟐: 𝐂𝐨𝐩𝐢𝐞𝐝 𝐭𝐡𝐞 𝐑𝐚𝐰 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐚 𝐍𝐞𝐰 𝐓𝐚𝐛𝐥𝐞
 **𝐍𝐨𝐭𝐞**: Always create a copy of your raw data before starting the cleaning process. This ensures you have the original data to refer back to if you make a mistake or need to validate your changes later. It's a simple but essential practice for maintaining data integrity!
@@ -27,6 +31,22 @@ FROM [Learn SQL].dbo.layoffs;
 
 ## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
 Here I used ROW_NUMBER(), OVER(), PARTITION BY, and ORDER BY to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
+
+* 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬:
+```
+SELECT * INTO layoffs_working
+FROM [Learn SQL].dbo.layoffs;
+```
+
+* **Checked for duplicates**
+```
+SELECT *
+FROM (
+	SELECT *,
+		ROW_NUMBER() OVER (PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, [date], stage, country, funds_raised_millions ORDER BY total_laid_off) AS dup_row_num
+	FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
+WHERE dup_row_num > 1;
+```
 
 ## 𝐓𝐚𝐬𝐤 𝟒: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐛𝐲 𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠 𝐟𝐨𝐫 𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬 𝐚𝐧𝐝 𝐟𝐢𝐱𝐢𝐧𝐠 𝐭𝐡𝐞𝐦 𝐭𝐨 𝐦𝐚𝐤𝐞 𝐚𝐥𝐥 𝐝𝐚𝐭𝐚 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭.
 
