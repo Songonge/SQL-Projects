@@ -1,14 +1,26 @@
-# Data Cleaning in SQL Server
+# 𝐏𝐫𝐨𝐣𝐞𝐜𝐭: 𝐃𝐚𝐭𝐚 𝐂𝐥𝐞𝐚𝐧𝐢𝐧𝐠 𝐢𝐧 𝐒𝐐𝐋 𝐒𝐞𝐫𝐯𝐞𝐫
 
-## Introduction
+## 𝐓𝐚𝐛𝐥𝐞 𝐨𝐟 𝐂𝐨𝐧𝐭𝐞𝐧𝐭𝐬  
+1. [Introduction](#introduction)
+2. [Importance of the Project](#Importance-of-the-Project)
+3. [Data Information](#Data-Information)
+4. [Task 1: Downloaded and Imported Data into SQL Server](#𝐓𝐚𝐬𝐤-𝟏-𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝-𝐚𝐧𝐝-𝐈𝐦𝐩𝐨𝐫𝐭𝐞𝐝-𝐃𝐚𝐭𝐚-𝐢𝐧𝐭𝐨-𝐒𝐐𝐋-𝐒𝐞𝐫𝐯𝐞𝐫)
+5. [Task 2: Copied the Raw Data to a New Table](#Task-2-Copied-the-Raw-Data-to-a-New-Table)
+6. [Task 3: Checked and Removed Duplicates](#Task-3-Checked-and-Removed-Duplicates)
+7. [Task 4: Standardized the Data by Checking for Incorrect Spellings and Fixing them to Make all Data Consistent](#Task-4-Standardized-the-Data-by-checking-for-incorrect-spellings-and-fixing-them-to-make-all-data-consistent)
+8. [Task 5: Looked at NULL and Blank Values](#Task-5-Looked-at-NULL-and-Blank-Values)
+9. [Task 6: Removed Unnecessary Rows and Columns](#Task-6-Removed-Unnecessary-Rows-and-Columns)
+10. [Step 4: Designing an Interactive Dashboard](#step-4-designing-an-interactive-dashboard)
+
+## 𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧
 This project focuses on data cleaning, a crucial step in preparing data for analysis. Mastering this process is essential for identifying trends and patterns in the data. It also simplifies the creation of dashboards and the development of reports to effectively communicate findings.
 
-## Importance of the Project
+## 𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐜𝐞 𝐨𝐟 𝐭𝐡𝐞 𝐏𝐫𝐨𝐣𝐞𝐜𝐭
 In this project, I focused on data cleaning to prepare a report on total layoffs across various companies in different countries. I followed the tutorial by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA), adapting the process from MySQL to SQL Server. Despite initial challenges, I successfully completed the project. Below, I provide a step-by-step description of the data cleaning and transformation tasks performed. 
 
 As many of you know, some functions behave differently in MySQL compared to SQL Server. This difference made the start of this project a bit challenging, but I’m proud to have overcome those hurdles and successfully completed the project. Below, I’ll walk you through the step-by-step process of cleaning and transforming the data. 
 
-### Data Information
+## 𝐃𝐚𝐭𝐚 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧
 The data was downloaded from the link provided by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
 * Number of rows: 2361 rows  
 * Number of columns: 9 columns
@@ -33,7 +45,7 @@ FROM [Learn SQL].dbo.layoffs;
 ## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
 Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
 
-* 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 for 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬:
+* **Checked for duplicates**
 ```
 SELECT *
 FROM (
