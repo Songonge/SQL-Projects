@@ -1,19 +1,41 @@
 # Data Cleaning in SQL Server
 
 ## Introduction
-This project involves a data cleaning process to prepare data for analysis. This is the most essential part of any data analytics project; mastering it facilitates identifying trends and patterns in the data. This also makes it easier to design 
-dashboards and write reports to communicate the findings.
+This project focuses on data cleaning, a crucial step in preparing data for analysis. Mastering this process is essential for identifying trends and patterns in the data. It also simplifies the creation of dashboards and the development of reports to effectively communicate findings.
 
 ## Importance of the Project
-In this project, I delve into data cleaning to prepare a report concerning the total layoffs of some companies in different countries. The project was completed by following the video from [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA). 
-Although the video showcases the completion of the project in MySQL, I went on to perform the same tasks in SQL Server. It was a little challenging at the beginning, but I am very happy I was able to complete it. In what follows, I describe step-by-step all the 
-tasks completed in cleaning and transforming the data.
+In this project, I focused on data cleaning to prepare a report on total layoffs across various companies in different countries. I followed the tutorial by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA), adapting the process from MySQL to SQL Server. Despite initial challenges, I successfully completed the project. Below, I provide a step-by-step description of the data cleaning and transformation tasks performed. 
 
-Data Information: 2361 rows and 9 columns
+As many of you know, some functions behave differently in MySQL compared to SQL Server. This difference made the start of this project a bit challenging, but I’m proud to have overcome those hurdles and successfully completed the project. Below, I’ll walk you through the step-by-step process of cleaning and transforming the data. 
 
-Steps completed:
----> Imported data into SQL Server. When I first imported the data into SQL Server using the option Import Flat File, I encountered an error. This was my first time encountering this error. From there, I watched a YouTube video by 
-TaiKup (Link: https://www.youtube.com/watch?v=K5_u6Xrbl_s) which showed how to use another option, Import Data. The video was very explicit and after watching it I went on to apply the steps and was able to import my data without any errors.
+### Data Information
+The data was downloaded from the link provided by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
+* Number of rows: 2361 rows  
+* Number of columns: 9 columns
+
+## 𝐓𝐚𝐬𝐤 𝟏: 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝 𝐚𝐧𝐝 𝐈𝐦𝐩𝐨𝐫𝐭𝐞𝐝 𝐃𝐚𝐭𝐚 𝐢𝐧𝐭𝐨 𝐒𝐐𝐋 𝐒𝐞𝐫𝐯𝐞𝐫 
+Initially, I used the Import Flat File option in SQL Server to import the data I downloaded from Alex Freberg's link, but I encountered an error I hadn't seen before. To troubleshoot, I watched a detailed YouTube tutorial by [𝐓𝐚𝐢𝐊𝐮𝐩](https://lnkd.in/gBbXR8Rz), which demonstrated how to use the Import Data option instead. Following the clear steps in the video, I successfully imported the data without any issues. During this first step, I previewed the data to have a broad idea of what needs to be done.
+
+## 𝐓𝐚𝐬𝐤 𝟐: 𝐂𝐨𝐩𝐢𝐞𝐝 𝐭𝐡𝐞 𝐑𝐚𝐰 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐚 𝐍𝐞𝐰 𝐓𝐚𝐛𝐥𝐞
+**𝐍𝐨𝐭𝐞**: Always create a copy of your raw data before starting the cleaning process. This ensures you have the original data to refer back to if you make a mistake or need to validate your changes later. It's a simple but essential practice for maintaining data integrity!
+
+In SQL server, the command to create a table from an existing one is different from that in MySQL. To copy the table to a new one, I used the following query in SQL Server:
+```
+SELECT * INTO layoffs_working
+FROM [Learn SQL].dbo.layoffs;
+```
+
+## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
+Here I used ROW_NUMBER(), OVER(), PARTITION BY, and ORDER BY to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
+
+## 𝐓𝐚𝐬𝐤 𝟒: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐛𝐲 𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠 𝐟𝐨𝐫 𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬 𝐚𝐧𝐝 𝐟𝐢𝐱𝐢𝐧𝐠 𝐭𝐡𝐞𝐦 𝐭𝐨 𝐦𝐚𝐤𝐞 𝐚𝐥𝐥 𝐝𝐚𝐭𝐚 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭.
+
+## 𝐓𝐚𝐬𝐤 𝟓: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
+
+## 𝐓𝐚𝐬𝐤 𝟔: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲 𝐑𝐨𝐰𝐬 𝐚𝐧𝐝 𝐂𝐨𝐥𝐮𝐦𝐧𝐬 
+
+## Imported data into SQL Server. 
+When I first imported the data into SQL Server using the option Import Flat File, I encountered an error. This was my first time encountering this error. From there, I watched a YouTube video by [TaiKup](https://www.youtube.com/watch?v=K5_u6Xrbl_s) which showed how to use another option, Import Data. The video was very explicit and after watching it I went on to apply the steps and was able to import my data without any errors.
 
 Note: It is not advised to work on the raw dataset. Always copy the raw data and do all your cleaning from the copied data. This is good practice as you can refer to the raw data if at any stage of your data cleaning, you made a mistake.
 
