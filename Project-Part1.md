@@ -134,7 +134,42 @@ WHERE [date] NOT LIKE 'NULL';
 > You can select all the data from the table to confirm that everything has been updated accordingly.
 
 ## 𝐓𝐚𝐬𝐤 𝟓: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
-This step helped in populating missing data where possible.
+This task helped in populating missing data where possible. I used the query below to convert every column with `'NULL'` (varchar data type) to `NULL` where the data type of that column was supposed to be int or float.
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET industry = NULL
+WHERE industry = 'NULL';
+```
+This facilitated the conversion of those columns from string to int or float. I realized that SQL Server does not allow the `JOIN` clause in an `UPDATE` statement like in MySQL. So, I had to use a proper `FROM` clause to achieve the same functionality. The following steps were performed:
+
+1. **Updated all the blanks with NULL**
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET industry = NULL
+WHERE industry = '';
+```
+
+2. **Performed a self JOIN on the table to identify rows with NULL and empty rows**
+```
+SELECT l1.industry, l2.industry
+FROM [Learn SQL].dbo.layoffs_working2 l1
+JOIN [Learn SQL].dbo.layoffs_working2 l2
+	ON l1.company = l2.company
+WHERE (l1.industry IS NULL OR l1.industry = '')
+AND l2.industry IS NOT NULL;
+```
+
+3. **Updated the table by replacing the table on the left side of the JOIN with the values from the table on the right**
+```
+UPDATE l1
+SET l1.industry = l2.industry
+FROM [Learn SQL].dbo.layoffs_working2 l1
+JOIN [Learn SQL].dbo.layoffs_working2 l2
+    ON l1.company = l2.company
+WHERE l1.industry IS NULL
+  AND l2.industry IS NOT NULL;
+```
+**Note**: The queries in steps 1, 2 and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
 
 ## 𝐓𝐚𝐬𝐤 𝟔: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲 𝐑𝐨𝐰𝐬 𝐚𝐧𝐝 𝐂𝐨𝐥𝐮𝐦𝐧𝐬 
 
