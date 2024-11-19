@@ -21,7 +21,8 @@ FROM [Learn SQL].dbo.layoffs;
 ```
 
 ## 𝐓𝐚𝐬𝐤 𝟐: 𝐂𝐨𝐩𝐢𝐞𝐝 𝐭𝐡𝐞 𝐑𝐚𝐰 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐚 𝐍𝐞𝐰 𝐓𝐚𝐛𝐥𝐞
-**𝐍𝐨𝐭𝐞**: Always create a copy of your raw data before starting the cleaning process. This ensures you have the original data to refer back to if you make a mistake or need to validate your changes later. It's a simple but essential practice for maintaining data integrity!
+> [!𝐍𝐨𝐭𝐞]
+> Always create a copy of your raw data before starting the cleaning process. This ensures you have the original data to refer back to if you make a mistake or need to validate your changes later. It's a simple but essential practice for maintaining data integrity!
 
 In SQL server, the command to create a table from an existing one is different from that in MySQL. To copy the table to a new one, I used the following query in SQL Server:
 ```
@@ -41,7 +42,8 @@ FROM (
 	FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
 WHERE dup_row_num > 1;
 ```
-**Note**: I first wrote the query without the `ORDER BY` clause and this generated an error after executing it. Therefore, I realized that it is necessary when using the `ROW_NUMBER()` function in SQL Server. 
+> [!𝐍𝐨𝐭𝐞]
+> I first wrote the query without the `ORDER BY` clause and this generated an error after executing it. Therefore, I realized that it is necessary when using the `ROW_NUMBER()` function in SQL Server. 
 
 In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing query with the `WHERE` clause for each of those duplicate to verify if those were actually duplicates. Doing this save you from deleting rows that are not duplicates.
 
@@ -140,7 +142,8 @@ UPDATE [Learn SQL].dbo.layoffs_working2
 SET industry = NULL
 WHERE industry = 'NULL';
 ```
-This facilitated the conversion of those columns from string to int or float. I realized that SQL Server does not allow the `JOIN` clause in an `UPDATE` statement like in MySQL. So, I had to use a proper `FROM` clause to achieve the same functionality. The following steps were performed:
+This facilitated the conversion of those columns from string to int or float.  
+I realized that SQL Server does not allow the `JOIN` clause in an `UPDATE` statement like in MySQL. So, I had to use a proper `FROM` clause to achieve the same functionality. The following steps were performed:
 
 1. **Updated all the blanks with NULL**
 ```
@@ -169,51 +172,24 @@ JOIN [Learn SQL].dbo.layoffs_working2 l2
 WHERE l1.industry IS NULL
   AND l2.industry IS NOT NULL;
 ```
-**Note**: The queries in steps 1, 2 and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
+> [!𝐍𝐨𝐭𝐞]
+> The queries in steps 1, 2 and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
 
 ## 𝐓𝐚𝐬𝐤 𝟔: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲 𝐑𝐨𝐰𝐬 𝐚𝐧𝐝 𝐂𝐨𝐥𝐮𝐦𝐧𝐬 
-
----> Looked at NULL and Blank values. This step helped in populating missing data where possible.
-I used the query below to convert every column with 'NULL' to NULL where the data type of that column was supposed to be int or float.
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET industry = NULL
-WHERE industry = 'NULL';
-
-This facilitated the conversion of those columns from string to int or float.
-
-
-I realized that SQL Server does not allow th JOIN clause in an UPDATE statement like in MySQL. So, I had to use a proper FROM clause to achieve the same functionality.
-
-The following steps were performed:
-1. Updated all the blanks with NULL
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET industry = NULL
-WHERE industry = '';
-
-2. Performed a self JOIN on the table to identify rows with NULL and empty rows.
-SELECT l1.industry, l2.industry
-FROM [Learn SQL].dbo.layoffs_working2 l1
-JOIN [Learn SQL].dbo.layoffs_working2 l2
-	ON l1.company = l2.company
-WHERE (l1.industry IS NULL OR l1.industry = '')
-AND l2.industry IS NOT NULL;
-
-3. Updated the table by replacing the table on the left side of the JOIN with the values from the table on the right
-UPDATE l1
-SET l1.industry = l2.industry
-FROM [Learn SQL].dbo.layoffs_working2 l1
-JOIN [Learn SQL].dbo.layoffs_working2 l2
-    ON l1.company = l2.company
-WHERE l1.industry IS NULL
-  AND l2.industry IS NOT NULL;
-
-
----> Removed unnecessary rows and columns that did not add any value to the entire dataset or that were not needed in the ETL (Extract, Transform, Load) process.
+This task served to remove rows and columns that did not add any value to the entire dataset or that would not be needed in the ETL (Extract, Transform, Load) process.
 Here I removed the dup_row_num column that was created while identifying duplicates in the data. The following query was used:
+```
 ALTER TABLE [Learn SQL].dbo.layoffs_working2
 DROP COLUMN dup_row_num;
+```
+The query below allowed to identify NULL in the columns named total_laid_off and percentage_laid_off. The output was 361 rows. Knowing that the raw data was 2361 rows, then 2356 after removing duplicates. Therefore, these rows cannot just be deleted, but will be anlayzed in the second part of the project while identifying trends and patterns in the entire data during the exploratory data analysis.
+```
+SELECT * 
+FROM [Learn SQL].dbo.layoffs_working2
+WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL;
+```
 
-Although there were still NULL values in the data, we left them for now as they could be explored in the next step which will be the exploratory data analysis.
+
 
 
 
