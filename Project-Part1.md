@@ -130,7 +130,7 @@ UPDATE [Learn SQL].dbo.layoffs_working2
 SET [date] = CAST([date] AS date)
 WHERE [date] NOT LIKE 'NULL';
 ```
-> [Tip]
+> [!Tip]
 > You can select all the data from the table to confirm that everything has been updated accordingly.
 
 ## 𝐓𝐚𝐬𝐤 𝟓: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
