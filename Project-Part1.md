@@ -30,25 +30,107 @@ FROM [Learn SQL].dbo.layoffs;
 ```
 
 ## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
-Here I used ROW_NUMBER(), OVER(), PARTITION BY, and ORDER BY to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
+Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
 
-* 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬:
-```
-SELECT * INTO layoffs_working
-FROM [Learn SQL].dbo.layoffs;
-```
-
-* **Checked for duplicates**
+* 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 for 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬:
 ```
 SELECT *
 FROM (
-	SELECT *,
+    SELECT *,
 		ROW_NUMBER() OVER (PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, [date], stage, country, funds_raised_millions ORDER BY total_laid_off) AS dup_row_num
 	FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
 WHERE dup_row_num > 1;
 ```
+**Note**: I first wrote the query without the `ORDER BY` clause and this generated an error after executing it. Therefore, I realized that it is necessary when using the `ROW_NUMBER()` function in SQL Server. 
+
+In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing query with the `WHERE` clause for each of those duplicate to verify if those were actually duplicates. Doing this save you from deleting rows that are not duplicates.
+
+* **Removed duplicates**
+To remove duplicates, I rewrote the above query. Then, inserted the output into a new table named layoffs_working2 containing non-duplicate rows. The query looked like:
+```
+SELECT * INTO [Learn SQL].dbo.layoffs_working2
+FROM (
+    SELECT *,
+	ROW_NUMBER() OVER (PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, [date], stage, country, funds_raised_millions ORDER BY total_laid_off) AS dup_row_num
+    FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
+WHERE dup_row_num = 1;
+```
+* **Selected all the data from the new table**
+```
+SELECT *
+FROM [Learn SQL].dbo.layoffs_working2;
+```
+This last query selected all data from the new table named layoffs_working2 and returned 2356 rows.
 
 ## 𝐓𝐚𝐬𝐤 𝟒: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐛𝐲 𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠 𝐟𝐨𝐫 𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬 𝐚𝐧𝐝 𝐟𝐢𝐱𝐢𝐧𝐠 𝐭𝐡𝐞𝐦 𝐭𝐨 𝐦𝐚𝐤𝐞 𝐚𝐥𝐥 𝐝𝐚𝐭𝐚 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭.
+The steps below were completed:
+
+* **Trimmed the data to remove trailing space**
+```
+SELECT 
+	company, 
+	TRIM(company)
+FROM [Learn SQL].dbo.layoffs_working2;
+```
+
+* **Updated the table with the trimmed columns**
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET company = TRIM(company);
+```
+
+* **Selected all the data from the updated table**
+```
+SELECT *
+FROM [Learn SQL].dbo.layoffs_working2;
+```
+
+Checked for misspelled words in the industry column
+```
+SELECT DISTINCT industry
+FROM [Learn SQL].dbo.layoffs_working2;
+```
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET industry = 'Crypto'
+WHERE industry LIKE 'Crypto%';
+```
+
+* **Checked for misspelled words in the location column**
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET location = 'Malmo'
+WHERE location LIKE 'Malmö';
+```
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET location = 'Dusseldorf'
+WHERE location LIKE 'Düsseldorf';
+```
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET location = 'Florianopolis'
+WHERE location LIKE 'Florianópolis';
+```
+
+* **Checked for misspelled words in the country column**
+```
+SELECT DISTINCT country
+FROM [Learn SQL].dbo.layoffs_working2;
+```
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET country = 'United States'
+WHERE country LIKE 'United States%';
+```
+
+* **Converted the date column to the date type**
+```
+UPDATE [Learn SQL].dbo.layoffs_working2
+SET [date] = CAST([date] AS date)
+WHERE [date] NOT LIKE 'NULL';
+```
+
 
 ## 𝐓𝐚𝐬𝐤 𝟓: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
 
