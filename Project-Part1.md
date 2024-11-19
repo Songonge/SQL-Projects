@@ -190,7 +190,14 @@ WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL;
 ```
 
 
+<br/>
+   
+**Thank you for taking the time to read this report!**
 
+**Please reach out for any updates.**
+
+### Author
+[Edwige Songong](https://github.com/Songonge)
 
 
 
