@@ -35,27 +35,51 @@ The data provided contained the following information:
 9. **expenditure**:  Money spent on the project
 10. **client**: Name of the client company
 
+> [!Important]
+> I copied my raw data to a new table before starting the cleaning process. This was to ensure I have the original data to refer back to if you make a mistake or need to validate your changes later and to maintain data integrity! The following query was used:
+```
+DROP TABLE IF EXISTS [Learn SQL].dbo.tech_solutions_data1
+SELECT * INTO [Learn SQL].dbo.tech_solutions_data1
+FROM [Learn SQL].dbo.tech_solutions_data;
+```
+
 ## 𝐓𝐚𝐬𝐤 𝟏: 𝐑𝐞𝐦𝐨𝐯𝐞 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞 𝐑𝐞𝐜𝐨𝐫𝐝𝐬 
 In this task, I checked for columns having the same row twice using the query below:
 ```
 SELECT *
-FROM (SELECT
-		ROW_NUMBER() OVER (PARTITION BY project_name, start_date, end_date, project_manager, team_members, status, budget, expenditure, client ORDER BY project_name) 
-		AS dup_data 
-	  FROM [Learn SQL].dbo.tech_solutions_data1) AS num_of_dup_rows
-WHERE dup_data > 1
-;
+FROM (
+    SELECT
+	ROW_NUMBER() OVER (PARTITION BY project_name, start_date, end_date, project_manager, team_members, status, budget, expenditure, client ORDER BY project_name) 
+	AS dup_data 
+    FROM [Learn SQL].dbo.tech_solutions_data1) AS num_of_dup_rows
+WHERE dup_data > 1;
 ```
 
 ## 𝐓𝐚𝐬𝐤 𝟐: 𝐅𝐢𝐱𝐞𝐝 𝐃𝐚𝐭𝐞 𝐅𝐨𝐫𝐦𝐚𝐭
+1. Checked for invalid date entries in the start_date column and corrected them.
+```
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET start_date = CONVERT(DATE, start_date);
+```
 > [!Note]
-> Always create a copy of your raw data before starting the cleaning process. This ensures you have the original data to refer back to if you make a mistake or need to validate your changes later. It's a simple but essential practice for maintaining data integrity!
+> After running this query, everything after the last digit of the date was transformed into zero. So, to update the date column permanently, I needed to alter the table and the start_date column.
 
-In SQL server, the command to create a table from an existing one is different from that in MySQL. To copy the table to a new one, I used the following query in SQL Server:
+2. To permanently store only the start_date without the time, I altered the start_date's data type.
 ```
-SELECT * INTO layoffs_working
-FROM [Learn SQL].dbo.layoffs;
+ALTER TABLE [Learn SQL].dbo.tech_solutions_data1
+ALTER COLUMN start_date DATE;
 ```
+3. Checked for invalid date entries in the end_date column and corrected them.
+```
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET end_date = CONVERT(DATE, end_date);
+```
+2. To permanently store only the end_date without the time, I altered the end_date's data type.
+```
+ALTER TABLE [Learn SQL].dbo.tech_solutions_data1
+ALTER COLUMN end_date DATE;
+```
+
 
 ## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
 Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
