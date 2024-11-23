@@ -56,6 +56,9 @@ WHERE dup_data > 1;
 ```
 
 ## 𝐓𝐚𝐬𝐤 𝟐: 𝐅𝐢𝐱𝐞𝐝 𝐃𝐚𝐭𝐞 𝐅𝐨𝐫𝐦𝐚𝐭
+
+### For the start_date column
+
 1. Checked for invalid date entries in the start_date column and corrected them.
 ```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
@@ -69,7 +72,9 @@ SET start_date = CONVERT(DATE, start_date);
 ALTER TABLE [Learn SQL].dbo.tech_solutions_data1
 ALTER COLUMN start_date DATE;
 ```
-3. Checked for invalid date entries in the end_date column and corrected them.
+
+### For the end_date column
+1. Checked for invalid date entries in the end_date column and corrected them.
 ```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
 SET end_date = CONVERT(DATE, end_date);
