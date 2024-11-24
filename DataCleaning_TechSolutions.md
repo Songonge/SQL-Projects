@@ -43,7 +43,7 @@ SELECT * INTO [Learn SQL].dbo.tech_solutions_data1
 FROM [Learn SQL].dbo.tech_solutions_data;
 ```
 
-## 𝐓𝐚𝐬𝐤 𝟏: 𝐑𝐞𝐦𝐨𝐯𝐞 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞 𝐑𝐞𝐜𝐨𝐫𝐝𝐬 
+## 𝐓𝐚𝐬𝐤 𝟏: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞 𝐑𝐞𝐜𝐨𝐫𝐝𝐬 
 In this task, I checked for columns having the same row twice using the query below:
 ```
 SELECT *
@@ -85,121 +85,114 @@ ALTER TABLE [Learn SQL].dbo.tech_solutions_data1
 ALTER COLUMN end_date DATE;
 ```
 
-
-## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
-Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
-
-* **Checked for duplicates**
-```
-SELECT *
-FROM (
-    SELECT *,
-		ROW_NUMBER() OVER (PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, [date], stage, country, funds_raised_millions ORDER BY total_laid_off) AS dup_row_num
-	FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
-WHERE dup_row_num > 1;
-```
-> [!Note]
-> I first wrote the query without the `ORDER BY` clause and this generated an error after executing it. Therefore, I realized that it is necessary when using the `ROW_NUMBER()` function in SQL Server. 
-
-In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing query with the `WHERE` clause for each of those duplicate to verify if those were actually duplicates. Doing this save you from deleting rows that are not duplicates.
-
-* **Removed duplicates**
-To remove duplicates, I rewrote the above query. Then, inserted the output into a new table named layoffs_working2 containing non-duplicate rows. The query looked like:
-```
-SELECT * INTO [Learn SQL].dbo.layoffs_working2
-FROM (
-    SELECT *,
-	ROW_NUMBER() OVER (PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, [date], stage, country, funds_raised_millions ORDER BY total_laid_off) AS dup_row_num
-    FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
-WHERE dup_row_num = 1;
-```
-* **Selected all the data from the new table**
-```
-SELECT *
-FROM [Learn SQL].dbo.layoffs_working2;
-```
-This last query selected all data from the new table named layoffs_working2 and returned 2356 rows.
-
-## 𝐓𝐚𝐬𝐤 𝟒: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐛𝐲 𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠 𝐟𝐨𝐫 𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬 𝐚𝐧𝐝 𝐟𝐢𝐱𝐢𝐧𝐠 𝐭𝐡𝐞𝐦 𝐭𝐨 𝐦𝐚𝐤𝐞 𝐚𝐥𝐥 𝐝𝐚𝐭𝐚 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭.
+## 𝐓𝐚𝐬𝐤 3: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 Text 𝐃𝐚𝐭𝐚 to fix spelling errors and ensure consistency
 The steps below were completed:
 
-* **Trimmed the data to remove trailing space**
+* **Cleaned any leading/trailing whitespaces in project_manager and status.**
 ```
-SELECT 
-	company, 
-	TRIM(company)
-FROM [Learn SQL].dbo.layoffs_working2;
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_manager = TRIM(TRAILING '' FROM project_manager);
 ```
 
-* **Updated the table with the trimmed columns**
+* **Standardized values in the status column** 
 ```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET company = TRIM(company);
-```
-
-* **Selected all the data from the updated table**
-```
-SELECT *
-FROM [Learn SQL].dbo.layoffs_working2;
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET status = 'pending'
+WHERE status = 'pennding';
 ```
 
-* **Checked for misspelled words in the industry column**
+* **Standardized capitalization for project_name**
 ```
-SELECT DISTINCT industry
-FROM [Learn SQL].dbo.layoffs_working2;
-```
-```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET industry = 'Crypto'
-WHERE industry LIKE 'Crypto%';
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_name = 'Data Warehouse'
+WHERE project_name = 'DATA WAREHOUSE';
 ```
 
-* **Checked for misspelled words in the location column**
 ```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET location = 'Malmo'
-WHERE location LIKE 'Malmö';
-```
-```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET location = 'Dusseldorf'
-WHERE location LIKE 'Düsseldorf';
-```
-```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET location = 'Florianopolis'
-WHERE location LIKE 'Florianópolis';
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_name = 'App Development'
+WHERE project_name = 'APP DEVELOPMENT';
 ```
 
-* **Checked for misspelled words in the country column**
 ```
-SELECT DISTINCT country
-FROM [Learn SQL].dbo.layoffs_working2;
-```
-```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET country = 'United States'
-WHERE country LIKE 'United States%';
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_name = 'IoT Automation'
+WHERE project_name = 'IOT AUTOMATION';
 ```
 
-* **Converted the date column to the date type**
 ```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET [date] = CAST([date] AS date)
-WHERE [date] NOT LIKE 'NULL';
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_name = 'Cloud Migration'
+WHERE project_name = 'CLOUD MIGRATION';
 ```
 > [!Tip]
-> You can select all the data from the table to confirm that everything has been updated accordingly.
+> When done with the modifications, select all the data from the table to confirm that everything has been updated accordingly.
 
-## 𝐓𝐚𝐬𝐤 𝟓: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
-This task helped in populating missing data where possible. I used the query below to convert every column with `'NULL'` (varchar data type) to `NULL` where the data type of that column was supposed to be int or float.
+## 𝐓𝐚𝐬𝐤 4: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
+This task helped in populating missing data where possible. 
+
+* Check for missing values in columns such as end_date, budget, expenditure, and team_members.
 ```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET industry = NULL
-WHERE industry = 'NULL';
+SELECT *
+FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE end_date IS NULL;
 ```
-This facilitated the conversion of those columns from string to int or float.  
-I realized that SQL Server does not allow the `JOIN` clause in an `UPDATE` statement like in MySQL. So, I had to use a proper `FROM` clause to achieve the same functionality. The following steps were performed:
+
+```
+SELECT *
+FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE budget IS NULL;
+```
+
+```
+SELECT *
+FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE expenditure IS NULL;
+```
+
+```
+SELECT *
+FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE team_members IS NULL;
+```
+
+* For budget and expenditure, I filled in missing values with the average of those columns.
+* Calculate the average of the budget column
+```
+SELECT 
+	AVG(budget)
+FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE budget IS NOT NULL;
+```
+
+* Updated the table with the average of the budget column where budget is NULL
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET budget = (SELECT 
+				Round(AVG(budget), 0)
+			  FROM [Learn SQL].dbo.tech_solutions_data1
+			  WHERE budget IS NOT NULL)
+WHERE budget IS NULL
+;
+
+-- Calculate the average of the expenditure column
+SELECT 
+	AVG(expenditure)
+FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE expenditure IS NOT NULL
+;
+
+-- Update the table with the average of the expenditure column where expenditure is NULL
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET expenditure = (SELECT 
+				Round(AVG(expenditure), 0)
+			  FROM [Learn SQL].dbo.tech_solutions_data1
+			  WHERE expenditure IS NOT NULL)
+WHERE expenditure IS NULL
+;
+
+SELECT *
+FROM [Learn SQL].dbo.tech_solutions_data1
+;
 
 1. **Updated all the blanks with NULL**
 ```
