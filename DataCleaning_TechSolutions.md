@@ -158,7 +158,7 @@ WHERE team_members IS NULL;
 ```
 
 2. For budget and expenditure columns, I filled in missing values with the average of those columns.  
-  * Calculated the average of the budget column
+   * Calculated the average of the budget column
 ```
 SELECT 
 	AVG(budget)
