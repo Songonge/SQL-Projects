@@ -1,7 +1,7 @@
 # 𝐏𝐫𝐨𝐣𝐞𝐜𝐭: 𝐃𝐚𝐭𝐚 𝐂𝐥𝐞𝐚𝐧𝐢𝐧𝐠 𝐢𝐧 𝐒𝐐𝐋 𝐒𝐞𝐫𝐯𝐞𝐫
 
 ## 𝐓𝐚𝐛𝐥𝐞 𝐨𝐟 𝐂𝐨𝐧𝐭𝐞𝐧𝐭𝐬  
-1. [Introduction](#𝐢𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
+1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Importance of the Project](#𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐜𝐞-𝐨𝐟-𝐭𝐡𝐞-𝐏𝐫𝐨𝐣𝐞𝐜𝐭)
 3. [Data Information](#𝐃𝐚𝐭𝐚-𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧)
 4. [Task 1: Downloaded and Imported Data into SQL Server](#𝐓𝐚𝐬𝐤-𝟏-𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝-𝐚𝐧𝐝-𝐈𝐦𝐩𝐨𝐫𝐭𝐞𝐝-𝐃𝐚𝐭𝐚-𝐢𝐧𝐭𝐨-𝐒𝐐𝐋-𝐒𝐞𝐫𝐯𝐞𝐫)
