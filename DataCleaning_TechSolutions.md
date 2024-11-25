@@ -1,7 +1,7 @@
 # 𝐏𝐫𝐨𝐣𝐞𝐜𝐭: 𝐃𝐚𝐭𝐚 𝐂𝐥𝐞𝐚𝐧𝐢𝐧𝐠 𝐟𝐨𝐫 𝐓𝐞𝐜𝐡𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬 𝐋𝐭𝐝.
 
 ## 𝐓𝐚𝐛𝐥𝐞 𝐨𝐟 𝐂𝐨𝐧𝐭𝐞𝐧𝐭𝐬  
-1. [Introduction](#𝐢𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
+1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Importance of the Project](#𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐜𝐞-𝐨𝐟-𝐭𝐡𝐞-𝐏𝐫𝐨𝐣𝐞𝐜𝐭)
 3. [Data Information](#𝐃𝐚𝐭𝐚-𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧)
    * [Description of Each Column](#Description-of-each-column)
@@ -90,7 +90,7 @@ ALTER TABLE [Learn SQL].dbo.tech_solutions_data1
 ALTER COLUMN end_date DATE;
 ```
 
-## 𝐓𝐚𝐬𝐤 𝟑: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐓𝐞𝐱𝐭 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐟𝐢𝐱 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠 𝐞𝐫𝐫𝐨𝐫𝐬 𝐚𝐧𝐝 𝐞𝐧𝐬𝐮𝐫𝐞 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐜𝐲
+## 𝐓𝐚𝐬𝐤 𝟑: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐓𝐞𝐱𝐭 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐅𝐢𝐱 𝐒𝐩𝐞𝐥𝐥𝐢𝐧𝐠 𝐄𝐫𝐫𝐨𝐫𝐬 𝐚𝐧𝐝 𝐄𝐧𝐬𝐮𝐫𝐞 𝐂𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐜𝐲
 The steps below were completed:
 
 * **Cleaned any leading/trailing whitespaces in project_manager and status.**
