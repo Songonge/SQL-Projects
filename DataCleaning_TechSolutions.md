@@ -131,7 +131,8 @@ WHERE project_name = 'CLOUD MIGRATION';
 ## 𝐓𝐚𝐬𝐤 4: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 
 This task helped in populating missing data where possible. 
 
-* Check for missing values in columns such as end_date, budget, expenditure, and team_members.
+1. Checked for missing values in columns such as end_date, budget, expenditure, and team_members.  
+Here, I first identified NULL in each columns using the queries below.
 ```
 SELECT *
 FROM [Learn SQL].dbo.tech_solutions_data1
@@ -156,8 +157,8 @@ FROM [Learn SQL].dbo.tech_solutions_data1
 WHERE team_members IS NULL;
 ```
 
-* For budget and expenditure, I filled in missing values with the average of those columns.
-* Calculate the average of the budget column
+2. For budget and expenditure columns, I filled in missing values with the average of those columns.  
+  * Calculated the average of the budget column
 ```
 SELECT 
 	AVG(budget)
@@ -165,51 +166,37 @@ FROM [Learn SQL].dbo.tech_solutions_data1
 WHERE budget IS NOT NULL;
 ```
 
-* Updated the table with the average of the budget column where budget is NULL
+  * Updated the table with the average of the budget column where budget is NULL
+```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
-SET budget = (SELECT 
-				Round(AVG(budget), 0)
-			  FROM [Learn SQL].dbo.tech_solutions_data1
-			  WHERE budget IS NOT NULL)
-WHERE budget IS NULL
-;
+SET budget = (
+    SELECT 
+        Round(AVG(budget), 0)
+    FROM [Learn SQL].dbo.tech_solutions_data1
+    WHERE budget IS NOT NULL)
+WHERE budget IS NULL;
+```
 
--- Calculate the average of the expenditure column
+  * Calculated the average of the expenditure column
+```
 SELECT 
 	AVG(expenditure)
 FROM [Learn SQL].dbo.tech_solutions_data1
-WHERE expenditure IS NOT NULL
-;
+WHERE expenditure IS NOT NULL;
+```
 
--- Update the table with the average of the expenditure column where expenditure is NULL
+  * Updated the table with the average of the expenditure column where expenditure is NULL
+```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
-SET expenditure = (SELECT 
-				Round(AVG(expenditure), 0)
-			  FROM [Learn SQL].dbo.tech_solutions_data1
-			  WHERE expenditure IS NOT NULL)
-WHERE expenditure IS NULL
-;
-
-SELECT *
-FROM [Learn SQL].dbo.tech_solutions_data1
-;
-
-1. **Updated all the blanks with NULL**
-```
-UPDATE [Learn SQL].dbo.layoffs_working2
-SET industry = NULL
-WHERE industry = '';
+SET expenditure = (
+    SELECT 
+        Round(AVG(expenditure), 0)
+    FROM [Learn SQL].dbo.tech_solutions_data1
+    WHERE expenditure IS NOT NULL)
+WHERE expenditure IS NULL;
 ```
 
-2. **Performed a self JOIN on the table to identify rows with NULL and empty rows**
-```
-SELECT l1.industry, l2.industry
-FROM [Learn SQL].dbo.layoffs_working2 l1
-JOIN [Learn SQL].dbo.layoffs_working2 l2
-	ON l1.company = l2.company
-WHERE (l1.industry IS NULL OR l1.industry = '')
-AND l2.industry IS NOT NULL;
-```
+
 
 3. **Updated the table by replacing the table on the left side of the JOIN with the values from the table on the right**
 ```
