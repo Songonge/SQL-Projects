@@ -166,7 +166,7 @@ FROM [Learn SQL].dbo.tech_solutions_data1
 WHERE budget IS NOT NULL;
 ```
 
-  * Updated the table with the average of the budget column where budget is NULL
+   * Updated the table with the average of the budget column where budget is NULL
 ```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
 SET budget = (
@@ -177,7 +177,7 @@ SET budget = (
 WHERE budget IS NULL;
 ```
 
-  * Calculated the average of the expenditure column
+   * Calculated the average of the expenditure column
 ```
 SELECT 
 	AVG(expenditure)
@@ -185,7 +185,7 @@ FROM [Learn SQL].dbo.tech_solutions_data1
 WHERE expenditure IS NOT NULL;
 ```
 
-  * Updated the table with the average of the expenditure column where expenditure is NULL
+   * Updated the table with the average of the expenditure column where expenditure is NULL
 ```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
 SET expenditure = (
