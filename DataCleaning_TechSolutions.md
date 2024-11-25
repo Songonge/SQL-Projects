@@ -4,12 +4,17 @@
 1. [Introduction](#𝐢𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Importance of the Project](#𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐜𝐞-𝐨𝐟-𝐭𝐡𝐞-𝐏𝐫𝐨𝐣𝐞𝐜𝐭)
 3. [Data Information](#𝐃𝐚𝐭𝐚-𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧)
-4. [Task 1: 𝐑𝐞𝐦𝐨𝐯𝐞 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞 𝐑𝐞𝐜𝐨𝐫𝐝𝐬](#𝐓𝐚𝐬𝐤-𝟏-𝐑𝐞𝐦𝐨𝐯𝐞-𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞-𝐑𝐞𝐜𝐨𝐫𝐝𝐬)
-5. [Task 2: 𝐅𝐢𝐱𝐞𝐝 𝐃𝐚𝐭𝐞 𝐅𝐨𝐫𝐦𝐚𝐭](#𝐓𝐚𝐬𝐤-𝟐-𝐅𝐢𝐱𝐞𝐝-𝐃𝐚𝐭𝐞-𝐅𝐨𝐫𝐦𝐚𝐭)
-6. [Task 3: Checked and Removed Duplicates](#𝐓𝐚𝐬𝐤-𝟑-𝐂𝐡𝐞𝐜𝐤𝐞𝐝-𝐚𝐧𝐝-𝐑𝐞𝐦𝐨𝐯𝐞𝐝-𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬)
-7. [Task 4: Standardized the Data by Checking for Incorrect Spellings and Fixing them to Make all Data Consistent](#𝐓𝐚𝐬𝐤-𝟒-𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝-𝐭𝐡𝐞-𝐃𝐚𝐭𝐚-𝐛𝐲-𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠-𝐟𝐨𝐫-𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭-𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬-𝐚𝐧𝐝-𝐟𝐢𝐱𝐢𝐧𝐠-𝐭𝐡𝐞𝐦-𝐭𝐨-𝐦𝐚𝐤𝐞-𝐚𝐥𝐥-𝐝𝐚𝐭𝐚-𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭)
-8. [Task 5: Looked at NULL and Blank Values](#𝐓𝐚𝐬𝐤-𝟓-𝐋𝐨𝐨𝐤𝐞𝐝-𝐚𝐭-𝐍𝐔𝐋𝐋-𝐚𝐧𝐝-𝐁𝐥𝐚𝐧𝐤-𝐕𝐚𝐥𝐮𝐞𝐬)
-9. [Task 6: Removed Unnecessary Rows and Columns](#𝐓𝐚𝐬𝐤-𝟔-𝐑𝐞𝐦𝐨𝐯𝐞𝐝-𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲-𝐑𝐨𝐰𝐬-𝐚𝐧𝐝-𝐂𝐨𝐥𝐮𝐦𝐧𝐬)
+   * [Description of Each Column](#Description-of-each-column)
+5. [Task 1: 𝐑𝐞𝐦𝐨𝐯𝐞d 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞 𝐑𝐞𝐜𝐨𝐫𝐝𝐬](#𝐓𝐚𝐬𝐤-𝟏-𝐑𝐞𝐦𝐨𝐯𝐞d-𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞-𝐑𝐞𝐜𝐨𝐫𝐝𝐬)
+6. [Task 2: 𝐅𝐢𝐱𝐞𝐝 𝐃𝐚𝐭𝐞 𝐅𝐨𝐫𝐦𝐚𝐭](#𝐓𝐚𝐬𝐤-𝟐-𝐅𝐢𝐱𝐞𝐝-𝐃𝐚𝐭𝐞-𝐅𝐨𝐫𝐦𝐚𝐭)
+   * [For the start_date column](#For-the-start_date-column)
+   * [For the end_date column](#For-the-end_date-column)
+7. [𝐓𝐚𝐬𝐤 𝟑: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐓𝐞𝐱𝐭 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐅𝐢𝐱 𝐒𝐩𝐞𝐥𝐥𝐢𝐧𝐠 𝐄𝐫𝐫𝐨𝐫𝐬 𝐚𝐧𝐝 𝐄𝐧𝐬𝐮𝐫𝐞 𝐂𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐜𝐲](#𝐓𝐚𝐬𝐤-𝟑-𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝-𝐓𝐞𝐱𝐭 𝐃𝐚𝐭𝐚-𝐭𝐨-𝐅𝐢𝐱-𝐒𝐩𝐞𝐥𝐥𝐢𝐧𝐠-𝐄𝐫𝐫𝐨𝐫𝐬-𝐚𝐧𝐝-𝐄𝐧𝐬𝐮𝐫𝐞-𝐂𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐜𝐲)
+8. [𝐓𝐚𝐬𝐤 4: 𝐋𝐨𝐨𝐤𝐞𝐝 𝐚𝐭 𝐍𝐔𝐋𝐋 𝐚𝐧𝐝 𝐁𝐥𝐚𝐧𝐤 𝐕𝐚𝐥𝐮𝐞𝐬 ](#𝐓𝐚𝐬𝐤-4-𝐋𝐨𝐨𝐤𝐞𝐝-𝐚𝐭-𝐍𝐔𝐋𝐋-𝐚𝐧𝐝-𝐁𝐥𝐚𝐧𝐤-𝐕𝐚𝐥𝐮𝐞𝐬 )
+9. [𝐓𝐚𝐬𝐤 𝟓: 𝐅𝐢𝐥𝐥𝐞𝐝 𝐨𝐫 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐄𝐦𝐩𝐭𝐲 𝐭𝐞𝐚𝐦_𝐦𝐞𝐦𝐛𝐞𝐫𝐬 𝐂𝐨𝐥𝐮𝐦𝐧](#𝐓𝐚𝐬𝐤-𝟓-𝐅𝐢𝐥𝐥𝐞𝐝-𝐨𝐫-𝐑𝐞𝐦𝐨𝐯𝐞𝐝-𝐄𝐦𝐩𝐭𝐲-𝐭𝐞𝐚𝐦_𝐦𝐞𝐦𝐛𝐞𝐫𝐬-𝐂𝐨𝐥𝐮𝐦𝐧)
+10. [𝐓𝐚𝐬𝐤 𝟔: 𝐔𝐩𝐝𝐚𝐭𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐓𝐲𝐩𝐞 𝐟𝐨𝐫 𝐑𝐞𝐯𝐞𝐧𝐮𝐞 𝐃𝐚𝐭𝐚](#𝐓𝐚𝐬𝐤-𝟔-𝐔𝐩𝐝𝐚𝐭𝐞𝐝-𝐭𝐡𝐞-𝐃𝐚𝐭𝐚-𝐓𝐲𝐩𝐞-𝐟𝐨𝐫-𝐑𝐞𝐯𝐞𝐧𝐮𝐞-𝐃𝐚𝐭𝐚)
+11. [𝐓𝐚𝐬𝐤 𝟕: 𝐔𝐬𝐞𝐝 𝐭𝐡𝐞 𝐓𝐑𝐈𝐌() 𝐅𝐮𝐧𝐜𝐭𝐢𝐨𝐧 𝐭𝐨 𝐔𝐩𝐝𝐚𝐭𝐞 𝐃𝐚𝐭𝐚](#𝐓𝐚𝐬𝐤-𝟕-𝐔𝐬𝐞𝐝-𝐭𝐡𝐞-𝐓𝐑𝐈𝐌()-𝐅𝐮𝐧𝐜𝐭𝐢𝐨𝐧-𝐭𝐨-𝐔𝐩𝐝𝐚𝐭𝐞-𝐃𝐚𝐭𝐚)
+12. [𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧](#𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧)
 
 ## 𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧
 This project focuses on cleaning data for TechSolutions Ltd., which specializes in developing software products and services. Due to internal mismanagement and inconsistent data collection methods, the company has a lot of dirty data. 
@@ -23,7 +28,7 @@ The data provided contained the following information:
 * Number of rows: 1800 rows  
 * Number of columns: 10 columns
 
-### Description of each column:
+### Description of Each Column
 1. **project_id**: ID of the project
 2. **project_name**: Name of the project
 3. **start_date**: Date when the project started
@@ -85,7 +90,7 @@ ALTER TABLE [Learn SQL].dbo.tech_solutions_data1
 ALTER COLUMN end_date DATE;
 ```
 
-## 𝐓𝐚𝐬𝐤 3: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 Text 𝐃𝐚𝐭𝐚 to fix spelling errors and ensure consistency
+## 𝐓𝐚𝐬𝐤 𝟑: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐓𝐞𝐱𝐭 𝐃𝐚𝐭𝐚 𝐭𝐨 𝐟𝐢𝐱 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠 𝐞𝐫𝐫𝐨𝐫𝐬 𝐚𝐧𝐝 𝐞𝐧𝐬𝐮𝐫𝐞 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐜𝐲
 The steps below were completed:
 
 * **Cleaned any leading/trailing whitespaces in project_manager and status.**
@@ -125,6 +130,16 @@ UPDATE [Learn SQL].dbo.tech_solutions_data1
 SET project_name = 'Cloud Migration'
 WHERE project_name = 'CLOUD MIGRATION';
 ```
+
+* **Standardized project status**
+Here, I ensured all statuses were either ‘Active’, ‘Completed’, or ‘Pending’ by replacing other status with 'Pending'. The query is written below.
+```
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET status = 'Pending'
+WHERE status = 'Cancelled';
+```
+After running this query, 404 were updated.
+
 > [!Tip]
 > When done with the modifications, select all the data from the table to confirm that everything has been updated accordingly.
 
@@ -158,7 +173,7 @@ WHERE team_members IS NULL;
 ```
 
 2. For budget and expenditure columns, I filled in missing values with the average of those columns.  
-   * Calculated the average of the budget column
+* Calculated the average of the budget column
 ```
 SELECT 
 	AVG(budget)
@@ -166,7 +181,7 @@ FROM [Learn SQL].dbo.tech_solutions_data1
 WHERE budget IS NOT NULL;
 ```
 
-   * Updated the table with the average of the budget column where budget is NULL
+* Updated the table with the average of the budget column where budget is NULL
 ```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
 SET budget = (
@@ -177,7 +192,7 @@ SET budget = (
 WHERE budget IS NULL;
 ```
 
-   * Calculated the average of the expenditure column
+* Calculated the average of the expenditure column
 ```
 SELECT 
 	AVG(expenditure)
@@ -185,7 +200,7 @@ FROM [Learn SQL].dbo.tech_solutions_data1
 WHERE expenditure IS NOT NULL;
 ```
 
-   * Updated the table with the average of the expenditure column where expenditure is NULL
+* Updated the table with the average of the expenditure column where expenditure is NULL
 ```
 UPDATE [Learn SQL].dbo.tech_solutions_data1
 SET expenditure = (
@@ -196,34 +211,66 @@ SET expenditure = (
 WHERE expenditure IS NULL;
 ```
 
-
-
-3. **Updated the table by replacing the table on the left side of the JOIN with the values from the table on the right**
+## 𝐓𝐚𝐬𝐤 𝟓: 𝐅𝐢𝐥𝐥𝐞𝐝 𝐨𝐫 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐄𝐦𝐩𝐭𝐲 𝐭𝐞𝐚𝐦_𝐦𝐞𝐦𝐛𝐞𝐫𝐬 𝐂𝐨𝐥𝐮𝐦𝐧
+Here, for empty cells in the team_members column, I checked if I could infer the data based on other columns. So, I:  
+* Filled team_members with project_manager where team_members had NULL.
+This filled 331 empty cells in the team_members columns. The query is given below:
 ```
-UPDATE l1
-SET l1.industry = l2.industry
-FROM [Learn SQL].dbo.layoffs_working2 l1
-JOIN [Learn SQL].dbo.layoffs_working2 l2
-    ON l1.company = l2.company
-WHERE l1.industry IS NULL
-  AND l2.industry IS NOT NULL;
+UPDATE t1 
+SET t1.team_members = t2.project_manager
+FROM [Learn SQL].dbo.tech_solutions_data1 t1
+JOIN [Learn SQL].dbo.tech_solutions_data1 t2
+    ON t1.project_id = t2.project_id
+WHERE t1.team_members IS NULL  -- This updated 331 rows;
+```
+
+* Filled project_manager with the first name in the team_members where project_manager had NULL.  
+This filled 83 empty cells in the team_members columns. The query was written as follows:
+```
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_manager = 
+    CASE 
+        WHEN CHARINDEX(',', team_members) > 0 THEN SUBSTRING(team_members, 1, CHARINDEX(',', team_members) - 1)
+        ELSE team_members
+    END
+WHERE project_manager IS NULL;
 ```
 > [!Note]
-> The queries in steps 1, 2 and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
+> In this query,
+> * `CHARINDEX(',', team_members)`: Finds the position of the first comma in the team_members column.
+> * `SUBSTRING(team_members, 1, CHARINDEX(',', team_members) - 1)`: Extracts the part of the team_members string before the first comma.
+> * `ELSE team_members`: Handles rows without a comma in team_members (assigns the entire value if no comma is present).
+> * `WHERE project_manager IS NULL`: Ensures only rows with NULL in the project_manager column are updated.
 
-## 𝐓𝐚𝐬𝐤 𝟔: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲 𝐑𝐨𝐰𝐬 𝐚𝐧𝐝 𝐂𝐨𝐥𝐮𝐦𝐧𝐬 
-This task served to remove rows and columns that did not add any value to the entire dataset or that would not be needed in the ETL (Extract, Transform, Load) process.
-Here I removed the dup_row_num column that was created while identifying duplicates in the data. The following query was used:
+## Removed Invalid Values
+Here, I removed any rows with invalid or negative values in the budget column using the query below:
 ```
-ALTER TABLE [Learn SQL].dbo.layoffs_working2
-DROP COLUMN dup_row_num;
+DELETE FROM [Learn SQL].dbo.tech_solutions_data1
+WHERE budget LIKE '-%';
 ```
-The query below allowed to identify NULL in the columns named total_laid_off and percentage_laid_off. The output was 361 rows. Knowing that the raw data was 2361 rows, then 2356 after removing duplicates. Therefore, these rows cannot just be deleted, but will be anlayzed in the second part of the project while identifying trends and patterns in the entire data during the exploratory data analysis.
+The above query removed 54 rows from the table.
+
+## 𝐓𝐚𝐬𝐤 𝟔: 𝐔𝐩𝐝𝐚𝐭𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐓𝐲𝐩𝐞 𝐟𝐨𝐫 𝐑𝐞𝐯𝐞𝐧𝐮𝐞 𝐃𝐚𝐭𝐚
+* Converted all monetary values in the table to the same currency. Here, the budget and expenditure columns were affected.
 ```
-SELECT * 
-FROM [Learn SQL].dbo.layoffs_working2
-WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL;
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET budget = CAST(budget AS MONEY);
 ```
+
+```
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET expenditure = CAST(expenditure AS MONEY);
+```
+
+## 𝐓𝐚𝐬𝐤 𝟕: 𝐔𝐬𝐞𝐝 𝐭𝐡𝐞 𝐓𝐑𝐈𝐌() 𝐅𝐮𝐧𝐜𝐭𝐢𝐨𝐧 𝐭𝐨 𝐔𝐩𝐝𝐚𝐭𝐞 𝐃𝐚𝐭𝐚
+Here, I use TRIM() to remove trailing space from the project_name column. The query was written as follows:
+```
+UPDATE [Learn SQL].dbo.tech_solutions_data1
+SET project_name = TRIM(TRAILING '' FROM project_name);
+```
+
+## 𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧
+In this project, I wrote queries to clean and prepare data for analysis. several tasks were completed such as checking and removing duplicates, looking at NULL and blank values, populating empty cells based on other columns, standardizing the data by checking for incorrect spellings and fixing them to make all data consistent, and converting data to the the correct data type where possible.
 
 
 <br/>
