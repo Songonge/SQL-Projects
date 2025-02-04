@@ -42,7 +42,7 @@ FROM [Learn SQL].dbo.layoffs;
 ```
 
 ## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
-Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
+Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain the best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
 
 * **Checked for duplicates**
 ```
@@ -56,10 +56,10 @@ WHERE dup_row_num > 1;
 > [!Note]
 > I first wrote the query without the `ORDER BY` clause and this generated an error after executing it. Therefore, I realized that it is necessary when using the `ROW_NUMBER()` function in SQL Server. 
 
-In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing query with the `WHERE` clause for each of those duplicate to verify if those were actually duplicates. Doing this save you from deleting rows that are not duplicates.
+In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain the exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing the query with the `WHERE` clause for each of those duplicates to verify if those were actually duplicates. Doing this saves you from deleting rows that are not duplicates.
 
 * **Removed duplicates**
-To remove duplicates, I rewrote the above query. Then, inserted the output into a new table named layoffs_working2 containing non-duplicate rows. The query looked like:
+To remove duplicates, I rewrote the above query. Then, inserted the output into a new table named layoffs_working2 containing non-duplicate rows. The query looked like this:
 ```
 SELECT * INTO [Learn SQL].dbo.layoffs_working2
 FROM (
@@ -184,7 +184,7 @@ WHERE l1.industry IS NULL
   AND l2.industry IS NOT NULL;
 ```
 > [!Note]
-> The queries in steps 1, 2 and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
+> The queries in steps 1, 2, and 3 could be written using CTEs. This was used in the video by [Alex the Analyst](https://www.youtube.com/watch?v=4UltKCnnnTA).
 
 ## 𝐓𝐚𝐬𝐤 𝟔: 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐔𝐧𝐧𝐞𝐜𝐞𝐬𝐬𝐚𝐫𝐲 𝐑𝐨𝐰𝐬 𝐚𝐧𝐝 𝐂𝐨𝐥𝐮𝐦𝐧𝐬 
 This task served to remove rows and columns that did not add any value to the entire dataset or that would not be needed in the ETL (Extract, Transform, Load) process.
