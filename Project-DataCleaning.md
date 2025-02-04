@@ -44,7 +44,7 @@ FROM [Learn SQL].dbo.layoffs;
 ## 𝐓𝐚𝐬𝐤 𝟑: 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐚𝐧𝐝 𝐑𝐞𝐦𝐨𝐯𝐞𝐝 𝐃𝐮𝐩𝐥𝐢𝐜𝐚𝐭𝐞𝐬
 Here I used `ROW_NUMBER()`, `OVER()`, `PARTITION BY`, and `ORDER BY` to identify duplicates in the data. To obtain the best results, I partitioned by all the columns in the table. The output was inserted into a new table containing non-duplicate data. 
 
-* **Checked for duplicates**
+* **Checked for duplicates**  
 ```
 SELECT *
 FROM (
@@ -58,7 +58,7 @@ WHERE dup_row_num > 1;
 
 In the above query, I wrote the partition by over all the rows of the table to ensure that duplicates contain the exact same rows. The query returned 5 rows (duplicates) from the data. Next, it was important to check further in writing the query with the `WHERE` clause for each of those duplicates to verify if those were actually duplicates. Doing this saves you from deleting rows that are not duplicates.
 
-* **Removed duplicates**
+* **Removed duplicates**  
 To remove duplicates, I rewrote the above query. Then, inserted the output into a new table named layoffs_working2 containing non-duplicate rows. The query looked like this:
 ```
 SELECT * INTO [Learn SQL].dbo.layoffs_working2
@@ -68,7 +68,7 @@ FROM (
     FROM [Learn SQL].dbo.layoffs_working ) AS rem_duplicate_data
 WHERE dup_row_num = 1;
 ```
-* **Selected all the data from the new table**
+* **Selected all the data from the new table**  
 ```
 SELECT *
 FROM [Learn SQL].dbo.layoffs_working2;
@@ -78,7 +78,7 @@ This last query selected all data from the new table named layoffs_working2 and 
 ## 𝐓𝐚𝐬𝐤 𝟒: 𝐒𝐭𝐚𝐧𝐝𝐚𝐫𝐝𝐢𝐳𝐞𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚 𝐛𝐲 𝐜𝐡𝐞𝐜𝐤𝐢𝐧𝐠 𝐟𝐨𝐫 𝐢𝐧𝐜𝐨𝐫𝐫𝐞𝐜𝐭 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠𝐬 𝐚𝐧𝐝 𝐟𝐢𝐱𝐢𝐧𝐠 𝐭𝐡𝐞𝐦 𝐭𝐨 𝐦𝐚𝐤𝐞 𝐚𝐥𝐥 𝐝𝐚𝐭𝐚 𝐜𝐨𝐧𝐬𝐢𝐬𝐭𝐞𝐧𝐭.
 The steps below were completed:
 
-* **Trimmed the data to remove trailing space**
+* **Trimmed the data to remove trailing space**  
 ```
 SELECT 
 	company, 
@@ -86,19 +86,19 @@ SELECT
 FROM [Learn SQL].dbo.layoffs_working2;
 ```
 
-* **Updated the table with the trimmed columns**
+* **Updated the table with the trimmed columns**  
 ```
 UPDATE [Learn SQL].dbo.layoffs_working2
 SET company = TRIM(company);
 ```
 
-* **Selected all the data from the updated table**
+* **Selected all the data from the updated table**  
 ```
 SELECT *
 FROM [Learn SQL].dbo.layoffs_working2;
 ```
 
-* **Checked for misspelled words in the industry column**
+* **Checked for misspelled words in the industry column**  
 ```
 SELECT DISTINCT industry
 FROM [Learn SQL].dbo.layoffs_working2;
@@ -109,7 +109,7 @@ SET industry = 'Crypto'
 WHERE industry LIKE 'Crypto%';
 ```
 
-* **Checked for misspelled words in the location column**
+* **Checked for misspelled words in the location column**  
 ```
 UPDATE [Learn SQL].dbo.layoffs_working2
 SET location = 'Malmo'
@@ -126,7 +126,7 @@ SET location = 'Florianopolis'
 WHERE location LIKE 'Florianópolis';
 ```
 
-* **Checked for misspelled words in the country column**
+* **Checked for misspelled words in the country column**  
 ```
 SELECT DISTINCT country
 FROM [Learn SQL].dbo.layoffs_working2;
@@ -137,7 +137,7 @@ SET country = 'United States'
 WHERE country LIKE 'United States%';
 ```
 
-* **Converted the date column to the date type**
+* **Converted the date column to the date type**  
 ```
 UPDATE [Learn SQL].dbo.layoffs_working2
 SET [date] = CAST([date] AS date)
@@ -156,14 +156,14 @@ WHERE industry = 'NULL';
 This facilitated the conversion of those columns from string to int or float.  
 I realized that SQL Server does not allow the `JOIN` clause in an `UPDATE` statement like in MySQL. So, I had to use a proper `FROM` clause to achieve the same functionality. The following steps were performed:
 
-1. **Updated all the blanks with NULL**
+1. **Updated all the blanks with NULL**  
 ```
 UPDATE [Learn SQL].dbo.layoffs_working2
 SET industry = NULL
 WHERE industry = '';
 ```
 
-2. **Performed a self JOIN on the table to identify rows with NULL and empty rows**
+2. **Performed a self JOIN on the table to identify rows with NULL and empty rows**  
 ```
 SELECT l1.industry, l2.industry
 FROM [Learn SQL].dbo.layoffs_working2 l1
