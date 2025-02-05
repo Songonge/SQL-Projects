@@ -492,7 +492,7 @@ In this task, we created new columns in the table. These columns will be useful 
 ### Adding and Populating the Column start_time
 
 1. **Adding a column named start_time**
-This is done by using the command `ALTER TABLE`. 
+This is done by using the `ALTER TABLE` statement which is used to modify the structure of an existing table. 
 ```
 ALTER TABLE spotify_streams
 ADD COLUMN start_time TIME
