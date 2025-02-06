@@ -277,7 +277,6 @@ SELECT
 		FROM spotify_streams
 	) dup_rows
 WHERE row_num > 1
-)
 ;
 ```
 Then, use the following query to copy all rows without duplicate values where `row_num = 1` to a new table named **spotify_streams_1**. Therefore, the other tasks will be completed based on the data in this new table.
