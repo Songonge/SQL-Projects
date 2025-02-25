@@ -34,7 +34,7 @@
       * [Adding and Populating the Column minutes_played](#Adding-and-Populating-the-Column-minutes_played)
       * [Adding and Populating the Column date_played](#Adding-and-Populating-the-Column-date_played)
 11. [Answering the Business Questions](#Answering-the-Business-Questions)
-12. [𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧](#𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧)
+12. [Conclusion](#conclusion)
 
 ## Introduction
 This project focuses on cleaning Spotify Streams data to prepare it for analysis. All the tasks are completed in PostgreSQL, one of the most powerful databases.
