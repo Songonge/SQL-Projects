@@ -4,6 +4,9 @@
 1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Problem Statement](#Problem-Statement)
 3. [Business Questions](#business-questions)
+   * [Impact of Shuffle Mode on Listening Behavior](#Impact-of-Shuffle-Mode-on-Listening-Behavior)
+   * [Track Completion Rates](#Track-Completion-Rates)
+   * [Platform Usage Trends](#Platform-Usage-Trends)
 4. [Tech Stack](#tech-stack)
 5. [Data Information](#Data-Information)
    * [Description of Each Column](#Description-of-each-column)
@@ -15,21 +18,23 @@
    * [Retrieving Data from the Table](#Retrieving-Data-from-the-Table)
 9. [Creating a new Table](#Creating-a-new-Table)
    * [Retrieving Data from the New Table](#Retrieving-Data-from-the-new-Table)
-10. [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
-11. [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
-    * [Checking for Duplicates](#Checking-for-Duplicates)
-    * [Returning Duplicates based one Column](#Returning-Duplicates-based-on-One-Column)
-    * [Returning all Rows with Duplicates](#Returning-all-Rows-with-Duplicates)
-    * [Assigning A Unique Identifier to Each Row](#Assigning-A-Unique-Identifier-to-Each-Row)
-12. [Checking and Replacing NULL Values](#Checking-and-Replacing-NULL-Values)
-    * [Checking for NULL Values](#Checking-for-NULL-Values)
-    * [Replacing NULL Values](#Replacing-NULL-Values)
-13. [Creating New Columns](#Creating-New-Columns)
-    * [Adding and Populating the Column start_time](#Adding-and-Populating-the-Column-start_time)
-    * [Adding and Populating the Column end_time](#Adding-and-Populating-the-Column-end_time)
-    * [Adding and Populating the Column minutes_played](#Adding-and-Populating-the-Column-minutes_played)
-    * [Adding and Populating the Column date_played](#Adding-and-Populating-the-Column-date_played)
-15. [𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧](#𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧)
+10. [Data Cleaning](#data-cleaning) 
+    * [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
+    * [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
+      * [Checking for Duplicates](#Checking-for-Duplicates)
+      * [Returning Duplicates based one Column](#Returning-Duplicates-based-on-One-Column)
+      * [Returning all Rows with Duplicates](#Returning-all-Rows-with-Duplicates)
+      * [Assigning A Unique Identifier to Each Row](#Assigning-A-Unique-Identifier-to-Each-Row)
+    * [Checking and Replacing NULL Values](#Checking-and-Replacing-NULL-Values)
+      * [Checking for NULL Values](#Checking-for-NULL-Values)
+      * [Replacing NULL Values](#Replacing-NULL-Values)
+    * [Creating New Columns](#Creating-New-Columns)
+      * [Adding and Populating the Column start_time](#Adding-and-Populating-the-Column-start_time)
+      * [Adding and Populating the Column end_time](#Adding-and-Populating-the-Column-end_time)
+      * [Adding and Populating the Column minutes_played](#Adding-and-Populating-the-Column-minutes_played)
+      * [Adding and Populating the Column date_played](#Adding-and-Populating-the-Column-date_played)
+11. [Answering the Business Questions](#Answering-the-Business-Questions)
+12. [𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧](#𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧)
 
 ## Introduction
 This project focuses on cleaning Spotify Streams data to prepare it for analysis. All the tasks are completed in PostgreSQL, one of the most powerful databases.
@@ -38,10 +43,24 @@ This project focuses on cleaning Spotify Streams data to prepare it for analysis
 Spotify wants to enhance user engagement by optimizing shuffle mode and improving track completion rates. To achieve this, they need to understand how shuffle mode affects listening behavior, identify patterns in track interruptions, and explore platform-specific performance trends.
 
 ## Business Questions  
-The entire project focuses on analyzing the impact of shuffle mode on listening behavior. Therefore, it aims to answer the following questions:
+
+### Impact of Shuffle Mode on Listening Behavior
+Here, the aim is to answer the following questions:  
 1. Do users play a more diverse range of tracks when shuffle mode is enabled?  
 2. What percentage of tracks played in shuffle mode is interrupted (reason_end)?
 3. Which platforms have the highest shuffle mode usage?
+
+### Track Completion Rates
+Here, the aim is to answer the following questions:  
+1. What percentage of tracks are stopped early versus completed?  
+2. Are there specific tracks or artists with consistently high interruption rates?  
+3. Does the platform or shuffle mode influence track completion rates?
+
+### Platform Usage Trends
+Here, the aim is to answer the following questions:  
+1. Which platforms have the longest average playback duration?
+2. Are there specific hours or days where platform usage peaks?
+
 
 ## Tech Stack
 This project will use two tech stacks: **PostgreSQL** and **Power BI**. This report provides all information related to data cleaning in PostgreSQL, while another report will focus on analyzing the data in **POWER BI** and building an interactive dashboard.  
@@ -138,7 +157,9 @@ FROM spotify_streams
 ```
 This returned 149860 rows.
 
-## Renaming Columns in the Table
+## Data Cleaning
+
+### Renaming Columns in the Table
 The column named **spotify_track_url** was renamed to **track_url** using the query below.
 ```
 ALTER TABLE spotify_streams
@@ -146,9 +167,9 @@ RENAME COLUMN spotify_track_url TO track_url
 ;
 ```
 
-## Checking and Removing Duplicates
+### Checking and Removing Duplicates
 
-### Checking for Duplicates
+#### Checking for Duplicates
 To check for duplicate values in the table, I used the `ROW_NUMBER()` window function and partitioned by all the columns. The reason behind partitioning by all columns was to ensure that rows counted as duplicates will have the same entries, otherwise, some rows may be skipped. The query reads as follows.
 ```
 SELECT 
@@ -158,7 +179,7 @@ FROM spotify_streams
 ;
 ```
 
-### Returning Duplicates based on one Column
+#### Returning Duplicates based on one Column
 After checking for duplicates using the above query, it is time to check and return the **track_url** column having `row_num > 1` which will be counted as duplicate values.
 ```
 SELECT 
@@ -183,7 +204,7 @@ HAVING COUNT(*) > 1
 ;
 ``` --->
 
-### Returning all Rows with Duplicates
+#### Returning all Rows with Duplicates
 Now, we return all rows that have the same entries in all columns more than once which duplicate values that must be deleted.
 ```
 SELECT 
@@ -218,7 +239,7 @@ FROM spotify_streams
 ;
 ``` -->
 
-### Assigning A Unique Identifier to Each Row
+#### Assigning A Unique Identifier to Each Row
 To facilitate the deleting process and ensure that we delete only duplicate rows from our table, we assign a unique number to each row in the table using `ctid`. Then, we can return rows with duplicate values before deleting them. The query reads as follows.
 ```
 SELECT 
@@ -247,7 +268,7 @@ WHERE row_num > 1
 This returned 1782 rows confirming what we saw earlier.
 
 
-### Deleting Duplicate Values 
+#### Deleting Duplicate Values 
 Now that we have identified rows with duplicate values and inspected as many of them to confirm that they are really duplicate values, we can delete these rows from the data without any doubt. The query is as follows.
 ```
 DELETE FROM spotify_streams
@@ -299,13 +320,13 @@ DROP COLUMN row_num
 ;
 ```
 
-## Checking and Replacing NULL Values
+### Checking and Replacing NULL Values
 In this task, we explore and query the data further to check for NULL values in the data and populate them wherever possible. 
 
 > [!Note]
 > Before deleting or replacing NULL Values, you should understand the behavior of each column with respect to other columns.
 
-### Checking for NULL Values
+#### Checking for NULL Values
 The queries below were written to check for NULL values.
 ```
 SELECT
@@ -457,7 +478,7 @@ This returned 10 rows.
 
 Since there is not enough data (far less than 100), and we do not have much information on the NULL values, we cannot do anything here other than replace these NULL values in the *reason_start* and *reason_end* columns with 'unknown'. Check the query below.
 
-### Replacing NULL Values
+#### Replacing NULL Values
 With the information we now know regarding entries in the *reason_start* and *reason_end* columns, we can go ahead and fill them with _unknown_. The query is written as follows. 
 ```
 UPDATE spotify_streams
@@ -485,10 +506,10 @@ FROM spotify_streams
 ```
 This returned **148078** rows in total.
 
-## Creating New Columns
+### Creating New Columns
 In this task, we created new columns in the table. These columns will be useful during the analysis of the data and also aid in uncovering insights and providing recommendations.
 
-### Adding and Populating the Column start_time
+#### Adding and Populating the Column start_time
 
 1. **Adding a column named start_time**
 This is done by using the `ALTER TABLE` statement which is used to modify the structure of an existing table. 
@@ -506,7 +527,7 @@ SET start_time = ts::TIME
 ;
 ```
 
-### Adding and Populating the Column end_time
+#### Adding and Populating the Column end_time
 
 1. **Adding a column named end_time**  
 ```
@@ -523,7 +544,7 @@ SET end_time = (ts + (ms_played/1000) * INTERVAL '1 second')::TIME
 ;
 ```
 
-### Adding and Populating the Column minutes_played
+#### Adding and Populating the Column minutes_played
 
 1. **Adding a column named minutes_played**  
 ```
@@ -540,7 +561,7 @@ SET minutes_played = ROUND(ms_played/60000.0, 2)
 ;
 ```
 
-### Adding and Populating the Column date_played
+#### Adding and Populating the Column date_played
 
 1. **Adding a column named date_played**
 ```
@@ -556,6 +577,315 @@ UPDATE spotify_streams
 SET date_played = ts::DATE
 ;
 ```
+
+## Answering the Business Questions
+<!--- 
+----------------- Business Questions ------------
+
+----------- Impact of shuffle mode on listening behavior:
+
+----- Do users play a more diverse range of tracks when shuffle mode is enabled?
+-- SELECT 
+-- 	shuffle AS mode,
+-- 	COUNT(DISTINCT track_url) AS unique_tracks
+-- FROM spotify
+-- GROUP BY shuffle
+-- ; -- This returns: false: 10432, true: 11095
+
+SELECT 
+	CASE 
+		WHEN shuffle = 'true' 
+		THEN 'is_enabled' 
+		ELSE 'not_enable' 
+	END AS shuffle_mode,
+	COUNT(DISTINCT track_url) AS unique_tracks,
+	COUNT(*) AS all_tracks,
+	ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT track_url), 2) AS avg_plays
+FROM spotify
+GROUP BY shuffle
+;
+
+-- What percentage of tracks played in shuffle mode are interrupted (reason_end)?
+SELECT DISTINCT reason_end
+FROM spotify
+;
+
+SELECT 
+	DISTINCT reason_end,
+	CASE 
+		WHEN reason_end = 'trackdone' 
+		THEN 'completed'
+		ELSE 'interrupted'
+	END AS reason_end_mode,
+	COUNT(DISTINCT track_url) AS unique_tracks,
+	COUNT(*) AS all_tracks,
+	ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT track_url), 2) AS avg_plays
+FROM spotify
+WHERE shuffle = 'true'
+GROUP BY reason_end
+;
+
+SELECT *
+FROM spotify
+WHERE reason_end = 'trackdone' AND shuffle = 'true'
+; -- This returned 51143 rows
+
+-- Solution 
+SELECT 
+	CASE 
+		WHEN ms_played / 60000 < 1 THEN 'short (<1 min)'
+		WHEN ms_played / 60000 BETWEEN 1 AND 3 THEN 'medium(1-3)'
+		ELSE 'Long (>3 min)'
+	END AS length_of_track,
+	COUNT(CASE 
+		WHEN reason_end <> 'trackdone' 
+		THEN 1
+	END) AS interrupted,
+	COUNT(*) AS total,
+	ROUND(COUNT(CASE 
+		WHEN reason_end <> 'trackdone' 
+		THEN 1
+	END) * 100.0 / NULLIF(COUNT(*), 0), 2) AS interrupted_rate
+FROM spotify
+-- WHERE shuffle = 'true'
+GROUP BY 
+CASE 
+	WHEN ms_played / 60000 < 1 THEN 'short (<1 min)'
+	WHEN ms_played / 60000 BETWEEN 1 AND 3 THEN 'medium(1-3)'
+	ELSE 'Long (>3 min)'
+END
+;
+
+
+----- Which platforms have the highest shuffle mode usage? Android
+SELECT DISTINCT platform
+FROM spotify
+;
+
+SELECT 
+	DISTINCT platform,
+	COUNT(shuffle)
+FROM spotify
+WHERE shuffle = 'true'
+GROUP BY platform
+;
+
+-- Solution 1
+SELECT 
+	platform,
+	COUNT(
+		CASE
+			WHEN shuffle = 'true' 
+			THEN 1 
+		END
+	) AS shuffle_count,
+	COUNT(*) AS total,
+	ROUND(COUNT(
+		CASE
+			WHEN shuffle = 'true' 
+			THEN 1 
+		END
+	) * 100.0 / NULLIF(COUNT(*), 0), 2) AS shuffle_percentage
+FROM spotify
+GROUP BY platform
+ORDER BY shuffle_percentage DESC
+;
+
+-- Solution 2
+WITH cte AS (
+	SELECT 
+		platform,
+		COUNT(
+			CASE
+				WHEN shuffle = 'true' 
+				THEN 1 
+			END
+		) AS shuffle_count,
+		COUNT(*) AS total
+	FROM spotify
+	GROUP BY platform
+)
+SELECT 
+	platform,
+	shuffle_count,
+	total,
+	ROUND(shuffle_count * 100.0 / total, 2) AS shuffle_percentage
+FROM cte
+ORDER BY shuffle_percentage DESC
+;
+
+
+----------- Track completion rates:
+
+----- What percentage of tracks are stopped early versus completed?
+WITH cte AS (
+	SELECT 
+		COUNT(
+			CASE 
+				WHEN reason_end <> 'trackdone' 
+				THEN 1
+			END
+		) AS stopped_early,
+		COUNT(*) AS total,
+		COUNT(
+			CASE 
+				WHEN reason_end = 'trackdone'
+				THEN 1
+			END
+		) AS completed
+FROM spotify
+)
+SELECT 
+	stopped_early,
+	completed,
+	ROUND(stopped_early * 100.0 / NULLIF(total, 0), 2) AS percent_stopped_early,
+	ROUND(completed * 100.0 / NULLIF(total, 0), 2) AS percent_completed
+FROM cte
+;
+
+
+-- Are there specific tracks or artists with consistently high interruption rates? Yes
+-- For Artists
+WITH cte AS (
+	SELECT 
+		artist_name,
+		SUM(ms_played) AS mins,
+		COUNT(*) AS total,
+		COUNT(
+			CASE 
+				WHEN reason_end <> 'trackdone' 
+				THEN 1
+			END
+		) AS interruption_count,
+		ROUND(COUNT(
+			CASE 
+				WHEN reason_end <> 'trackdone' 
+				THEN 1
+			END
+		) * 100.0 / NULLIF(COUNT(*), 0), 2) AS percent_rate
+	FROM spotify
+	GROUP BY artist_name
+)
+SELECT *
+FROM cte
+WHERE total = interruption_count 
+	AND total > 10
+ORDER BY interruption_count DESC
+;
+	
+-- For tracks
+WITH cte AS (
+	SELECT 
+		track_name,
+		SUM(ms_played) AS mins,
+		COUNT(*) AS total,
+		COUNT(
+			CASE 
+				WHEN reason_end <> 'trackdone' 
+				THEN 1
+			END
+		) AS interruption_count,
+		ROUND(COUNT(
+			CASE 
+				WHEN reason_end <> 'trackdone' 
+				THEN 1
+			END
+		) * 100.0 / NULLIF(COUNT(*), 0), 2) AS percent_rate
+	FROM spotify
+	GROUP BY track_name
+)
+SELECT *
+FROM cte
+WHERE total = interruption_count 
+	AND total > 10
+ORDER BY interruption_count DESC
+;
+
+
+-- Does the platform or shuffle mode influence track completion rates? Yes
+SELECT 
+	platform,
+	shuffle,
+	COUNT(DISTINCT track_url) AS unique_tracks,
+	ROUND(COUNT(
+		CASE
+			WHEN reason_end = 'trackdone' 
+			THEN 1
+		END
+	) * 100.0 / NULLIF(COUNT(*), 0), 2) AS percent_rate
+FROM spotify
+GROUP BY platform, shuffle
+ORDER BY percent_rate DESC
+;
+
+
+--------------- Platform usage trends:
+
+----- Which platforms have the longest average playback duration?
+SELECT 
+	platform,
+	-- SUM(ms_played) AS mins,
+	COUNT(*) AS total,
+	COUNT(
+		CASE
+			WHEN reason_end = 'backbtn' 
+			THEN 1
+		END
+	) AS payback_count,
+	ROUND(AVG(ms_played), 2) AS avg_playback
+FROM spotify
+GROUP BY platform
+ORDER BY avg_playback DESC
+;
+
+
+----- Are there specific hours or days where platform usage peaks?
+SELECT
+	platform,
+	EXTRACT(HOUR FROM ts)
+FROM spotify
+GROUP BY platform, ts
+;
+
+-- Peak Usage by Hour
+SELECT 
+    DATE_TRUNC('hour', ts) AS hour, 
+    platform, 
+    COUNT(*) AS usage_count
+FROM spotify
+GROUP BY hour, platform
+ORDER BY usage_count DESC
+LIMIT 10
+;
+
+-- Peak Usage by Day
+SELECT 
+    DATE(ts) AS day, 
+    platform, 
+    COUNT(*) AS usage_count
+FROM spotify
+GROUP BY day, platform
+ORDER BY usage_count DESC
+LIMIT 10
+; 
+
+-- Find the Peak Hour for Each Platform
+WITH platform_peak AS (
+    SELECT 
+        platform, 
+        DATE_TRUNC('hour', ts) AS hour, 
+        COUNT(*) AS usage_count,
+        RANK() OVER (PARTITION BY platform ORDER BY COUNT(*) DESC) AS rnk
+    FROM spotify
+    GROUP BY platform, hour
+)
+SELECT platform, hour, usage_count
+FROM platform_peak
+WHERE rnk = 1
+ORDER BY usage_count DESC
+;
+
+-->
 
 ## Conclusion
 This project involved cleaning the Spotify Streams dataset to prepare it for analysis on another platform. The following tasks were completed:  
