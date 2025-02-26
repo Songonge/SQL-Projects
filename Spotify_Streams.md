@@ -18,7 +18,7 @@
    * [Retrieving Data from the Table](#Retrieving-Data-from-the-Table)
 9. [Creating a new Table](#Creating-a-new-Table)
    * [Retrieving Data from the New Table](#Retrieving-Data-from-the-new-Table)
-10. [Data Cleaning](#data-cleaning) 
+10. [Part I: Data Cleaning](#part-I-data-cleaning) 
     * [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
     * [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
       * [Checking for Duplicates](#Checking-for-Duplicates)
@@ -33,7 +33,7 @@
       * [Adding and Populating the Column end_time](#Adding-and-Populating-the-Column-end_time)
       * [Adding and Populating the Column minutes_played](#Adding-and-Populating-the-Column-minutes_played)
       * [Adding and Populating the Column date_played](#Adding-and-Populating-the-Column-date_played)
-11. [Answering the Business Questions](#Answering-the-Business-Questions)
+11. [Part II: Answering the Business Questions](#part-II-Answering-the-Business-Questions)
 12. [Conclusion](#conclusion)
 
 ## Introduction
@@ -157,7 +157,7 @@ FROM spotify_streams
 ```
 This returned 149860 rows.
 
-## Data Cleaning
+## Part 1: Data Cleaning
 
 ### Renaming Columns in the Table
 The column named **spotify_track_url** was renamed to **track_url** using the query below.
@@ -358,7 +358,7 @@ WHERE track_url IS NULL OR ts IS NULL OR platform IS NULL
 	OR shuffle IS NULL OR skipped IS NULL
 ;
 ```
-This also returned 212 rows. After writing the above two queries and exploring the data further, we realized that the *reason_start* and *reason_end* were the ones with NULL Values.
+This also returned **212** rows. After writing the above two queries and exploring the data further, we realized that the *reason_start* and *reason_end* were the ones with NULL Values.
 
 
 * **Checking details for a specific track_url**  
@@ -400,7 +400,7 @@ WHERE
 ORDER BY track_url
 ;
 ```
-This also returned 212 rows.
+This also returned **212** rows.
 
 
 * **Checking for NULL values in the reason_start column**
@@ -474,7 +474,7 @@ WHERE
 	track_url = '5Ux410GeRXrojeP0vUPx6v'
 ;
 ```
-This returned 10 rows.  
+This returned **10** rows.  
 
 Since there is not enough data (far less than 100), and we do not have much information on the NULL values, we cannot do anything here other than replace these NULL values in the *reason_start* and *reason_end* columns with 'unknown'. Check the query below.
 
@@ -578,20 +578,28 @@ SET date_played = ts::DATE
 ;
 ```
 
-## Answering the Business Questions
-<!--- 
------------------ Business Questions ------------
+## Part II: Answering the Business Questions
+In this second part, We answer the business questions highlighted earlier. The answers provided here will be useful in the recommendations.
 
------------ Impact of shuffle mode on listening behavior:
+### Impact of Shuffle Mode on Listening Behavior
+The first question to address here is:  
 
------ Do users play a more diverse range of tracks when shuffle mode is enabled?
--- SELECT 
--- 	shuffle AS mode,
--- 	COUNT(DISTINCT track_url) AS unique_tracks
--- FROM spotify
--- GROUP BY shuffle
--- ; -- This returns: false: 10432, true: 11095
+### Do users play a more diverse range of tracks when shuffle mode is enabled?  
+First, we write a query to check the amount of tracks with and without shuffle. Note that the shuffle column only contains Boolean values True and False. The former refers to the shuffle mode being enabled and the second is when the shuffle is not enabled. The query is given below.
+```
+SELECT 
+	shuffle AS mode,
+	COUNT(DISTINCT track_url) AS unique_tracks
+FROM spotify_streams
+GROUP BY shuffle
+;
+``` 
+This returned:  
+* False: 10432
+* True: 11095  
 
+Now we write a query to find the average plays when shuffle mode is enabled. 
+```
 SELECT 
 	CASE 
 		WHEN shuffle = 'true' 
@@ -601,15 +609,37 @@ SELECT
 	COUNT(DISTINCT track_url) AS unique_tracks,
 	COUNT(*) AS all_tracks,
 	ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT track_url), 2) AS avg_plays
-FROM spotify
+FROM spotify_streams
 GROUP BY shuffle
 ;
+```
+This returned:  
+* For shuffle mode not enabled:
+  * all tracks: 36948
+  * unique tracks: 10432
+  * average plays: 3.54  
 
--- What percentage of tracks played in shuffle mode are interrupted (reason_end)?
-SELECT DISTINCT reason_end
-FROM spotify
+* For shuffle mode enabled:
+  * all tracks: 111130
+  * unique tracks: 11095
+  * average plays: 10.02  
+
+From these results, we can conclude that more tracks are listened when shuffle mode is enabled.
+
+The second question to address here is: 
+
+### What percentage of tracks played in shuffle mode are interrupted (reason_end)?
+Here we are interested in seeing the amount of tracks interrupted when shuffle mode was enabled. For that to be done, we first inspect the reason_end column which contains information about the track ended. First, we write a query to return all distinct entries from the reason_end column as follows.
+```
+SELECT
+	DISTINCT reason_end
+FROM spotify_streams
 ;
+```
+This returned **15** rows.
 
+Now, we write a query to check the amount of completed and interrupted tracks with shuffle mode enabled as follows.
+```
 SELECT 
 	DISTINCT reason_end,
 	CASE 
@@ -620,17 +650,27 @@ SELECT
 	COUNT(DISTINCT track_url) AS unique_tracks,
 	COUNT(*) AS all_tracks,
 	ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT track_url), 2) AS avg_plays
-FROM spotify
+FROM spotify_streams
 WHERE shuffle = 'true'
 GROUP BY reason_end
 ;
+```
+The results show that out of **148078** columns in total,  
+* For completed tracks with shuffle mode enabled:  
+  * all tracks: 51143
+  * unique tracks: 8368  
 
-SELECT *
+* For interrupted tracks with shuffle mode enabled:  
+  * all tracks: 51143
+  * unique tracks: 8368
+
+<!--- SELECT *
 FROM spotify
 WHERE reason_end = 'trackdone' AND shuffle = 'true'
-; -- This returned 51143 rows
+; -- This returned 51143 rows --->
 
--- Solution 
+To complete this question, we write a query to return the percentage of tracks interrupted when shuffle mode was enabled. The query reads as follows.
+```
 SELECT 
 	CASE 
 		WHEN ms_played / 60000 < 1 THEN 'short (<1 min)'
@@ -646,7 +686,7 @@ SELECT
 		WHEN reason_end <> 'trackdone' 
 		THEN 1
 	END) * 100.0 / NULLIF(COUNT(*), 0), 2) AS interrupted_rate
-FROM spotify
+FROM spotify_streams
 -- WHERE shuffle = 'true'
 GROUP BY 
 CASE 
@@ -655,22 +695,37 @@ CASE
 	ELSE 'Long (>3 min)'
 END
 ;
+```
+It can be seen that:  
+* For short tracks (<1 minute): out of 51316 tracks in total, 50631 were interrupted, giving a percentage of **98.67%**.
+* For medium tracks (between 1 and 3 minutes): out of 42429 tracks in total, 8398 were interrupted, giving a percentage of **19.79%**.
+* For long tracks (>3 minutes): out of 17385 tracks in total, 958 were interrupted, giving a percentage of **5.51%**.  
 
+The third and last question to address here is:
 
------ Which platforms have the highest shuffle mode usage? Android
-SELECT DISTINCT platform
-FROM spotify
+### Which platforms have the highest shuffle mode usage? 
+First, we write a query to return all distinct platforms as given by:
+```
+SELECT
+	DISTINCT platform
+FROM spotify_streams
 ;
+```
+This returned **6** rows with Android, Cast to device, IOS, Mac, Web player, and Windows.  
 
+The next thing to do is to write another query to count the number of shuffles for each platform when the shuffle mode is enabled. The query reads as follows.
+```
 SELECT 
 	DISTINCT platform,
 	COUNT(shuffle)
-FROM spotify
+FROM spotify_streams
 WHERE shuffle = 'true'
 GROUP BY platform
 ;
-
--- Solution 1
+```
+Lastly, we write a query to return the platform with the highest shuffle mode usage.
+```
+Solution 1
 SELECT 
 	platform,
 	COUNT(
@@ -686,12 +741,13 @@ SELECT
 			THEN 1 
 		END
 	) * 100.0 / NULLIF(COUNT(*), 0), 2) AS shuffle_percentage
-FROM spotify
+FROM spotify_streams
 GROUP BY platform
 ORDER BY shuffle_percentage DESC
 ;
-
--- Solution 2
+```
+Another way of writing the solution:
+```
 WITH cte AS (
 	SELECT 
 		platform,
@@ -702,7 +758,7 @@ WITH cte AS (
 			END
 		) AS shuffle_count,
 		COUNT(*) AS total
-	FROM spotify
+	FROM spotify_streams
 	GROUP BY platform
 )
 SELECT 
@@ -713,8 +769,18 @@ SELECT
 FROM cte
 ORDER BY shuffle_percentage DESC
 ;
+```
+From this query, the results read as follows:  
+* Android: out of 139002 tracks in total, 107369 were shuffled, giving a percentage of **77.24%**.
+* IOS: out of 3048 tracks in total, 2110 were shuffled, giving a percentage of **69.23%**.
+* Windows: out of 1690 tracks in total, 1007 were shuffled, giving a percentage of **59.59%**.
+* Mac: out of 1176 tracks in total, 639 were shuffled, giving a percentage of **54.34%**.
+* Cast to device: out of 2981 tracks in total, 5 were shuffled, giving a percentage of **0.17%**.
+* Web player: out of 181 tracks in total, 0 was shuffled, giving a percentage of **0.00%**. 
 
+Clearly, Android was the platform with the highest shuffle mode usage.
 
+<!---
 ----------- Track completion rates:
 
 ----- What percentage of tracks are stopped early versus completed?
