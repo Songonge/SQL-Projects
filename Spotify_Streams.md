@@ -1,6 +1,6 @@
 # Project: Data Cleaning for Spotify Streams 
 
-## Table of Content
+## Table of Contents
 1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Problem Statement](#Problem-Statement)
 3. [Business Questions](#business-questions)
@@ -44,7 +44,7 @@
 This project focuses on cleaning Spotify Streams data to prepare it for analysis. All the tasks are completed in PostgreSQL, one of the most powerful databases.
 
 ## Problem Statement
-Spotify wants to enhance user engagement by optimizing shuffle mode and improving track completion rates. To achieve this, they need to understand how shuffle mode affects listening behavior, identify patterns in track interruptions, and explore platform-specific performance trends.
+Spotify wants to enhance user engagement by optimizing the shuffle mode and improving track completion rates. To achieve this, they need to understand how shuffle mode affects listening behavior, identify patterns in track interruptions, and explore platform-specific performance trends.
 
 ## Business Questions  
 
@@ -68,7 +68,7 @@ Here, the aim is to answer the following questions:
 
 ## Tech Stack
 This project will use two tech stacks: **PostgreSQL** and **Power BI**. This report provides all information related to data cleaning in PostgreSQL, while another report will focus on analyzing the data in **POWER BI** and building an interactive dashboard.  
-**PostgreSQL** was used because it supports different data types such as _TIMESTAMP_ and _BOOLEAN_ (which are data types of some of the columns in the datasets) unlike other databases which need external tools to manipulate such data types.
+**PostgreSQL** was used because it supports different data types such as _TIMESTAMP_ and _BOOLEAN_ (which are data types of some of the columns in the datasets), unlike other databases, which need external tools to manipulate such data types.
 
 ## Data Information
 The data provided contained the following information:  
@@ -91,7 +91,7 @@ The data downloaded was stored in a .csv file. Each column in the file is descri
 11. _skipped_ (BOOLEAN): TRUE or FALSE depending on if the user skipped to the next song								
 
 ## Creating the Database
-This task is to create a database in PostgreSQL where to store the new table that will contain the dataset. The query is as follows.
+This task is to create a database in PostgreSQL to store the new table that will contain the dataset. The query is as follows.
 ```
 CREATE DATABASE sql_projects
 ;
@@ -99,7 +99,7 @@ CREATE DATABASE sql_projects
 In this query, **sql_projects** represents the name of the database.
 
 ## Creating the Table
-This task involves creating a table where to store the data. To begin with, it is necessary to drop the table if it already exists. This is to avoid any conflict.
+This task involves creating a table to store the data. To begin with, it is necessary to drop the table if it already exists. This is to avoid any conflict.
 
 ### Dropping the Table if it Exists
 ```
@@ -146,7 +146,7 @@ FROM spotify_history
 This returned 149860 rows.
 
 ## Creating a New Table 
-It is important to always keep the row data and copy it to a new table where to do the cleaning and transformation. This way, we can refer to that initial table at any stage of the project if we need more information. So, the table named **spotify_history** was copied to a new table named **spotify_streams** where to perform the cleaning. The query below was used.
+It is important to always keep the raw data and copy it to a new table to do the cleaning and transformation. This way, we can refer to that initial table at any stage of the project if we need more information. So, the table named **spotify_history** was copied to a new table named **spotify_streams** to perform the cleaning. The query below was used.
 ```
 CREATE TABLE spotify_streams AS
 SELECT * 
@@ -253,7 +253,7 @@ FROM spotify_streams
 ;
 ```
 > [!Note]
-> The **ctid** column gives a unique number to each row. So anywhere there is `row_num > 2` will be a duplicate and we will delete them.
+> The **ctid** column gives a unique number to each row. So anywhere there is `row_num > 2` will be a duplicate, and we will delete them.
 
 
 * **Returning rows with duplicate values based on the ctid column**
@@ -269,7 +269,7 @@ FROM (
 WHERE row_num > 1
 ;
 ```
-This returned 1782 rows confirming what we saw earlier.
+This returned 1782 rows, confirming what we saw earlier.
 
 
 #### Deleting Duplicate Values 
@@ -328,7 +328,7 @@ DROP COLUMN row_num
 In this task, we explore and query the data further to check for NULL values in the data and populate them wherever possible. 
 
 > [!Note]
-> Before deleting or replacing NULL Values, you should understand the behavior of each column with respect to other columns.
+> Before deleting or replacing NULL Values, you should understand the behavior of each column concerning other columns.
 
 #### Checking for NULL Values
 The queries below were written to check for NULL values.
@@ -516,7 +516,7 @@ In this task, we created new columns in the table. These columns will be useful 
 #### Adding and Populating the Column start_time
 
 1. **Adding a column named start_time**
-This is done by using the `ALTER TABLE` statement which is used to modify the structure of an existing table. 
+This is done by using the `ALTER TABLE` statement, which is used to modify the structure of an existing table. 
 ```
 ALTER TABLE spotify_streams
 ADD COLUMN start_time TIME
@@ -558,7 +558,7 @@ ADD COLUMN minutes_played NUMERIC
 ```
 
 2. **Populating the column minutes_played**
-Here we populate the column named _minutes_played_ using the _ms_played_ column and converting it to minutes. The query is as follows.
+Here, we populate the column named _minutes_played_ using the _ms_played_ column and converting it to minutes. The query is as follows.
 ```
 UPDATE spotify_streams
 SET minutes_played = ROUND(ms_played/60000.0, 2) 
@@ -575,7 +575,7 @@ ADD COLUMN date_played DATE
 ```
 
 2. **Populating the column date_played**  
-To Populate the column named _date_played_ we used the _ts_ column and extracted the date from it.
+To populate the column named _date_played_, we used the _ts_ column and extracted the date from it.
 ```
 UPDATE spotify_streams
 SET date_played = ts::DATE
@@ -589,7 +589,7 @@ In this second part, We answer the business questions highlighted earlier. The a
 The first question to address here is:  
 
 #### 1. Do users play a more diverse range of tracks when shuffle mode is enabled?  
-First, we write a query to check the amount of tracks with and without shuffle. Note that the shuffle column only contains Boolean values True and False. The former refers to the shuffle mode being enabled and the second is when the shuffle is not enabled. The query is given below.
+First, we write a query to check the amount of tracks with and without shuffle. Note that the shuffle column only contains the Boolean values True and False. The former refers to the shuffle mode being enabled and the second is when the shuffle is not enabled. The query is given below.
 ```
 SELECT 
 	shuffle AS mode,
@@ -602,7 +602,7 @@ This returned:
 * **False**: 10432
 * **True**: 11095  
 
-Now we write a query to find the average plays when shuffle mode is enabled. 
+Now, we write a query to find the average plays when shuffle mode is enabled. 
 ```
 SELECT 
 	CASE 
@@ -628,12 +628,12 @@ This returned:
   * unique tracks: 11095
   * average plays: 10.02  
 
-From these results, we can conclude that more tracks are listened when shuffle mode is enabled.
+From these results, we can conclude that more tracks are listened to when shuffle mode is enabled.
 
 The second question to address here is: 
 
 #### 2. What percentage of tracks played in shuffle mode are interrupted (reason_end)?
-Here we are interested in seeing the amount of tracks interrupted when shuffle mode was enabled. For that to be done, we first inspect the reason_end column which contains information about the track ended. First, we write a query to return all distinct entries from the reason_end column as follows.
+Here, we are interested in seeing the number of tracks interrupted when shuffle mode was enabled. For that to be done, we first inspect the _reason_end_ column, which contains information about the track ended. First, we write a query to return all distinct entries from the _reason_end_ column as follows.
 ```
 SELECT
 	DISTINCT reason_end
@@ -673,7 +673,7 @@ FROM spotify
 WHERE reason_end = 'trackdone' AND shuffle = 'true'
 ; -- This returned 51143 rows --->
 
-To complete this question, we write a query to return the percentage of tracks interrupted when shuffle mode was enabled. The query reads as follows.
+To complete this question, we wrote a query to return the percentage of tracks interrupted when shuffle mode was enabled. The query reads as follows.
 ```
 SELECT 
 	CASE 
@@ -780,7 +780,7 @@ From this query, the results read as follows:
 * Windows: out of 1690 tracks in total, 1007 were shuffled, giving a percentage of **59.59%**.
 * Mac: out of 1176 tracks in total, 639 were shuffled, giving a percentage of **54.34%**.
 * Cast to device: out of 2981 tracks in total, 5 were shuffled, giving a percentage of **0.17%**.
-* Web player: out of 181 tracks in total, 0 was shuffled, giving a percentage of **0.00%**. 
+* Web player: out of 181 tracks in total, 0 track was shuffled, giving a percentage of **0.00%**. 
 
 Clearly, Android was the platform with the highest shuffle mode usage.
 
@@ -806,7 +806,7 @@ WITH cte AS (
 				THEN 1
 			END
 		) AS completed
-FROM spotify
+FROM spotify_streams
 )
 SELECT 
 	stopped_early,
@@ -823,7 +823,7 @@ This query returned the following results:
 The second question to be addressed here is:
 
 #### 2. Are there specific tracks or artists with consistently high interruption rates?
-Here we write queries to return the tracks or artists with a higher percentage of interruptions.  
+Here, we write queries to return the tracks or artists with a higher percentage of interruptions.  
 
 ##### a) For Artists 
 ```
@@ -844,7 +844,7 @@ WITH cte AS (
 				THEN 1
 			END
 		) * 100.0 / NULLIF(COUNT(*), 0), 2) AS percent_rate
-	FROM spotify
+	FROM spotify_streams
 	GROUP BY artist_name
 )
 SELECT *
@@ -854,7 +854,7 @@ WHERE total = interruption_count
 ORDER BY interruption_count DESC
 ;
 ```
-In this query, we returned the artists with the total of interruption greater than 10. The results are the following:  
+In this query, we returned the artists with a total interruption greater than 10. The results are the following:  
 * Les Misérables - International Cast: Number of interruptions: 15
 * El Bebeto: Number of interruptions: 13
 * Deorro: Number of interruptions: 13
@@ -879,7 +879,7 @@ WITH cte AS (
 				THEN 1
 			END
 		) * 100.0 / NULLIF(COUNT(*), 0), 2) AS percent_rate
-	FROM spotify
+	FROM spotify_streams
 	GROUP BY track_name
 )
 SELECT *
@@ -889,7 +889,7 @@ WHERE total = interruption_count
 ORDER BY interruption_count DESC
 ;
 ```
-In this query, we returned the tracks with the total of interruption greater than 10. The results are the following:  
+In this query, we returned the tracks with a total interruption greater than 10. The results are the following:  
 * Sister Ray - International Cast: Number of interruptions: 40
 * My Mind Is Ramblin: Number of interruptions: 31
 * Komm gib mir deine Hand - Remastered 2009: Number of interruptions: 25
@@ -898,7 +898,7 @@ In this query, we returned the tracks with the total of interruption greater tha
 * As Long As You Love Me: Number of interruptions: 12
 * Weird Fishes/ Arpeggi: Number of interruptions: 11  
 
-So, the answer is **Yes**, there are specific tracks or artists with consistently high interruption rates.  
+So, the answer is **Yes**. There are specific tracks or artists with consistently high interruption rates.  
 
 The third question to be addressed here is:
 
@@ -914,12 +914,12 @@ SELECT
 			THEN 1
 		END
 	) * 100.0 / NULLIF(COUNT(*), 0), 2) AS percent_rate
-FROM spotify
+FROM spotify_streams
 GROUP BY platform, shuffle
 ORDER BY percent_rate DESC
 ;
 ```
-From this query, we could see that when shuffle mode is enabled, the track completion rate is lesser than when shuffle mode is not enabled as shown in the table below.
+From this query, we could see that when shuffle mode is enabled, the track completion rate is lesser than when shuffle mode is not enabled, as shown in the table below.
 | platform	| shuffle	| unique_tracks	     | percent_rate |
 |:--------------|:--------------|:--------------|:--------------|
 | mac 	| FALSE	|259	|91.06 |
@@ -951,7 +951,7 @@ SELECT
 		END
 	) AS payback_count,
 	ROUND(AVG(ms_played), 2) AS avg_playback
-FROM spotify
+FROM spotify_streams
 GROUP BY platform
 ORDER BY avg_playback DESC
 ;
@@ -966,7 +966,7 @@ The query returned the results shown in the table below:
 | android	| 139002	| 2087	| 125412.10 |
 | web player	| 181	| 3	| 108554.36 |
 
-From the above table, if we look at the average playback (miliseconds) we will conclude that mac is the platform with the longest average playback duration. However, looking at the total number of tracks played and the playback count, Android is the platform with the longest average playback duration.
+From the above table, if we look at the average playback (milliseconds), we will conclude that Mac is the platform with the longest average playback duration. However, looking at the total number of tracks played and the playback count, Android has the longest average playback duration.
 
 The second question to be addressed here is:
 
@@ -977,7 +977,7 @@ SELECT
     EXTRACT(HOUR FROM  ts) AS hour_peak, 
     platform, 
     COUNT(*) AS usage_count
-FROM spotify
+FROM spotify_streams
 GROUP BY 
 	platform,
 	hour_peak
@@ -991,9 +991,9 @@ The results show the following:
 * For Android: Usage peaks at night.
 * For Cast to device: Usage peaks at late in the afternoon.
 * For IOS: Usage peaks early in the evening.
-* For Mac: Usage peaks at late in the afternoon.
+* For Mac: Usage peaks late in the afternoon.
 * For Web player: There is no specific peak time.
-* For Windows: Usage peaks early in the moring.  
+* For Windows: Usage peaks early in the morning.  
 
 ##### b) Peak Usage by Day
 ```
@@ -1001,7 +1001,7 @@ SELECT
     EXTRACT(DOW FROM ts) AS day_of_week, 
     platform, 
     COUNT(*) AS usage_count
-FROM spotify
+FROM spotify_streams
 GROUP BY 
 	platform, 
 	day_of_week
@@ -1011,12 +1011,12 @@ ORDER BY
 ; 
 ```
 The results show the following:  
-* For Android: Usage peaks on Fridays followed by Wednesday. Sundays have lesser usage.
-* For Cast to device: Usage peaks on Tuesdays followed by Thursday. Sundays have lesser usage.
-* For IOS: Usage peaks on Wednesdays followed by Fridays. Saturdays have lesser usage.
-* For Mac: Usage peaks on Wednesdays followed by Tuesday. Sundays have lesser usage.
-* For Web player: Usage peaks on Mondays followed by Tuesday. Wednesdays and Fridays have lesser usage.
-* For Windows: Usage peaks on Fridays followed by Thursday. Sundays have lesser usage.  
+* For Android: Usage peaks on Fridays, followed by Wednesdays. Sundays have lesser usage.
+* For Cast to device: Usage peaks on Tuesdays, followed by Thursdays. Sundays have lesser usage.
+* For IOS: Usage peaks on Wednesdays, followed by Fridays. Saturdays have lesser usage.
+* For Mac: Usage peaks on Wednesdays, followed by Tuesdays. Sundays have lesser usage.
+* For Web player: Usage peaks on Mondays, followed by Tuesdays. Wednesdays and Fridays have lesser usage.
+* For Windows: Usage peaks on Fridays, followed by Thursdays. Sundays have lesser usage.  
 
 
 ##### c) Peak Hour for Each Platform
@@ -1027,7 +1027,7 @@ WITH platform_peak AS (
         DATE_TRUNC('hour', ts) AS hour, 
         COUNT(*) AS usage_count,
         RANK() OVER (PARTITION BY platform ORDER BY COUNT(*) DESC) AS rnk
-    FROM spotify
+    FROM spotify_streams
     GROUP BY platform, hour
 )
 SELECT platform, hour, usage_count
@@ -1053,13 +1053,13 @@ This project involved cleaning the Spotify Streams dataset to prepare it for ana
 * Creating new columns to deeply understand the data
 * Answering business questions  
 
-From the above tasks, we could be uncover the following insights:  
+From the above tasks, we could uncover the following insights:  
 * Most tracks are interrupted when shuffle mode is enabled
-* **Android** is the platform with the highest shuffle mode usage, while **Web player** is the platform with the lowest shuffle mode usage followed by **Cast to device**.
+* **Android** is the platform with the highest shuffle mode usage, while **Web player** has the lowest shuffle mode usage followed by **Cast to device**.
 * The percentage of completed tracks is 51.45% compared to 48.55% for interrupted tracks.
 * The artist named **Les Misérables - International Cast** and the track named **Sister Ray** both have the highest number of interruptions.
 * The shuffle mode influences the track completion rates: when shuffle mode is enabled, the track completion rate is lesser than when shuffle mode is not enabled.
-* **Android** is the platform with the longest average playback duration and the highest usage count.
+* **Android** has the longest average playback duration and the highest usage count.
 * The usage peak differs from one platform to another.  
 
 Now that the data is cleaned, we can proceed with the analysis in Power BI.
