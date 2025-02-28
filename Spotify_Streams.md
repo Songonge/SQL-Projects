@@ -1,4 +1,5 @@
 # Project: Data Cleaning for Spotify Streams 
+----
 
 ## Table of Contents
 1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
