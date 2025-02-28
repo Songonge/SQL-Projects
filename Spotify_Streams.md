@@ -599,8 +599,8 @@ GROUP BY shuffle
 ;
 ``` 
 This returned:  
-* False: 10432
-* True: 11095  
+* **False**: 10432
+* **True**: 11095  
 
 Now we write a query to find the average plays when shuffle mode is enabled. 
 ```
@@ -618,12 +618,12 @@ GROUP BY shuffle
 ;
 ```
 This returned:  
-* For shuffle mode not enabled:
+* **For shuffle mode not enabled**:
   * all tracks: 36948
   * unique tracks: 10432
   * average plays: 3.54  
 
-* For shuffle mode enabled:
+* **For shuffle mode enabled**:
   * all tracks: 111130
   * unique tracks: 11095
   * average plays: 10.02  
@@ -660,11 +660,11 @@ GROUP BY reason_end
 ;
 ```
 The results show that out of **148078** columns in total,  
-* For completed tracks with shuffle mode enabled:  
+* **For completed tracks with shuffle mode enabled**:  
   * all tracks: 51143
   * unique tracks: 8368  
 
-* For interrupted tracks with shuffle mode enabled:  
+* **For interrupted tracks with shuffle mode enabled**:  
   * all tracks: 59987
   * unique tracks: 13851
 
@@ -701,9 +701,9 @@ END
 ;
 ```
 It can be seen that:  
-* For short tracks (<1 minute): out of 51316 tracks in total, 50631 were interrupted, giving a percentage of **98.67%**.
-* For medium tracks (between 1 and 3 minutes): out of 42429 tracks in total, 8398 were interrupted, giving a percentage of **19.79%**.
-* For long tracks (>3 minutes): out of 17385 tracks in total, 958 were interrupted, giving a percentage of **5.51%**.  
+* **For short tracks (<1 minute)**: out of 51316 tracks in total, 50631 were interrupted, giving a percentage of **98.67%**.
+* **For medium tracks (between 1 and 3 minutes)**: out of 42429 tracks in total, 8398 were interrupted, giving a percentage of **19.79%**.
+* **For long tracks (>3 minutes)**: out of 17385 tracks in total, 958 were interrupted, giving a percentage of **5.51%**.  
 
 The third and last question to address here is:
 
@@ -817,15 +817,15 @@ FROM cte
 ;
 ```
 This query returned the following results:  
-* For interrupted tracks: 71896 with a percentage of 48.55%
-* For completed tracks: 76182 with a percentage of 51.45%
+* **For interrupted tracks**: 71896 with a percentage of 48.55%
+* **For completed tracks**: 76182 with a percentage of 51.45%
 
 The second question to be addressed here is:
 
 #### 2. Are there specific tracks or artists with consistently high interruption rates?
 Here we write queries to return the tracks or artists with a higher percentage of interruptions.  
 
-* **a. For Artists**  
+##### a) For Artists 
 ```
 WITH cte AS (
 	SELECT 
@@ -860,7 +860,7 @@ In this query, we returned the artists with the total of interruption greater th
 * Deorro: Number of interruptions: 13
 * Fetty Wap: Number of interruptions: 12  
 
-* **b. For Tracks**
+##### b) For Tracks
 ```
 WITH cte AS (
 	SELECT 
@@ -971,7 +971,7 @@ From the above table, if we look at the average playback (miliseconds) we will c
 The second question to be addressed here is:
 
 #### Are there specific hours or days where platform usage peaks?
-* **a. Peak Usage by Hour**
+##### a) Peak Usage by Hour
 ```
 SELECT 
     EXTRACT(HOUR FROM  ts) AS hour_peak, 
@@ -995,7 +995,7 @@ The results show the following:
 * For Web player: There is no specific peak time.
 * For Windows: Usage peaks early in the moring.  
 
-* **b. Peak Usage by Day**
+##### b) Peak Usage by Day
 ```
 SELECT 
     EXTRACT(DOW FROM ts) AS day_of_week, 
@@ -1019,7 +1019,7 @@ The results show the following:
 * For Windows: Usage peaks on Fridays followed by Thursday. Sundays have lesser usage.  
 
 
-* **c. Peak Hour for Each Platform**
+##### c) Peak Hour for Each Platform
 ```
 WITH platform_peak AS (
     SELECT 
