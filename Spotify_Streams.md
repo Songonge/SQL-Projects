@@ -34,9 +34,9 @@
       * [Adding and Populating the Column minutes_played](#Adding-and-Populating-the-Column-minutes_played)
       * [Adding and Populating the Column date_played](#Adding-and-Populating-the-Column-date_played)
 11. [Part II: Answering the Business Questions](#part-II-Answering-the-Business-Questions)
-    * [Impact of Shuffle Mode on Listening Behavior](#Impact-of-Shuffle-Mode-on-Listening-Behavior)
-    * [Track Completion Rates](#Track-Completion-Rates)
-    * [Platform Usage Trends](#Platform-Usage-Trends)
+    * [A. Impact of Shuffle Mode on Listening Behavior](#A-Impact-of-Shuffle-Mode-on-Listening-Behavior)
+    * [B. Track Completion Rates](#B-Track-Completion-Rates)
+    * [C. Platform Usage Trends](#C-Platform-Usage-Trends)
 12. [Conclusion](#conclusion)
 
 
@@ -585,7 +585,7 @@ SET date_played = ts::DATE
 ## Part II: Answering the Business Questions
 In this second part, We answer the business questions highlighted earlier. The answers provided here will be useful in the recommendations.
 
-### Impact of Shuffle Mode on Listening Behavior 
+### A. Impact of Shuffle Mode on Listening Behavior 
 The first question to address here is:  
 
 #### 1. Do users play a more diverse range of tracks when shuffle mode is enabled?  
@@ -785,7 +785,7 @@ From this query, the results read as follows:
 Clearly, Android was the platform with the highest shuffle mode usage.
 
 
-### Track Completion Rates 
+### B. Track Completion Rates 
 The first question to be answered here is:
 
 #### 1. What percentage of tracks are stopped early versus completed?
@@ -825,7 +825,7 @@ The second question to be addressed here is:
 #### 2. Are there specific tracks or artists with consistently high interruption rates?
 Here we write queries to return the tracks or artists with a higher percentage of interruptions.  
 
-* **For Artists**  
+* **a. For Artists**  
 ```
 WITH cte AS (
 	SELECT 
@@ -860,7 +860,7 @@ In this query, we returned the artists with the total of interruption greater th
 * Deorro: Number of interruptions: 13
 * Fetty Wap: Number of interruptions: 12  
 
-* **For Tracks**
+* **b. For Tracks**
 ```
 WITH cte AS (
 	SELECT 
@@ -935,7 +935,7 @@ From this query, we could see that when shuffle mode is enabled, the track compl
 | cast to device	| TRUE |	5 |	20 |
 
 
-### Platform Usage Trends
+### C. Platform Usage Trends
 In this last part, we analyze the platform usage trends. The first question to be addressed is:  
 
 #### 1. Which platforms have the longest average playback duration?
@@ -971,7 +971,7 @@ From the above table, if we look at the average playback (miliseconds) we will c
 The second question to be addressed here is:
 
 #### Are there specific hours or days where platform usage peaks?
-* **Peak Usage by Hour**
+* **a. Peak Usage by Hour**
 ```
 SELECT 
     EXTRACT(HOUR FROM  ts) AS hour_peak, 
@@ -995,7 +995,7 @@ The results show the following:
 * For Web player: There is no specific peak time.
 * For Windows: Usage peaks early in the moring.  
 
-* **Peak Usage by Day**
+* **b. Peak Usage by Day**
 ```
 SELECT 
     EXTRACT(DOW FROM ts) AS day_of_week, 
@@ -1019,7 +1019,7 @@ The results show the following:
 * For Windows: Usage peaks on Fridays followed by Thursday. Sundays have lesser usage.  
 
 
-* **Find the Peak Hour for Each Platform**
+* **c. Peak Hour for Each Platform**
 ```
 WITH platform_peak AS (
     SELECT 
@@ -1043,6 +1043,7 @@ The results show the following:
 * For Mac: Usage peaks at 03 A.M.
 * For Web player: Usage peaks at 10 P.M.
 * For Windows: Usage peaks at 1 A.M. 
+
 
 ## Conclusion
 This project involved cleaning the Spotify Streams dataset to prepare it for analysis on another platform. The following tasks were completed:  
