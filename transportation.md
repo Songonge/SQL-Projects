@@ -59,33 +59,33 @@ The downloaded data contained the following information:
 ### Description of Each Column in the Table
 The data downloaded was stored in a .csv file. Each column in the file is described as follows.  
 1. _GpsProvider_ (TEXT): GPS service provider tracking the vehicle.
-_Booking_ID_ (TEXT): Unique identifier for each booking.
-_Shipment_Type_ (TEXT): Indicates whether the shipment is a Market (spot booking) or Regular (contract-based) trip.
-_Booking_Date_ (TIMESTAMP): The date and time when the booking was created.
-_Vehicle_Registration_ (TEXT): The unique registration number of the vehicle used for transportation.
-_Origin_Location_ (TEXT): The initial point from which the shipment starts.
-_Destination_Location_ (TEXT): The final destination where the shipment is to be delivered.
-_Origin_Loc_Latitude_ (NUMERIC): Latitude of the origin location.
-_Origin_Loc_Longitude_ (NUMERIC): Longitude of the origin location.
-_Destination_Loc_Latitude_ (NUMERIC): Latitude of the destination location.
-_Destination_Loc_Longitude_ (NUMERIC): Longitude of the destination location.
-_Data_Ping_Time_ (TIME): The timestamp of the last recorded GPS data ping from the vehicle.
-_Planned_ETA_	(TIME): The expected time of arrival at the destination as per the trip plan.
-_Current_Location_ (TEXT): The most recent known location of the vehicle.
-_Actual_Eta_ (TIMESTAMP): The actual time of arrival at the destination.
-_Current_Loc_Latitude_ (NUMERIC): The latitude of the vehicle’s current location.
-_Current_Loc_Longitude_ (NUMERIC): The longitude of the vehicle’s current location.
-_Ontime_ (TEXT): Indicates whether the vehicle arrived on time (Yes/No).
-_Trip_Start_Date_ (TIMESTAMP): The actual start date and time of the trip.
-_Trip_End_Date_ (TIMESTAMP): The estimated date and time of Arrival
-_Transportation_Distance_Km_ (NUMERIC): The total distance covered by the vehicle during the trip in kilometers.
-_Vehicle_Type_ (TEXT): The type of vehicle used for the shipment (e.g., 32 FT Truck, Tata Ace, Multi-Axle).
-_Min_Km_Per_Day_ (BIGINT): The minimum distance the vehicle is expected to cover in a single day.
-_Driver_Name_ (TEXT): The name of the driver assigned to the trip.
-_Driver_Mobile_No_ (TEXT): The contact number of the driver.
-_Customer_Name_Code_ (TEXT): The name of the customer receiving the shipment.
-_Supplier_Name_Code_ (TEXT): The name of the supplier sending the shipment.
-_Material_Shipped_ (TEXT): A description of the materials being transported in the shipment.
+2. _Booking_ID_ (TEXT): Unique identifier for each booking.
+3. _Shipment_Type_ (TEXT): Indicates whether the shipment is a Market (spot booking) or Regular (contract-based) trip.
+4. _Booking_Date_ (TIMESTAMP): The date and time when the booking was created.
+5. _Vehicle_Registration_ (TEXT): The unique registration number of the vehicle used for transportation.
+6. _Origin_Location_ (TEXT): The initial point from which the shipment starts.
+7. _Destination_Location_ (TEXT): The final destination where the shipment is to be delivered.
+8. _Origin_Loc_Latitude_ (NUMERIC): Latitude of the origin location.
+9. _Origin_Loc_Longitude_ (NUMERIC): Longitude of the origin location.
+10. _Destination_Loc_Latitude_ (NUMERIC): Latitude of the destination location.
+11. _Destination_Loc_Longitude_ (NUMERIC): Longitude of the destination location.
+12. _Data_Ping_Time_ (TIME): The timestamp of the last recorded GPS data ping from the vehicle.
+13. _Planned_ETA_	(TIME): The expected time of arrival at the destination as per the trip plan.
+14. _Current_Location_ (TEXT): The most recent known location of the vehicle.
+15. _Actual_Eta_ (TIMESTAMP): The actual time of arrival at the destination.
+16. _Current_Loc_Latitude_ (NUMERIC): The latitude of the vehicle’s current location.
+17. _Current_Loc_Longitude_ (NUMERIC): The longitude of the vehicle’s current location.
+18. _Ontime_ (TEXT): Indicates whether the vehicle arrived on time (Yes/No).
+19. _Trip_Start_Date_ (TIMESTAMP): The actual start date and time of the trip.
+20. _Trip_End_Date_ (TIMESTAMP): The estimated date and time of Arrival
+21. _Transportation_Distance_Km_ (NUMERIC): The total distance covered by the vehicle during the trip in kilometers.
+22. _Vehicle_Type_ (TEXT): The type of vehicle used for the shipment (e.g., 32 FT Truck, Tata Ace, Multi-Axle).
+23. _Min_Km_Per_Day_ (BIGINT): The minimum distance the vehicle is expected to cover in a single day.
+24. _Driver_Name_ (TEXT): The name of the driver assigned to the trip.
+25. _Driver_Mobile_No_ (TEXT): The contact number of the driver.
+26. _Customer_Name_Code_ (TEXT): The name of the customer receiving the shipment.
+27. _Supplier_Name_Code_ (TEXT): The name of the supplier sending the shipment.
+28. _Material_Shipped_ (TEXT): A description of the materials being transported in the shipment.
 	
 
 ## Creating the Database
