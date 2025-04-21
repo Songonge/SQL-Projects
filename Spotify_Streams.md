@@ -23,7 +23,7 @@
     * [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
     * [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
       * [Checking for Duplicates](#Checking-for-Duplicates)
-      * [Returning Duplicates based one Column](#Returning-Duplicates-based-on-One-Column)
+      * [Returning Duplicates based on One Column](#Returning-Duplicates-based-on-One-Column)
       * [Returning all Rows with Duplicates](#Returning-all-Rows-with-Duplicates)
       * [Assigning A Unique Identifier to Each Row](#Assigning-A-Unique-Identifier-to-Each-Row)
     * [Checking and Replacing NULL Values](#Checking-and-Replacing-NULL-Values)
@@ -52,7 +52,7 @@ Spotify wants to enhance user engagement by optimizing the shuffle mode and impr
 ### Impact of Shuffle Mode on Listening Behavior
 Here, the aim is to answer the following questions:  
 1. Do users play a more diverse range of tracks when shuffle mode is enabled?  
-2. What percentage of tracks played in shuffle mode is interrupted (reason_end)?
+2. What percentage of tracks played in shuffle mode are interrupted (reason_end)?
 3. Which platforms have the highest shuffle mode usage?
 
 ### Track Completion Rates
@@ -64,7 +64,7 @@ Here, the aim is to answer the following questions:
 ### Platform Usage Trends
 Here, the aim is to answer the following questions:  
 1. Which platforms have the longest average playback duration?
-2. Are there specific hours or days where platform usage peaks?
+2. Are there specific hours or days when platform usage peaks?
 
 
 ## Tech Stack
@@ -79,16 +79,16 @@ The data provided contained the following information:
 
 ### Description of Each Column
 The data downloaded was stored in a .csv file. Each column in the file is described as follows.  
-1. _track_url_ (TEXT):	Spotify URI that uniquely identifies each track in the form of "spotify:track:<base-62 string>"  		 						
+1. _track_url_ (TEXT): Spotify URI that uniquely identifies each track in the form of "spotify:track:<base-62 string>"  		 						
 2. _ts_ (TIMESTAMP): Timestamp indicating when the track stopped playing in UTC (Coordinated Universal Time)								
 3. _platform_ (TEXT): Platform used when streaming the track
-4. _ms_played_ (BIGINT):	Number of milliseconds the stream was played
+4. _ms_played_ (BIGINT): Number of milliseconds the stream was played
 5. _track_name_ (TEXT): Name of the track
-6. _artist_name_ (TEXT):	Name of the artist
+6. _artist_name_ (TEXT): Name of the artist
 7. _album_name_ (TEXT): Name of the album
 8. _reason_start_ (TEXT): Why the track started
 9. _reason_end_ (TEXT): Why the track ended
-10. _shuffle_ (BOOLEAN): TRUE or FALSE depending on if shuffle mode was used when playing the track
+10. _shuffle_ (BOOLEAN): TRUE or FALSE depending on whether shuffle mode was used when playing the track
 11. _skipped_ (BOOLEAN): TRUE or FALSE depending on if the user skipped to the next song								
 
 ## Creating the Database
@@ -184,7 +184,7 @@ FROM spotify_streams
 ;
 ```
 
-#### Returning Duplicates based on one Column
+#### Returning Duplicates based on One Column
 After checking for duplicates using the above query, it is time to check and return the **track_url** column having `row_num > 1` which will be counted as duplicate values.
 ```
 SELECT 
