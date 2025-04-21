@@ -95,20 +95,20 @@ Go to Kaggle and get the API Key. Proceed as follows:
 > Another way is to just launch VS Code and open the folder from your computer.  
 
 3. Create a new file with the extension `.ipynb` (This is a Jupyter notebook.)
-4. Write the following lines of code and run them:
-   * Install Kaggle
+4. Write the following lines of code and run them:  
+* Install Kaggle
 ```
 pip install kaggle
 ```
-   * Import Kaggle
+* Import Kaggle
 ```
 import kaggle
 ```
-   * Now, we need to check if we have access to the dataset.
+* Now, we need to check if we have access to the dataset.
 ```
 !kaggle datasets list
 ```
-   * Next, we go back to the consumer complaints page on Kaggle and copy the path (text between the double quotes) from the code I mentioned in the second bullet on the **Data information** section. Go to VS Code and write the following to download the dataset:
+* Next, we go back to the consumer complaints page on Kaggle and copy the path (text between the double quotes) from the code I mentioned in the second bullet on the **Data information** section. Go to VS Code and write the following to download the dataset:
 ```
 !kaggle datasets download -d utkarshx27/consumer-complaint --unzip
 ```
@@ -119,8 +119,8 @@ import kaggle
 You can now view the `.csv` file in your folder.
 
 The downloaded data contained the following information:  
-* Number of rows: 3585952 rows  
-* Number of columns: 18 columns
+* Number of rows: `3585952` rows  
+* Number of columns: `18` columns
 
 
 ### Description of Each Column
