@@ -4,13 +4,10 @@
 ## Table of Contents
 1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Problem Statement](#Problem-Statement)
-3. [Business Questions](#business-questions)
-   * [Impact of Shuffle Mode on Listening Behavior](#Impact-of-Shuffle-Mode-on-Listening-Behavior)
-   * [Track Completion Rates](#Track-Completion-Rates)
-   * [Platform Usage Trends](#Platform-Usage-Trends)
+3. [Deliverables](#deliverables)
 4. [Tech Stack](#tech-stack)
 5. [Data Information](#Data-Information)
-   * [Description of Each Column](#Description-of-each-column)
+   * [Description of Each Column in the Table](#Description-of-each-column-in-the-table)
 6. [Creating the Database](#Creating-the-Database)
 7. [Creating the Table](#creating-the-table)
    * [Dropping the Table if it Exists](#Dropping-the-Table-if-it-Exists)
@@ -71,7 +68,7 @@ The cleaning part of this project will be done in **PostgreSQL**. The current re
 
 
 ## Data Information
-To get the data, it was not straightforward as we always go ahead and download it from Kaggle. Instead, I used the **Python API** to get it. Here is how I proceeded:  
+To get the data, it was not straightforward, as we always go ahead and download it from Kaggle. Instead, I used the **Python API** to get it. Here is how I proceeded:  
 1. Visited **Kaggle**'s website and typed '**Consumer Complaints**' in the search bar. You can also use this [link](https://www.kaggle.com/datasets/selener/consumer-complaint-database).
 2. Clicked on the 'Download' button. This opened the code to be used in Python, which I could copy and paste directly into a Python environment. But there are other steps to be completed before this.
 
@@ -123,8 +120,26 @@ The downloaded data contained the following information:
 * Number of columns: `18` columns
 
 
-### Description of Each Column
+### Description of Each Column in the Table
 The data downloaded was stored in a .csv file. Each column in the file is described as follows.  
+1. _Date received_ (DATE): The date when the consumer complaint was received.
+2. _Product_ (TEXT): The specific financial product or service associated with the complaint.
+3. _Sub-product_ (TEXT): Further sub-categorization of the product or service, if applicable.
+4. _Issue_ (TEXT): The main issue or problem described in the consumer complaint.
+5. _Sub-issue_ (TEXT): Additional details or sub-category related to the main issue.
+6. _Consumer_complaint_narrative_  (TEXT): The text description provided by the consumer detailing their complaint.
+7. _Company_public_response_ (TEXT): The response or statement issued by the company regarding the complaint.
+8. _Company_ (TEXT): The name of the company being complained about.
+9. _State_ (TEXT): The state where the consumer resides.
+10. _ZIP_code_ (TEXT): The ZIP code of the consumer's location.
+11. _Tags_ (TEXT): Any additional tags or labels associated with the complaint.
+12. _Consumer_consent_provided_ (TEXT): Indicates whether the consumer provided consent for their complaint to be published.
+13. _Submitted_via_ (TEXT): The channel or method through which the complaint was submitted.
+14. _Date_sent_to_company_ (TEXT): The date when the complaint was sent to the company for response.
+15. _Company_response_to_consumer_ (TEXT): The company's response or resolution to the consumer's complaint.
+16. _Timely_response_ (TEXT): Indicates whether the company provided a timely response to the complaint.
+17. _Consumer_disputed_ (TEXT): Indicates whether the consumer disputed the company's response.
+18. _Complaint_ID_ (TEXT): A unique identifier assigned to each complaint.
 	
 
 <!---
