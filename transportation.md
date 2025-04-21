@@ -70,7 +70,7 @@ The data downloaded was stored in a .csv file. Each column in the file is descri
 10. _Destination_Loc_Latitude_ (NUMERIC): Latitude of the destination location.
 11. _Destination_Loc_Longitude_ (NUMERIC): Longitude of the destination location.
 12. _Data_Ping_Time_ (TIME): The timestamp of the last recorded GPS data ping from the vehicle.
-13. _Planned_ETA_	(TIME): The expected time of arrival at the destination as per the trip plan.
+13. _Planned_ETA_ (TIME): The expected time of arrival at the destination as per the trip plan.
 14. _Current_Location_ (TEXT): The most recent known location of the vehicle.
 15. _Actual_Eta_ (TIMESTAMP): The actual time of arrival at the destination.
 16. _Current_Loc_Latitude_ (NUMERIC): The latitude of the vehicle’s current location.
@@ -422,9 +422,9 @@ GROUP BY booking_id, shipment_type,
 	current_location, actual_eta,
 	current_loc_latitude, current_loc_longitude,
 	ontime,	trip_start_date, trip_end_date,
-	transportation_distance_km,	vehicle_type,
+	transportation_distance_km, vehicle_type,
 	min_km_per_day,	driver_name, driver_mobile_no,
-	customer_name_code,	supplier_name_code,
+	customer_name_code, supplier_name_code,
 	material_shipped,
 HAVING COUNT(*) > 1
 ;
@@ -453,9 +453,9 @@ SELECT
 	current_location, actual_eta,
 	current_loc_latitude, current_loc_longitude,
 	ontime,	trip_start_date, trip_end_date,
-	transportation_distance_km,	vehicle_type,
+	transportation_distance_km, vehicle_type,
 	min_km_per_day,	driver_name, driver_mobile_no,
-	customer_name_code,	supplier_name_code,
+	customer_name_code, supplier_name_code,
 	material_shipped
 	) AS row_num
 FROM transport
@@ -478,9 +478,9 @@ FROM (
 		current_location, actual_eta,
 		current_loc_latitude, current_loc_longitude,
 		ontime,	trip_start_date, trip_end_date,
-		transportation_distance_km,	vehicle_type,
+		transportation_distance_km, vehicle_type,
 		min_km_per_day,	driver_name, driver_mobile_no,
-		customer_name_code,	supplier_name_code,
+		customer_name_code, supplier_name_code,
 		material_shipped) AS row_num
 	FROM transport
 ) 
