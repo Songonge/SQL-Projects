@@ -1,3 +1,132 @@
+# Project: Consumer Complaints Analysis 
+----
+
+## Table of Contents
+1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
+2. [Problem Statement](#Problem-Statement)
+3. [Business Questions](#business-questions)
+   * [Impact of Shuffle Mode on Listening Behavior](#Impact-of-Shuffle-Mode-on-Listening-Behavior)
+   * [Track Completion Rates](#Track-Completion-Rates)
+   * [Platform Usage Trends](#Platform-Usage-Trends)
+4. [Tech Stack](#tech-stack)
+5. [Data Information](#Data-Information)
+   * [Description of Each Column](#Description-of-each-column)
+6. [Creating the Database](#Creating-the-Database)
+7. [Creating the Table](#creating-the-table)
+   * [Dropping the Table if it Exists](#Dropping-the-Table-if-it-Exists)
+   * [Creating Columns in the Table](#Creating-Columns-in-the-Table)
+8. [Inserting Values in the Table](#Inserting-Values-in-the-Table)
+   * [Retrieving Data from the Table](#Retrieving-Data-from-the-Table)
+9. [Creating a new Table](#Creating-a-new-Table)
+   * [Retrieving Data from the New Table](#Retrieving-Data-from-the-new-Table)
+10. [Part I: Data Cleaning](#part-I-data-cleaning) 
+    * [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
+    * [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
+      * [Checking for Duplicates](#Checking-for-Duplicates)
+      * [Returning Duplicates based one Column](#Returning-Duplicates-based-on-One-Column)
+      * [Returning all Rows with Duplicates](#Returning-all-Rows-with-Duplicates)
+      * [Assigning A Unique Identifier to Each Row](#Assigning-A-Unique-Identifier-to-Each-Row)
+    * [Checking and Replacing NULL Values](#Checking-and-Replacing-NULL-Values)
+      * [Checking for NULL Values](#Checking-for-NULL-Values)
+      * [Replacing NULL Values](#Replacing-NULL-Values)
+    * [Creating New Columns](#Creating-New-Columns)
+      * [Adding and Populating the Column start_time](#Adding-and-Populating-the-Column-start_time)
+      * [Adding and Populating the Column end_time](#Adding-and-Populating-the-Column-end_time)
+      * [Adding and Populating the Column minutes_played](#Adding-and-Populating-the-Column-minutes_played)
+      * [Adding and Populating the Column date_played](#Adding-and-Populating-the-Column-date_played)
+11. [Part II: Answering the Business Questions](#part-II-Answering-the-Business-Questions)
+    * [A. Impact of Shuffle Mode on Listening Behavior](#A-Impact-of-Shuffle-Mode-on-Listening-Behavior)
+    * [B. Track Completion Rates](#B-Track-Completion-Rates)
+    * [C. Platform Usage Trends](#C-Platform-Usage-Trends)
+12. [Conclusion](#conclusion)
+
+
+## Introduction
+The Consumer Complaint Database is a compilation of complaints regarding consumer financial services and products that are forwarded to businesses for resolution. After the business responds and confirms a business relationship with the customer, the complaint is published. The Consumer Complaint Database does not publish complaints that are forwarded to other regulators, such as those concerning banking institutions with assets under $10 billion. In general, the database is updated every day. 
+
+In this project, we are focusing on cleaning the Consumer Complaints data to prepare it for analysis. 
+
+
+## Problem Statement
+The main problem regarding this dataset is as follows: How can financial institutions reduce unresolved complaints and improve response times to enhance customer satisfaction and regulatory compliance?  
+
+Addressing this problem is of paramount importance because:  
+1. Delayed or inadequate responses to consumer complaints can lead to compliance violations and legal penalties.  
+2. Poorly handled complaints increase dissatisfaction and can lead to customer churn.  
+3. Identifying bottlenecks in the complaint resolution process helps companies streamline their operations.
+
+
+## Deliverables
+Here are the deliverables of this project:  
+1. Identify companies with the most complaints and the highest dispute rates  
+2. Analyze common complaint types and trends over time
+3. Assess which complaint issues remain unresolved
+4. Evaluate response times and effectiveness
+5. Create a dashboard to visualize company performance and consumer disputes
+6. Provide data-driven recommendations for improving complaint resolution
+
+
+## Tech Stack
+The cleaning part of this project will be done in **PostgreSQL**. The current report provides all information related to data cleaning in PostgreSQL and the queries written to retrieve insights.
+
+
+## Data Information
+To get the data, it was not straightforward as we always go ahead and download it from Kaggle. Instead, I used the **Python API** to get it. Here is how I proceeded:  
+1. Visited **Kaggle**'s website and typed '**Consumer Complaints**' in the search bar. You can also use this [link](https://www.kaggle.com/datasets/selener/consumer-complaint-database).
+2. Clicked on the 'Download' button. This opened the code to be used in Python, which I could copy and paste directly into a Python environment. But there are other steps to be completed before this.
+
+### On your local computer
+1. Go to the local disk on your computer.
+2. Navigate to your root: `C:\Users\yourusername`
+3. Create a new folder named **.kaggle**
+4. Navigate to a directory on your computer where you want the file to be downloaded. For example, **Documents**, or create a new folder on your computer and name it as you want.
+
+### On Kaggle
+Go to Kaggle and get the API Key. Proceed as follows:  
+1. Click on your picture on your Kaggle profile.
+2. Click on Settings and scroll down until you see API.
+3. Click on '**Create New Token**' (This token will be used every time you want to download any dataset from Kaggle using this method.)
+4. Save this to the **.kaggle** folder you created earlier (This is a JSON file.).
+
+### On Visual Studio (VS) Code
+1. Right-click on the folder you created, which will contain the downloaded dataset, and select '**Open in Terminal**' from the menu.
+2. In the terminal, type `code .` and this will open VS Code for you. 
+> [!Note]
+> Another way is to just launch VS Code and open the folder from your computer.  
+
+3. Create a new file with the extension `.ipynb` (This is a Jupyter notebook.)
+4. Write the following lines of code and run them:
+   * Install Kaggle
+```
+pip install kaggle
+```
+   * Import Kaggle
+```
+import kaggle
+```
+   * Now, we need to check if we have access to the dataset.
+```
+!kaggle datasets list
+```
+   * Next, we go back to the consumer complaints page on Kaggle and copy the path (text between the double quotes) from the code I mentioned in the second bullet on the **Data information** section. Go to VS Code and write the following to download the dataset:
+```
+!kaggle datasets download -d utkarshx27/consumer-complaint --unzip
+```
+> [!Note]
+> `utkarshx27/consumer-complaint` is the path copied.
+> `--unzip` is added to the line of code to unzip the data as soon as it is downloaded.
+
+You can now view the `.csv` file in your folder.
+
+The downloaded data contained the following information:  
+* Number of rows: 3585952 rows  
+* Number of columns: 18 columns
+
+
+### Description of Each Column
+The data downloaded was stored in a .csv file. Each column in the file is described as follows.  
+	
+
 <!---
 DROP TABLE complaints_raw
 ;
