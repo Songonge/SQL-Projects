@@ -16,6 +16,7 @@
    * [Retrieving Data from the Table](#Retrieving-Data-from-the-Table)
 9. [Creating a new Table](#Creating-a-new-Table)
    * [Retrieving Data from the New Table](#Retrieving-Data-from-the-new-Table)
+<!--
 10. [Part I: Data Cleaning](#part-I-data-cleaning) 
     * [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
     * [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
@@ -36,7 +37,7 @@
     * [B. Track Completion Rates](#B-Track-Completion-Rates)
     * [C. Platform Usage Trends](#C-Platform-Usage-Trends)
 12. [Conclusion](#conclusion)
-
+-->
 
 ## Introduction
 The Consumer Complaint Database is a compilation of complaints regarding consumer financial services and products that are forwarded to businesses for resolution. After the business responds and confirms a business relationship with the customer, the complaint is published. The Consumer Complaint Database does not publish complaints that are forwarded to other regulators, such as those concerning banking institutions with assets under $10 billion. In general, the database is updated every day. 
