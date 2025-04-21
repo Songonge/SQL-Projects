@@ -1,4 +1,4 @@
-# Project: Transportation Analysis in India
+# Project: Transportation and Logistics Analysis
 ----
 
 <!--
@@ -20,15 +20,14 @@
    -->
 
 ## Introduction
-<!--The Consumer Complaint Database is a compilation of complaints regarding consumer financial services and products that are forwarded to businesses for resolution. After the business responds and confirms a business relationship with the customer, the complaint is published. The Consumer Complaint Database does not publish complaints that are forwarded to other regulators, such as those concerning banking institutions with assets under $10 billion. In general, the database is updated every day. 
+The Transportation and Logistics Analysis was launched by FP20 Analytics as Challenge 24. It invited data enthusiasts to explore and derive actionable insights from a real-world logistics tracking dataset, featuring shipment records, GPS tracking, vehicle information, and transportation distances.  
+The current report provides the data cleaning steps and responds to the questions asked for the challenge.
 
-In this project, we are focusing on cleaning the Consumer Complaints data to prepare it for analysis. 
--->
 
 ## Problem Statement
-<!--
-The main problem regarding this dataset is as follows: How can financial institutions reduce unresolved complaints and improve response times to enhance customer satisfaction and regulatory compliance? 
--->
+Shipment delays cause disruptions, and as a result, many industries suffer from not delivering goods on time. The question is, how do we help companies solve this issue of delay?
+
+Knowing that in today's fast-paced supply chain industry, it is crucial to optimize shipment efficiency, reduce delivery times, and enhance operational visibility for total success, it is imperative to analyze historical data to uncover insights that will help the industry solve the issue while enhancing customer satisfaction. 
 
 
 ## Deliverables
