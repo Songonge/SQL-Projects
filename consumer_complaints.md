@@ -142,11 +142,25 @@ The data downloaded was stored in a .csv file. Each column in the file is descri
 18. _Complaint_ID_ (TEXT): A unique identifier assigned to each complaint.
 	
 
-<!---
+## Creating the Database
+Since I already have the database available, I will just go ahead and create my table to store the data. If not, the following query can be used: 
+```
+CREATE DATABASE sql_projects
+;
+```
+In this query, **sql_projects** represents the name of the database.
+
+## Creating the Table
+
+### Dropping the Table if it Exists
+```
 DROP TABLE complaints_raw
 ;
+```
 
--- Creating the table
+### Creating Columns in the Table 
+The query below was written to create columns in the table called **complaints_raw**, which will be populated using the downloaded table. If we were working with **MS SQL Server**, we will just import the downloaded **.csv** file without stress.
+```
 CREATE TABLE complaints_raw (
 	date_received DATE,
 	Product TEXT,
@@ -168,90 +182,79 @@ CREATE TABLE complaints_raw (
 	Complaint_ID TEXT
 )
 ;
+```
 
--- Loading the data in the table from the .csv file
+### Loading the Data in the New Columns
+To populate the created column with data, we used the table from the **.csv** file. The query read as follows:
+```
 COPY complaints_raw
 FROM 'C:\Users\edwig\Documents\Courses\Kaggle Datasets\complaints.csv'
 null 'NULL'
 DELIMITER ','
 CSV HEADER
 ;
+```
 
+### Retrieving all the Data from the Table
+```
 SELECT * 
 FROM complaints_raw
 ;
+```
+This returned `3585952` rows.
 
+## Creating a New Table 
+```
 CREATE TABLE complaints AS
 SELECT * FROM complaints_raw
 ;
+```
+> [!Important]
+> Always copy the raw data to a new table while keeping the raw data intact. Perform all cleaning and transformations on the copied table.
+> The raw data can be referred to at any stage of the data cleaning or analysis process if needed.
 
+Now, we write the following query to retrieve the data from the newly copied table.
+```
 SELECT * 
 FROM complaints
-; -- This returned 3585952 rows
+;
+```
+This also returned `3585952` rows as expected.
 
+## Exploratory Data Analysis
+After previewing the data, I realized that the column named _Consumer_complaint_narrative_ was not needed in for the analysis. So, I wrote the following query to delete it.
+```
+ALTER TABLE complaints
+DROP COLUMN consumer_complaint_narrative
+; 
+```
+
+### Counting the number of companies.
+```
 SELECT 
-	company,
+	DISTINCT company,
 	COUNT(*) AS total
 FROM complaints
 GROUP BY company
 ORDER BY total DESC
-; -- This returned 6731 rows with EQUIFAX, INC as the leading company
+;
+```
+This returned `6731` rows with **EQUIFAX, INC.** as the leading company
 
-SELECT 
-	DISTINCT company,
-	COUNT(complaint_id) AS total_complaints
-FROM complaints
-GROUP BY company
-ORDER BY total_complaints DESC
-;  -- This returned 6731 rows with EQUIFAX, INC as the leading company
-
-SELECT 
-	COUNT(complaint_id) AS total_complaints
-FROM complaints
-;  -- This returned 3585952 rows
-
-SELECT *
-FROM complaints
-WHERE product IS NULL
-;  -- Zero row returned
-
+### Counting the Total Quantity for Each Product
+```
 SELECT 
 	product,
 	COUNT(*) AS total_each_product
 FROM complaints
 GROUP BY product
 ORDER BY total_each_product DESC
-; -- This returned 18 rows
+;
+```
+This returned `18` rows, with **Credit report, credit ...** as the leading product.
 
-SELECT 
-	COUNT(*) consumer_disputed_all
-FROM complaints
-WHERE consumer_disputed IS NOT NULL
-; -- This returned 3585952 rows which is the total number of rows
--- meaning that there are no null values
-
-SELECT 
-	COUNT(*) consumer_disputed_all
-FROM complaints
-WHERE consumer_disputed IS NULL
-; -- Zero row returned
-
-SELECT 
-	DISTINCT consumer_disputed,
-	COUNT(*)
-FROM complaints
-GROUP BY consumer_disputed
-; -- This returned 3 rows with N/A = 2817594, No = 619980, Yes = 148378
-
-SELECT 
-	DISTINCT company,
-	COUNT(*) consumer_disputed_all
-FROM complaints
-WHERE consumer_disputed LIKE 'Yes'
-GROUP BY company
-ORDER BY consumer_disputed_all DESC
-; -- This returned 2475 rows with "BANK OF AMERICA, NATIONAL ASSOCIATION" on top with 14387 disputes.
-
+### Returning the percentage of dispute
+```
 WITH null_from_disputes AS (
 	SELECT
 		COUNT(*) null_disputes 
@@ -266,27 +269,89 @@ total_disputes AS (
 SELECT 
 	ROUND(null_disputes * 100.0/NULLIF(total_dispute,0), 2) AS percentage_dispute
 FROM null_from_disputes, total_disputes
-; -- This returned 78.57
+;
+```
+This returned `78.57`, which is very high.
 
+### Checking data in the _Company_response_to_consumer_ column
+```
 SELECT 
 	Company_response_to_consumer,
 	COUNT(*) AS responses
 FROM complaints
 GROUP BY Company_response_to_consumer
 ORDER BY responses DESC
-; -- This returned 9 rows
+; 
+```
+This returned `9` rows, with **Closed with explanation** having the highest amount equal to `2,675,823`. This shows that most complaints were resolved.
 
+### Checking for NULL Values
+1. Checking for NULL values in the product column
+```
+SELECT *
+FROM complaints
+WHERE product IS NULL
+;  
+```
+Zero row returned, indicating that there are no nulls.
+
+2. Checking for NULL values in the _consumer_disputed_all_ column
+```
+SELECT 
+	COUNT(*) consumer_disputed_all
+FROM complaints
+WHERE consumer_disputed IS NOT NULL
+;
+```
+This returned `3585952` rows, which is the total number of rows. This means that there are no null values. The following query also returned zero.
+```
+SELECT 
+	COUNT(*) consumer_disputed_all
+FROM complaints
+WHERE consumer_disputed IS NULL
+; 
+```
+
+<!--
+SELECT 
+	DISTINCT consumer_disputed,
+	COUNT(*)
+FROM complaints
+GROUP BY consumer_disputed
+; -- This returned 3 rows with N/A = 2817594, No = 619980, Yes = 148378
+-->
+
+## Checking for the company with the highest disputes
+```
+SELECT 
+	DISTINCT company,
+	COUNT(*) consumer_disputed_all
+FROM complaints
+WHERE consumer_disputed LIKE 'Yes'
+GROUP BY company
+ORDER BY consumer_disputed_all DESC
+;
+```
+-- This returned `2475` rows with **BANK OF AMERICA, NATIONAL ASSOCIATION** on top with the total number of `14387` disputes.
+
+### Checking and populating empty cells in the _Company_response_to_consumer_ column
+```
 SELECT 
 	*
 FROM complaints
 WHERE Company_response_to_consumer = ''
-; -- This returned 4 rows
-
+;
+```
+This returned `4` rows.
+```
 UPDATE complaints
 SET Company_response_to_consumer = 'Closed with explanation'
 WHERE Company_response_to_consumer = ''
-; -- This added 4 to Company_response_to_consumer = 'Closed with explanation'
+;
+```
+This added `4` to _Company_response_to_consumer_ = 'Closed with explanation'
 
+<!--
 SELECT
 	complaint_id,
 	Company_response_to_consumer,
@@ -294,13 +359,10 @@ SELECT
 FROM complaints
 WHERE company_public_response = 'Company has responded to the consumer and the CFPB and chooses not to provide a public response'
 ; -- This returned 1386092 rows
+-->
 
-SELECT
-	*
-FROM complaints
-WHERE company_public_response = ''
-; -- This returned 1981357 rows
-
+### Checking and populating empty cells in the _company_public_response_ column
+```
 SELECT
 	DISTINCT company_public_response,
 	COUNT(*)
@@ -308,201 +370,326 @@ FROM complaints
 GROUP BY company_public_response
 ORDER BY count DESC
 ;
-
+```
+This returned 12 rows with **N/A** on top with `1,981,357`. Then, we wrote the following query to retrieve empty cells. 
+```
+SELECT
+	*
+FROM complaints
+WHERE company_public_response = ''
+; 
+```
+This returned `1,981,357` rows, confirming the above number. Now we update the empty cells wit **N/A**.
+```
 UPDATE complaints
 SET company_public_response = 'N/A'
 WHERE company_public_response = ''
-; -- This updated 1981357 values
+;
+```
+This updated `1,981,357` cells.
 
-SELECT
-	*
-FROM complaints
-WHERE issue = 'NULL'
-; -- No null values found
-
-SELECT 
-	DISTINCT issue
-FROM complaints
-; -- This returned 165 rows
-
-SELECT
-	*
-FROM complaints
-WHERE timely_response IS NULL
-; -- No null values found
-
-SELECT 
-	DISTINCT timely_response,
-	COUNT(*) AS total_timely_response
-FROM complaints
-GROUP BY timely_response
-; -- This returned Yes: 3533574 and No: 52378
-
--- This is to check for duplicates
-SELECT
-	complaint_id,
-	COUNT(*)
-FROM complaints
-GROUP BY complaint_id
-HAVING COUNT(*) > 1
-; -- No duplicate values found
-
-ALTER TABLE complaints
-DROP COLUMN consumer_complaint_narrative
-; -- We do not need this column in the analysis.
-
+### Checking for NULL values in the _State_ column
+```
 SELECT
 	*
 FROM complaints
 WHERE state = ''
-; -- This returned 41219 rows
+;
+```
+This returned `41,219` rows.
 
+Filling the empty cells with **N/A**.
+```
 UPDATE complaints
 SET state = 'N/A'
 WHERE state = ''
-; -- This updated 41219 values
+;
+```
+This query updated `41,219` cells.
 
+### Checking for NULL values in the _Zip_code_ column
+```
 SELECT
 	*
 FROM complaints
 WHERE zip_code = ''
-; -- This returned 41756 rows
+; 
+```
+This returned `41,756` rows.
 
+Filling the empty cells with **N/A**.
+```
 UPDATE complaints
 SET zip_code = 'N/A'
 WHERE zip_code = ''
-; -- This updated 41756 values
+; 
+```
+This updated `41,756` values.
 
+### Checking for NULL values in the _Tags_ column
+```
 SELECT
 	tags,
 	COUNT(*)
 FROM complaints
 GROUP BY tags
 ; 
+```
 
+```
 SELECT
 	*
 FROM complaints
 WHERE tags = ''
-; -- This returned 3194575 rows
+;
+```
+This returned `3,194,575` rows.
 
+Filling the empty cells with **N/A**.
+```
 UPDATE complaints
 SET tags = 'N/A'
 WHERE tags = ''
-; -- This updated 3194575 values
+;
+```
+This updated `3,194,575` values
 
-SELECT 
-	EXTRACT(YEAR FROM date_received) year_ext
-FROM complaints
-GROUP BY year_ext
-; -- The years range from 2011 till 2023
-
-SELECT 
-	DISTINCT date_received
-FROM complaints
-WHERE date_received IS NULL
-; -- No nulls found
-
+### Checking for NULL values in the _Sub_product_ column
+```
 SELECT 
 	sub_product,
 	COUNT(*)
 FROM complaints
 GROUP BY sub_product
 ORDER BY count
-; -- This returned 77 rows with 235291 nulls
+;
+```
+This returned `77` rows with `235,291` nulls.
 
+Filling the empty cells with **N/A**.
+```
 UPDATE complaints
 SET sub_product = 'N/A'
 WHERE sub_product = ''
-; -- This updated 235291 values
+;
+```
+This updated `235,291` values.
 
-SELECT 
-	*
-FROM complaints
-WHERE company = '' OR company = 'NULL' OR company IS NULL
-; -- No nulls found
-
+### Checking for NULL values in the _Consumer_consent_provided_ column
+```
 SELECT 
 	*
 FROM complaints
 WHERE consumer_consent_provided = '' 
 	OR consumer_consent_provided = 'NULL' 
 	OR consumer_consent_provided IS NULL
-; -- This returned 146563
-
+;
+```
+This returned `146,563` rows.
+<!--- ```
 SELECT 
 	DISTINCT consumer_consent_provided,
 	COUNT(*)
 FROM complaints
 GROUP BY consumer_consent_provided
 ;
+```
+-->
 
+Filling the empty cells with **N/A**.
+```
 UPDATE complaints
 SET consumer_consent_provided = 'N/A'
 WHERE consumer_consent_provided = ''
-; -- This updated 146563 values
+; 
+```
+This updated `146,563` values.
 
+### Checking for NULL values in the _Sub_issue_ column
+```
 SELECT 
 	*
 FROM complaints
 WHERE sub_issue = '' 
 	OR sub_issue = 'NULL' 
 	OR sub_issue IS NULL
-; -- This returned 704472
+; 
+```
+This returned 704472
 
+<!--
 SELECT 
 	DISTINCT sub_issue,
 	COUNT(*)
 FROM complaints
 GROUP BY sub_issue
 ;
+-->
 
+Filling the empty cells with **N/A**.
+```
 UPDATE complaints
 SET sub_issue = 'N/A'
 WHERE sub_issue = ''
-; -- This updated 704472 values
+; 
+```
+This updated `704,472` values.
 
-ALTER TABLE complaints
-RENAME submited_via TO submitted_via
+
+### Checking for NULL values in other columns
+```
+SELECT
+	*
+FROM complaints
+WHERE issue = 'NULL'
 ;
+```
+No null values found.
+<!-- ```
+SELECT 
+	DISTINCT issue
+FROM complaints
+;
+```
+This returned 165 rows
+-->
 
+```
+SELECT
+	*
+FROM complaints
+WHERE timely_response IS NULL
+;
+```
+No null values found.
+
+```
+SELECT 
+	DISTINCT date_received
+FROM complaints
+WHERE date_received IS NULL
+;
+```
+No nulls found.
+
+```
+SELECT 
+	*
+FROM complaints
+WHERE company = '' OR company = 'NULL' OR company IS NULL
+; 
+```
+No nulls found.
+
+```
 SELECT 
 	*
 FROM complaints
 WHERE submitted_via = '' 
 	OR submitted_via = 'NULL' 
 	OR submitted_via IS NULL
-; -- No NULL found
+; 
+```
+No NULL found.
 
+```
 SELECT 
 	*
 FROM complaints
 WHERE date_sent_to_company IS NULL
-; -- No NULL found
+;
+```
+No NULL found.
 
+```
 SELECT 
 	*
 FROM complaints
 WHERE timely_response = '' 
 	OR timely_response = 'NULL' 
 	OR timely_response IS NULL
-; -- No NULL found
+; 
+```
+No NULL found.
 
+```
 SELECT 
 	*
 FROM complaints
 WHERE consumer_disputed = '' 
 	OR consumer_disputed = 'NULL' 
 	OR consumer_disputed IS NULL
-; -- No NULL found
+; 
+```
+No NULL found.
 
+```
 SELECT 
 	*
 FROM complaints
 WHERE complaint_id = '' 
 	OR complaint_id = 'NULL' 
 	OR complaint_id IS NULL
-; -- No NULL found
+; 
+```
+No NULL found.
+
+
+## Evaluating Response Time
+```
+SELECT 
+	DISTINCT timely_response,
+	COUNT(*) AS total_timely_response
+FROM complaints
+GROUP BY timely_response
+;
+```
+This returned:  
+* Yes: `3,533,574`
+* No: `52,378`
+We can see from the results that most responses were given on time.
+
+
+
+## Checking for Duplicate Values
+The _Complaint_ID_ is considered our **primary key**. So, we should check for duplicate values in it. The query reads as follows.
+```
+SELECT
+	complaint_id,
+	COUNT(*)
+FROM complaints
+GROUP BY complaint_id
+HAVING COUNT(*) > 1
+;
+```
+No duplicate values found.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+SELECT 
+	EXTRACT(YEAR FROM date_received) year_ext
+FROM complaints
+GROUP BY year_ext
+; -- The years range from 2011 to 2023
+
+ALTER TABLE complaints
+RENAME submited_via TO submitted_via
+;
 
 CREATE TABLE complaint_cleaned AS
 SELECT *
@@ -566,7 +753,5 @@ FROM companies
 SELECT *
 FROM complaints
 ;
-
-
 
 --->
