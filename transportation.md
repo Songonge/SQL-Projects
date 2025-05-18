@@ -1548,8 +1548,3 @@ DROP COLUMN full_address
 ;
 ```
 
-```PostgreSQL
-ALTER TABLE customers
-DROP COLUMN full_address;
-```
-
