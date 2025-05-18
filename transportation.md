@@ -1547,4 +1547,7 @@ ALTER TABLE customers
 DROP COLUMN full_address
 ;
 ```
+[comment]: <> (This is a comment, it will not be included)
+
+
 
