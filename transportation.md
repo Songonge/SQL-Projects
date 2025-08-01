@@ -1,7 +1,6 @@
 # Project: Transportation and Logistics Analysis
 ----
 
-<!--
 ## Table of Contents
 1. [Introduction](#𝐈𝐧𝐭𝐫𝐨𝐝𝐮𝐜𝐭𝐢𝐨𝐧)
 2. [Problem Statement](#Problem-Statement)
@@ -13,11 +12,13 @@
 7. [Creating the Table](#creating-the-table)
    * [Dropping the Table if it Exists](#Dropping-the-Table-if-it-Exists)
    * [Creating Columns in the Table](#Creating-Columns-in-the-Table)
-8. [Inserting Values in the Table](#Inserting-Values-in-the-Table)
-   * [Retrieving Data from the Table](#Retrieving-Data-from-the-Table)
-9. [Creating a new Table](#Creating-a-new-Table)
+   * [Loading Data into the Table](Loading-Data-in-the-Table)
+8. [Data Cleaning](#Data-Cleaning)
+   * [Checking for Duplicate Values](#Checking-for-duplicate-values)
+   * [Checking and Filling NULL Values](#Checking-and-filling-NULL-values)
+9. [Answering Questions from the Deliverables](#Answering-Questions-from-the-Deliverables)
    * [Retrieving Data from the New Table](#Retrieving-Data-from-the-new-Table)
-   -->
+
 
 ## Introduction
 The Transportation and Logistics Analysis was launched by FP20 Analytics as Challenge 24. It invited data enthusiasts to explore and derive actionable insights from a real-world logistics tracking dataset, featuring shipment records, GPS tracking, vehicle information, and transportation distances.  
@@ -89,7 +90,7 @@ The data downloaded was stored in a .csv file. Each column in the file is descri
 
 ## Creating the Database
 Since I already have the database available, I will just go ahead and create my table to store the data. If not, the following query can be used: 
-```
+```sql
 CREATE DATABASE sql_projects
 ;
 ```
@@ -99,13 +100,13 @@ In this query, **sql_projects** represents the name of the database.
 
 ### Dropping the Table if it Exists
 
-```
+```sql
 DROP TABLE transportation_raw
 ;
 ```
 
 ### Creating the table
-```
+```sql
 CREATE TABLE transportation_raw (
 	gps_provider TEXT,
     booking_id TEXT,
@@ -139,10 +140,11 @@ CREATE TABLE transportation_raw (
 ;
 ```
 
-### Loading the data in the table from the .csv file
-```
+### Loading Data Into the Table 
+Here, we load data into the table from the .csv file.
+```sql
 COPY transportation_raw
-FROM 'C:\Users\edwig\Documents\Courses\Challenges\Transportation-Logistics-Tracking\transportation.csv'
+FROM 'your_path\transportation.csv'
 null 'NULL'
 DELIMITER ','
 CSV HEADER
@@ -150,26 +152,26 @@ CSV HEADER
 ```
 
 ### Retrieving all the data from the table named spotify_history
-```
+```sql
 SELECT * 
 FROM transportation_raw
 ;
 ```
 
 ### Creating a new table named transportation as a copy of the table transportation_raw, where to perform the cleaning.
-```
+```sql
 DROP TABLE transportation
 ;
 ```
 
-```
+```sql
 CREATE TABLE transportation AS
 SELECT * 
 FROM transportation_raw
 ;
 ```
 
-```
+```sql
 SELECT * 
 FROM transportation
 ;
@@ -177,8 +179,8 @@ FROM transportation
 
 ## Data Cleaning
 
-### Checking for duplicate values
-```
+### Checking for Duplicate Values
+```sql
 SELECT 
 	booking_id,
 	COUNT(*) AS total
@@ -188,39 +190,42 @@ HAVING COUNT(*) > 1
 ;
 ```
 
-```
+```sql
 SELECT 
 	booking_id
 FROM (
 	SELECT
 		booking_id, 
-		ROW_NUMBER() OVER (PARTITION BY booking_id, gps_provider,
-		    shipment_type,
-		    booking_date,
-		    vehicle_registration,
-		    origin_location,
-		    destination_location,
-		    origin_loc_latitude,
-		    origin_loc_longitude,
-		    destination_loc_latitude,
-		    destination_loc_longitude,
-		    data_ping_time,
-		    planned_eta,
-		    current_location,
-		    actual_eta,
-		    current_loc_latitude,
-		    current_loc_longitude,
-		    ontime,
-		    trip_start_date,
-		    trip_end_date,
-		    transportation_distance_km,
-		    vehicle_type,
-		    min_km_per_day,
-		    driver_name,
-		    driver_mobile_no,
-		    customer_name_code,
-		    supplier_name_code,
-		    material_shipped) AS row_num
+		ROW_NUMBER() OVER (PARTITION BY
+			booking_id,
+			gps_provider,
+		    	shipment_type,
+		    	booking_date,
+		   	vehicle_registration,
+		    	origin_location,
+		    	destination_location,
+		    	origin_loc_latitude,
+		    	origin_loc_longitude,
+		    	destination_loc_latitude,
+		    	destination_loc_longitude,
+		    	data_ping_time,
+		    	planned_eta,
+		    	current_location,
+		    	actual_eta,
+		    	current_loc_latitude,
+		    	current_loc_longitude,
+		    	ontime,
+		    	trip_start_date,
+		    	trip_end_date,
+		    	transportation_distance_km,
+		    	vehicle_type,
+		    	min_km_per_day,
+		    	driver_name,
+		    	driver_mobile_no,
+		    	customer_name_code,
+		    	supplier_name_code,
+		    	material_shipped
+		) AS row_num
 	FROM transport
 	) dup
 WHERE row_num > 1
@@ -229,57 +234,57 @@ WHERE row_num > 1
 No duplicate values found.
 
 
-### Checking for NULL values in the entire table
-```
+### Checking and Filling NULL Values
+```sql
 SELECT *
 FROM transportation
 WHERE gps_provider IS NULL OR
-    booking_id IS NULL OR
-    shipment_type IS NULL OR
-    booking_date IS NULL OR
-    vehicle_registration IS NULL OR
-    origin_location IS NULL OR
-    destination_location IS NULL OR
-    origin_loc_latitude IS NULL OR
-    origin_loc_longitude IS NULL OR
-    destination_loc_latitude IS NULL OR
-    destination_loc_longitude IS NULL OR
-    data_ping_time IS NULL OR
-    planned_eta IS NULL OR
-    current_location IS NULL OR
-    actual_eta IS NULL OR
-    current_loc_latitude IS NULL OR
-    current_loc_longitude IS NULL OR
-    ontime IS NULL OR
-    trip_start_date IS NULL OR
-    trip_end_date IS NULL OR
-    transportation_distance_km IS NULL OR
-    vehicle_type IS NULL OR
-    min_km_per_day IS NULL OR
-    driver_name IS NULL OR
-    driver_mobile_no IS NULL OR
-    customer_name_code IS NULL OR
-    supplier_name_code IS NULL OR
-    material_shipped IS NULL
+	booking_id IS NULL OR
+    	shipment_type IS NULL OR
+    	booking_date IS NULL OR
+    	vehicle_registration IS NULL OR
+    	origin_location IS NULL OR
+    	destination_location IS NULL OR
+    	origin_loc_latitude IS NULL OR
+    	origin_loc_longitude IS NULL OR
+    	destination_loc_latitude IS NULL OR
+    	destination_loc_longitude IS NULL OR
+    	data_ping_time IS NULL OR
+    	planned_eta IS NULL OR
+    	current_location IS NULL OR
+    	actual_eta IS NULL OR
+    	current_loc_latitude IS NULL OR
+    	current_loc_longitude IS NULL OR
+    	ontime IS NULL OR
+    	trip_start_date IS NULL OR
+    	trip_end_date IS NULL OR
+    	transportation_distance_km IS NULL OR
+    	vehicle_type IS NULL OR
+    	min_km_per_day IS NULL OR
+    	driver_name IS NULL OR
+    	driver_mobile_no IS NULL OR
+    	customer_name_code IS NULL OR
+    	supplier_name_code IS NULL OR
+    	material_shipped IS NULL
 ;
 ```
 
 #### Checking for NULL values in the _min_km_per_day_ column.
-```
+```sql
 SELECT 
 	DISTINCT min_km_per_day
 FROM transportation
 ;
 ```
 
-```
+```sql
 UPDATE transportation
 SET min_km_per_day = 0
 WHERE min_km_per_day IS NULL OR min_km_per_day NOT IN (250, 275);
 ;
 ```
 
-```
+```sql
 SELECT 
 	COUNT(min_km_per_day)
 FROM transportation
@@ -302,7 +307,7 @@ WHERE min_km_per_day = 0
 ```
 
 #### Copying the table to a new table
-```
+```sql
 CREATE TABLE transport AS
 SELECT *
 FROM transportation
@@ -310,7 +315,7 @@ FROM transportation
 ```
 
 Retrieving the data from the newly copied table.
-```
+```sql
 SELECT *
 FROM transport
 ;
@@ -318,7 +323,7 @@ FROM transport
 
 
 #### Filling blank or NULL values in the _min_km_per_day_ column with a random selection between 250 and 275.
-```
+```sql
 UPDATE transport
 SET min_km_per_day = CASE 
     WHEN random() < 0.5 THEN 250  
@@ -329,7 +334,7 @@ WHERE min_km_per_day NOT IN (250, 275)
 ```
 This updated `2645` rows.
 
-```
+```sql
 SELECT 
 	DISTINCT min_km_per_day
 FROM transport
@@ -337,7 +342,7 @@ FROM transport
 ```
 
 #### Checking for NULL values in the _vehicle_type_ column
-```
+```sql
 SELECT 
 	vehicle_type,
 	COUNT(vehicle_type) AS total
@@ -347,7 +352,7 @@ ORDER BY total DESC
 ;
 ```
 
-```
+```sql
 SELECT 
 	COUNT(
     CASE
@@ -359,7 +364,7 @@ FROM transport
 ;
 ```
 
-```
+```sql
 SELECT 
 	booking_id,
 	COUNT(*) AS total
@@ -369,7 +374,7 @@ HAVING COUNT(*) > 1
 ;
 ```
 
-```
+```sql
 SELECT 
 	*
 FROM transport
@@ -377,7 +382,7 @@ WHERE booking_id = 'MVCV0000759/082021'
 ;
 ```
 
-```
+```sql
 SELECT 
 	*
 FROM transport
@@ -386,7 +391,7 @@ WHERE booking_id = 'MVCV0000798/082021'
 ```
 
 <!--
-```
+```sql
 -- SELECT 
 -- 	*
 -- FROM transportation
@@ -395,7 +400,7 @@ WHERE booking_id = 'MVCV0000798/082021'
 ```
 -->
 
-```
+```sql
 SELECT
 	booking_id, shipment_type,
 	booking_date, vehicle_registration,
@@ -412,7 +417,8 @@ SELECT
 	material_shipped,	
 	COUNT(*) AS total
 FROM transport
-GROUP BY booking_id, shipment_type,
+GROUP BY
+	booking_id, shipment_type,
 	booking_date, vehicle_registration,
 	origin_location, destination_location,
 	origin_loc_latitude, origin_loc_longitude,
@@ -429,7 +435,7 @@ HAVING COUNT(*) > 1
 ;
 ```
 
-```
+```sql
 SELECT
 	booking_id,	
 	COUNT(*) AS total
@@ -439,7 +445,7 @@ HAVING COUNT(*) > 1
 ;
 ```
 
-```
+```sql
 SELECT 
 	ctid,
 	ROW_NUMBER() OVER (PARTITION BY 
@@ -461,7 +467,7 @@ FROM transport
 ;
 ```
 
-```
+```sql
 SELECT 
 	ctid
 FROM (
@@ -488,7 +494,7 @@ WHERE row_num > 1
 ```
 
 <!--
-```
+```sql
 -- ALTER TABLE transport
 -- ADD CONSTRAINT booking_key PRIMARY KEY (booking_id)
 -- ;
@@ -496,8 +502,8 @@ WHERE row_num > 1
 -->
 
 #### Setting the _booking_id_ column as a PRIMARY KEY
+```sql
 -- Checking for entries for one of the duplicated _booking_id_
-```
 SELECT 
 	*
 FROM transport
@@ -505,7 +511,7 @@ WHERE booking_id = 'MVCV0000759/082021'
 ;
 ```
 
-```
+```sql
 SELECT 
 	material_shipped,
 	COUNT(*)
@@ -514,23 +520,21 @@ WHERE material_shipped LIKE '%Rectifier%'
 GROUP BY material_shipped
 ;
 ```
-
-```
+```sql
 DELETE FROM transport
 WHERE booking_id = 'MVCV0000759/082021' AND material_shipped = 'Rectifier'
 ;
 ```
 
 #### Checking for entries for the other duplicated _booking_id_
-```
-SELECT 
-	*
+```sql
+SELECT *
 FROM transport
 WHERE booking_id = 'MVCV0000798/082021'
 ;
 ```
 
-```
+```sql
 SELECT 
 	DISTINCT material_shipped,
 	COUNT(*)
@@ -542,7 +546,7 @@ GROUP BY material_shipped
 ;
 ```
 
-```
+```sql
 SELECT 
 	booking_id,
 	customer_name_code,
@@ -560,7 +564,7 @@ GROUP BY
 ```
 
 <!--
-```
+```sql
 -- SELECT 
 -- 	gps_provider,
 -- 	COUNT(*)
@@ -572,43 +576,43 @@ GROUP BY
 -->
 
 ### Checking for NULL values in the entire table
-```
+```sql
 SELECT *
 FROM transport
 WHERE gps_provider IS NULL OR
-    booking_id IS NULL OR
-    shipment_type IS NULL OR
-    booking_date IS NULL OR
-    vehicle_registration IS NULL OR
-    origin_location IS NULL OR
-    destination_location IS NULL OR
-    origin_loc_latitude IS NULL OR
-    origin_loc_longitude IS NULL OR
-    destination_loc_latitude IS NULL OR
-    destination_loc_longitude IS NULL OR
-    data_ping_time IS NULL OR
-    planned_eta IS NULL OR
-    current_location IS NULL OR
-    actual_eta IS NULL OR
-    current_loc_latitude IS NULL OR
-    current_loc_longitude IS NULL OR
-    ontime IS NULL OR
-    trip_start_date IS NULL OR
-    trip_end_date IS NULL OR
-    transportation_distance_km IS NULL OR
-    vehicle_type IS NULL OR
-    min_km_per_day IS NULL OR
-    driver_name IS NULL OR
-    driver_mobile_no IS NULL OR
-    customer_name_code IS NULL OR
-    supplier_name_code IS NULL OR
-    material_shipped IS NULL
+	booking_id IS NULL OR
+    	shipment_type IS NULL OR
+    	booking_date IS NULL OR
+	vehicle_registration IS NULL OR
+    	origin_location IS NULL OR
+    	destination_location IS NULL OR
+    	origin_loc_latitude IS NULL OR
+    	origin_loc_longitude IS NULL OR
+    	destination_loc_latitude IS NULL OR
+    	destination_loc_longitude IS NULL OR
+    	data_ping_time IS NULL OR
+    	planned_eta IS NULL OR
+    	current_location IS NULL OR
+    	actual_eta IS NULL OR
+    	current_loc_latitude IS NULL OR
+    	current_loc_longitude IS NULL OR
+    	ontime IS NULL OR
+    	trip_start_date IS NULL OR
+    	trip_end_date IS NULL OR
+    	transportation_distance_km IS NULL OR
+    	vehicle_type IS NULL OR
+    	min_km_per_day IS NULL OR
+    	driver_name IS NULL OR
+    	driver_mobile_no IS NULL OR
+    	customer_name_code IS NULL OR
+    	supplier_name_code IS NULL OR
+    	material_shipped IS NULL
 ; 
 ```
 This returned `933` rows.
 
 #### Checking for NULL values in the _current_location_ column
-```
+```sql
 SELECT DISTINCT current_location
 FROM transport
 -- WHERE 
@@ -618,36 +622,37 @@ ORDER BY current_location ASC
 ```
 This returned `12` rows.
 
-```
-SELECT current_location
+```sql
+SELECT
+	current_location
 FROM transport
 WHERE current_location LIKE '????, Nashik - Pune Hwy, Chimbali, Maharashtra 412105, India'
 ;
 ```
 
 #### Updating inconsistent names in the current_location column
-```
+```sql
 UPDATE transport
 SET current_location = 'Unnamed Road, Nashik - Pune Hwy, Chimbali, Maharashtra 412105, India'
 WHERE current_location = '????, Nashik - Pune Hwy, Chimbali, Maharashtra 412105, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET current_location = 'Unnamed Road, Diara Sector, Bilaspur, Himachal Pradesh 174001, India'
 WHERE current_location = '???? ???, Diara Sector, Bilaspur, Himachal Pradesh 174001, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET current_location = 'Unnamed Road, Pune - Pandharpur Rd, Maharashtra 415528, India'
 WHERE current_location = '?Pune - Pandharpur Rd, Maharashtra 415528, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET current_location = 'Unknown'
 WHERE current_location = 'Null'
@@ -655,27 +660,27 @@ WHERE current_location = 'Null'
 ```
 This updated `12` rows.
 
-```
+```sql
 SELECT *
 FROM transport
 ;
 ```
 
-```
+```sql
 SELECT *
 FROM transport
 WHERE 
-    min_km_per_day IS NULL OR
-    driver_name IS NULL OR
-    driver_mobile_no IS NULL OR
-    customer_name_code IS NULL OR
-    supplier_name_code IS NULL OR
-    material_shipped IS NULL
+	min_km_per_day IS NULL OR
+    	driver_name IS NULL OR
+    	driver_mobile_no IS NULL OR
+    	customer_name_code IS NULL OR
+    	supplier_name_code IS NULL OR
+    	material_shipped IS NULL
 ;
 ```
 
 ### Filling NULL values in the _gps_provider_ column
-```
+```sql
 UPDATE transport
 SET gps_provider = 'Unknown'
 WHERE gps_provider = 'Null'
@@ -683,7 +688,7 @@ WHERE gps_provider = 'Null'
 ```
 
 #### Checking for NULL values in the _gps_provider_ column
-```
+```sql
 SELECT 
 	data_ping_time, 
 	COUNT(*) AS total
@@ -694,7 +699,7 @@ ORDER BY total DESC
 ```
 
 #### Filling NULL values in the _gps_provider_ column
-```
+```sql
 UPDATE transport
 SET data_ping_time = '00:05:09'
 WHERE data_ping_time IS NULL 
@@ -702,7 +707,7 @@ WHERE data_ping_time IS NULL
 ```
 
 #### Checking for NULL values in the _actual_eta_ column
-```
+```sql
 SELECT 
 	actual_eta, 
 	COUNT(*) AS total
@@ -713,43 +718,45 @@ ORDER BY total DESC
 ```
 
 #### Filling NULL values in the actual_eta column
-```
+```sql
 UPDATE transport
-SET actual_eta = CAST(CASE 
-    WHEN random() < 0.5 THEN '2020-08-04 21:38:00' 
-	WHEN random() BETWEEN 0.5 AND 1 THEN '2020-06-18 17:19:00' 
-	WHEN random() > 1 THEN '2020-07-31 13:13:00'
-END AS TIMESTAMP)
+SET actual_eta = CAST(
+	CASE 
+		WHEN random() < 0.5 THEN '2020-08-04 21:38:00' 
+		WHEN random() BETWEEN 0.5 AND 1 THEN '2020-06-18 17:19:00' 
+		WHEN random() > 1 THEN '2020-07-31 13:13:00'
+	END AS TIMESTAMP)
 WHERE actual_eta IS NULL
 ;
 ```
 
 #### Checking for NULL values in the _transportation_distance_km_ column
 
-```
-SELECT DISTINCT transportation_distance_km,
-COUNT(*) AS total
+```sql
+SELECT
+	DISTINCT transportation_distance_km,
+	COUNT(*) AS total
 FROM transport
 GROUP BY transportation_distance_km
 ORDER BY total DESC
 ;
 ```
 
-```
+```sql
 SELECT *
 FROM transport
 WHERE gps_provider = 'Consent Track'
 ;
 ```
 
-```
+```sql
 ALTER TABLE transport
 ALTER transportation_distance_km TYPE NUMERIC
 ;
 ```
 
 #### Filling NULL values in the _transportation_distance_km_ column
-```
+```sql
 SELECT 
 	COALESCE(transportation_distance_km, (
 		SELECT 
@@ -762,7 +769,7 @@ FROM transport
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET transportation_distance_km = (
 		SELECT 
@@ -776,7 +783,7 @@ WHERE transportation_distance_km IS NULL
 
 
 #### Checking for NULL values in the _transportation_distance_km_ column
-```
+```sql
 SELECT 
 	DISTINCT vehicle_type,
 	COUNT(*) AS total
@@ -787,7 +794,7 @@ ORDER BY total DESC
 ```
 This returned `39` rows with `763` NULL values.
 
-```
+```sql
 SELECT *
 FROM transport
 WHERE vehicle_type IS NULL
@@ -795,7 +802,7 @@ WHERE vehicle_type IS NULL
 ```
 This returned `763` rows.
 
-```
+```sql
 SELECT 
 	gps_provider,
 	booking_id,
@@ -803,7 +810,8 @@ SELECT
 	COUNT(*) AS total
 FROM transport
 WHERE vehicle_type IS NULL
-GROUP BY gps_provider,
+GROUP BY
+	gps_provider,
 	booking_id,
 	vehicle_type
 ORDER BY total DESC
@@ -811,7 +819,7 @@ ORDER BY total DESC
 ```
 This returned `761` to,ws most of them being Vamosys gps_provider.
 
-```
+```sql
 SELECT 
 	gps_provider,
 	COUNT(*) AS total
@@ -823,8 +831,7 @@ ORDER BY total DESC
 ```
 This returned `12` rows with `600` Vamosys gps_provider.
 
-
-```
+```sql
 SELECT 
 	*
 FROM transport
@@ -832,7 +839,7 @@ WHERE gps_provider = 'Vamosys' AND vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 ;
 ```
 
-```
+```sql
 SELECT 
 	DISTINCT vehicle_type,
 	COUNT(*) AS total
@@ -844,21 +851,21 @@ ORDER BY total DESC
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type IS NULL AND gps_provider = 'Vamosys'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type IS NULL AND gps_provider = 'Vamosys'
 ;
 ```
 
-```
+```sql
 SELECT 
 	vehicle_type,
 	COUNT(*) AS total
@@ -870,14 +877,14 @@ ORDER BY total DESC
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '40 FT 3XL Trailer 35MT'
 WHERE vehicle_type IS NULL AND gps_provider = 'Consent Track'
 ;
 ```
 
-```
+```sql
 SELECT 
 	vehicle_type,
 	COUNT(*) AS total
@@ -889,107 +896,100 @@ ORDER BY total DESC
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Virstempo'
 ; 
 ```
 This returned `14` rows with _vehicle_type_ all NULL values.
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = 'Unknown'
 WHERE vehicle_type IS NULL AND gps_provider = 'Virstempo'
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Bhiwadidelhiroadline'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = 'Unknown'
 WHERE vehicle_type IS NULL AND gps_provider = 'Bhiwadidelhiroadline'
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Beecon'
 ; -- This returned 33 rows with vehicle_type all NULL values
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type IS NULL AND gps_provider = 'Beecon'
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Krc Logistics'
 ; 
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type IS NULL AND gps_provider = 'Krc Logistics'
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Nimble'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type IS NULL AND gps_provider = 'Nimble'
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Wabcotrans'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = 'Unknown'
 WHERE vehicle_type IS NULL AND gps_provider = 'Wabcotrans'
 ;
 ```
 
-```
+```sql
 SELECT *
 FROM transport
 WHERE vehicle_type IS NULL
 ;
 ```
 
-```
-SELECT 
-*
+```sql
+SELECT *
 FROM transport
 WHERE gps_provider = 'Dhillongoods'
 	OR gps_provider = 'Manual'
@@ -998,7 +998,7 @@ WHERE gps_provider = 'Dhillongoods'
 ```
 This returned `13` rows with _vehicle_type_ all NULL values.
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE gps_provider = 'Dhillongoods'
@@ -1007,14 +1007,14 @@ WHERE gps_provider = 'Dhillongoods'
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type IS NULL AND gps_provider = 'Bally Logistics'
 ;
 ```
 
-```
+```sql
 SELECT 
 	DISTINCT vehicle_type,
 	COUNT(*) AS total
@@ -1024,20 +1024,20 @@ ORDER BY total DESC
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET vehicle_type = '32 FT Multi-Axle 14MT - HCV'
 WHERE vehicle_type ='Unknown'
 ;
 ```
 
-```
+```sql
 SELECT *
 FROM transport
 ;
 ```
 
-```
+```sql
 SELECT 
 	DISTINCT driver_mobile_no,
 	COUNT(*) AS total
@@ -1048,34 +1048,34 @@ ORDER BY total DESC
 ;
 ```
 
-```
+```sql
 UPDATE transport
 SET driver_mobile_no = 'Unknown'
 WHERE driver_mobile_no ='NA'
 ;
 ```
 
-```
+```sql
 SELECT DISTINCT shipment_type
 FROM transport
 ;
 ```
 
-```
+```sql
 CREATE TABLE transport_new AS
 SELECT * 
 FROM transport
 ;
 ```
 
-```
+```sql
 SELECT * 
 FROM transport_new
 ;
 ```
 
 #### Splitting the origin_location column into three columns representing the town, city, and state
-```
+```sql
 SELECT
 	origin_location,
 	SPLIT_PART(origin_location, ',', 1) AS origin_town,
@@ -1086,7 +1086,7 @@ FROM transport_new
 ```
 
 <!--
-```
+```sql
 -- ALTER TABLE transport_new
 -- DROP COLUMN origin_town, 
 -- DROP COLUMN origin_city, 
@@ -1095,7 +1095,7 @@ FROM transport_new
 ```
 -->
 
-```
+```sql
 ALTER TABLE transport_new
 ADD COLUMN origin_loc_town TEXT, 
 ADD COLUMN origin_loc_city TEXT, 
@@ -1103,7 +1103,7 @@ ADD COLUMN origin_loc_state TEXT
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET 
 	origin_loc_town = SPLIT_PART(origin_location, ',', 1),
@@ -1112,7 +1112,7 @@ SET
 ;
 ```
 
-```
+```sql
 ALTER TABLE transport_new
 ADD COLUMN destination_loc_town TEXT, 
 ADD COLUMN destination_loc_city TEXT, 
@@ -1120,7 +1120,7 @@ ADD COLUMN destination_loc_state TEXT
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET 
 	destination_loc_town = SPLIT_PART(destination_location, ',', 1),
@@ -1129,58 +1129,56 @@ SET
 ;
 ```
 
-```
+```sql
 ALTER TABLE transport_new
 ADD COLUMN current_loc_country TEXT 
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
-SET 
-	current_loc_country = RIGHT(current_location, 5)
+SET current_loc_country = RIGHT(current_location, 5)
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET destination_loc_town = 'Hosur - Thally Rd, Near By Karnoor Village, Tamil Nadu 635110, India'
 WHERE current_location = 'Block No. 1 Survey No. 466,467,468,469, Plot No. 474, 485, Hosur - Thally Rd, Near By Karnoor Village, Tamil Nadu 635110, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET destination_loc_town = 'Keshav Rd, Meerut, Uttar Pradesh 250103, India'
 WHERE current_location = 'Keshav Rd, Panchvati Enclave, Sector 4, Mda, Meerut, Uttar Pradesh 250103, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET destination_loc_town = 'Golf Links Rd, Ghaziabad, Uttar Pradesh 201001, India'
 WHERE current_location = 'Golf Links Rd, Pandav Nagar, Uttar Pradesh 201001, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET destination_loc_town = '17, Ghaziabad, Uttar Pradesh 201003, India'
 WHERE current_location = '17, Mainapur, Uttar Pradesh 201003, India'
 ;
 ```
 
-```
+```sql
 UPDATE transport_new
 SET destination_loc_town = 'Outer Ring Road, Bengaluru, Karnataka 560043, India'
 WHERE current_location = 'No 13/14 Royal Chambers, 3rd Floor, Dodda Banaswadi, Outer Ring Road, Near Vijaya Bank Colony., Annaiah Reddy Layout, Dodda Banaswadi, Bengaluru, Karnataka 560043, India'
 ;
 ```
 
-```
+```sql
 ALTER TABLE transport_new
 ADD COLUMN current_loc_road TEXT,
--- ADD COLUMN current_loc_town TEXT,
 ADD COLUMN current_loc_city TEXT, 
 ADD COLUMN current_loc_state TEXT, 
 ADD COLUMN current_loc_country TEXT, 
@@ -1191,7 +1189,7 @@ ADD COLUMN current_loc_t4 TEXT
 ;
 ```
 
-```
+```sql
 ALTER TABLE transport_new
 DROP COLUMN current_loc_road,
 DROP COLUMN current_loc_city, 
@@ -1205,7 +1203,7 @@ DROP COLUMN current_loc_t4
 ```
 
 <!--
-```
+```sql
 -- UPDATE transport_new
 -- SET 
 -- 	current_loc_town = SPLIT_PART(origin_location, ',', 1),
@@ -1215,7 +1213,7 @@ DROP COLUMN current_loc_t4
 ```
 -->
 
-```
+```sql
 UPDATE transport_new
 SET
 	current_loc_road = SPLIT_PART(current_location, ',', 1),
@@ -1230,7 +1228,7 @@ SET
 ```
 
 <!--
-```
+```sql
 -- DROP TABLE location
 -- ;
 -- CREATE TABLE location AS
@@ -1249,24 +1247,23 @@ SET
 ```
 -->
 
-```
+```sql
 UPDATE transport_new
-SET
-	current_loc_state = 'Tamil Nadu 635110'
+SET current_loc_state = 'Tamil Nadu 635110'
 WHERE current_loc_state = '468' AND current_loc_road = 'Block No. 1 Survey No. 466'
 ;
 ```
 
-```	
+```sql	
 SELECT *
 FROM transport_new
 ;
 ```
 
-## Answering the Questions
+## Answering Questions from the Deliverables
 
 ### Top Routes: Most Common Shipment Routes and Their Average Distances
-```
+```sql
 SELECT 
     origin_location, 
     destination_location, 
@@ -1285,7 +1282,7 @@ ORDER BY total_shipments DESC, avg_distance DESC
 
 
 ### Delivery Times: Routes with the Longest Delivery Times
-```
+```sql
 SELECT 
   origin_location, 
   destination_location, 
@@ -1308,7 +1305,7 @@ LIMIT 10
 ### Peak Shipments: Busiest Booking and Delivery Dates
 
 #### Busiest Booking Dates
-```
+```sql
 SELECT 
 	TO_CHAR(booking_date, 'Day') AS day_name,
     COUNT(*) AS total_bookings
@@ -1338,7 +1335,7 @@ LIMIT 10
 -- ; -->
 
 #### Busiest Delivery Dates
-```
+```sql
 SELECT 
     DATE(trip_end_date) AS delivery_day, 
     COUNT(*) AS total_deliveries
@@ -1350,7 +1347,7 @@ LIMIT 10
 ```
 
 ### Delays Analysis: Factors Contributing to Shipment Delays
-```
+```sql
 SELECT 
     vehicle_type, 
     shipment_type, 
@@ -1366,7 +1363,7 @@ ORDER BY avg_delay_hours DESC
 ```
 
 ### Supplier Trends: Top Suppliers and Their Delay Rates
-```
+```sql
 SELECT 
     supplier_name_code, 
     COUNT(*) AS total_shipments,
@@ -1393,7 +1390,7 @@ LIMIT 10
 ```
 
 ### Customer Insights: Top Customers and Their Delay Experience
-```
+```sql
 SELECT 
     customer_name_code, 
     COUNT(*) AS total_shipments,
@@ -1404,12 +1401,15 @@ SELECT
 			ELSE 0 
 		END
 		) AS delayed_shipments,
-    ROUND((SUM(CASE WHEN actual_eta > (actual_eta::date + planned_eta)::timestamp 
-					THEN 1 
-					ELSE 0 
-				END
-			) * 100.0) / COUNT(*), 2
-	) AS delay_percentage
+    ROUND((
+	SUM(
+		CASE
+			WHEN actual_eta > (actual_eta::date + planned_eta)::timestamp 
+			THEN 1 
+			ELSE 0 
+		END
+	) * 100.0) / COUNT(*), 2
+) AS delay_percentage
 FROM transport_new
 GROUP BY customer_name_code
 ORDER BY total_shipments DESC
@@ -1418,13 +1418,14 @@ LIMIT 10
 ```
 
 ### Material Movement: Most Frequently Shipped Materials and Delivery Times
-```
+```sql
 SELECT 
-    material_shipped, 
-    COUNT(*) AS total_shipments, 
-    ROUND(
+	material_shipped, 
+    	COUNT(*) AS total_shipments, 
+    	ROUND(
 		AVG(
-			EXTRACT(EPOCH FROM (trip_end_date - trip_start_date))/3600), 2
+			EXTRACT(EPOCH FROM (trip_end_date - trip_start_date))/3600
+		), 2
 	) AS avg_delivery_time_hours
 FROM transport_new
 GROUP BY material_shipped
@@ -1434,13 +1435,14 @@ LIMIT 10
 ```
 
 ### Bottlenecks: Most Common Shipment Delays Based on GPS Data
-```
+```sql
 SELECT 
-    current_location, 
-    COUNT(*) AS delay_occurrences,
-    ROUND(
+	current_location, 
+    	COUNT(*) AS delay_occurrences,
+    	ROUND(
 		AVG(
-			EXTRACT(EPOCH FROM (actual_eta - (actual_eta::date + planned_eta)::timestamp ))/3600), 2
+			EXTRACT(EPOCH FROM (actual_eta - (actual_eta::date + planned_eta)::timestamp ))/3600
+		), 2
 	) AS avg_delay_hours
 FROM transport_new
 WHERE actual_eta > (actual_eta::date + planned_eta)::timestamp 
@@ -1451,7 +1453,7 @@ LIMIT 10
 ```
 
 ### Predicting Delays: To build a model predicting shipment delays, first extract key features:
-```
+```sql
 SELECT 
     transportation_distance_km,
     vehicle_type,
@@ -1471,13 +1473,15 @@ FROM transport_new
 
 ### Route Optimization: Strategies for Efficiency
 
-A key optimization is finding routes where actual distance deviates from expected:
-```
+A key optimization is finding routes where the actual distance deviates from the expected:
+```sql
 SELECT 
-    origin_location, 
-    destination_location, 
-    ROUND(AVG(transportation_distance_km), 2) AS avg_distance,
-    ROUND(AVG(EXTRACT(EPOCH FROM (trip_end_date - trip_start_date))/3600), 2) AS avg_delivery_time_hours
+	origin_location, 
+    	destination_location, 
+    	ROUND(AVG(transportation_distance_km), 2) AS avg_distance,
+    	ROUND(AVG(
+		EXTRACT(EPOCH FROM (trip_end_date - trip_start_date))/3600), 2
+	) AS avg_delivery_time_hours
 FROM transport_new
 GROUP BY origin_location, destination_location
 HAVING COUNT(*) > 5
@@ -1486,18 +1490,18 @@ LIMIT 10
 ;
 ```
 
-```
+```sql
 SELECT *
 FROM transport_new
 ;
 ```
 
-```
+```sql
 DROP TABLE customers
 ;
 ```
 
-```
+```sql
 CREATE TABLE customers (
 	customer_id SERIAL PRIMARY KEY,
 	customer_name TEXT,
@@ -1505,25 +1509,25 @@ CREATE TABLE customers (
 );
 ```
 
-```
+```sql
 INSERT INTO customers
 (customer_id, customer_name, full_address)
 VALUES
 (1, 'Jane Smith', '456 Maple Ave., San Francisco, CA, 44102'),
 (2, 'Emily Davis', '321 Pine Ln., Miami, FL, 33130'),
 (3, 'Olivia Wong', '555 Ocean Blvd, Santa Monica, CA, 90210'),
-(4, 'Julia Lopez', '789 oak Rd, Houston, TX, 77005'),
-(5, 'Anna Jones', '1001 cedar Dr., Dallas, TX, 75001')
+(4, 'Julia Lopez', '789 Oak Rd, Houston, TX, 77005'),
+(5, 'Anna Jones', '1001 Cedar Dr., Dallas, TX, 75001')
 ;
 ```
 
-```
+```sql
 SELECT *
 FROM customers
 ;
 ```
 
-```
+```sql
 ALTER TABLE customers
 ADD COLUMN street TEXT,
 ADD COLUMN city TEXT,
@@ -1532,7 +1536,7 @@ ADD COLUMN postal_code TEXT
 ;
 ```
 
-```
+```sql
 UPDATE customers
 SET
 	street = SPLIT_PART(full_address, ',', 1),
@@ -1542,7 +1546,7 @@ SET
 ;
 ```
 
-```
+```sql
 ALTER TABLE customers
 DROP COLUMN full_address
 ;
