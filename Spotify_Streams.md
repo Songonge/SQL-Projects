@@ -1,4 +1,4 @@
-# Project: Data Cleaning for Spotify Streams 
+# Project: Cleaning Spotify Streams Data in PostgreSQL
 ----
 
 ## Table of Contents
@@ -1081,6 +1081,8 @@ From the above tasks, we could uncover the following insights:
 * The usage peak differs from one platform to another.  
 
 Now that the data is cleaned, we can proceed with the analysis in Power BI.
+
+Follow this [link](https://github.com/Songonge/Power-BI-Projects/tree/main/Spotify%20Songs%20Analysis%202023) to view the dashboard and the full report.
 
 
 
