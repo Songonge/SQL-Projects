@@ -189,7 +189,7 @@ CREATE TABLE complaints_raw (
 To populate the created column with data, we used the table from the **.csv** file. The query read as follows:
 ```sql
 COPY complaints_raw
-FROM 'C:\Users\edwig\Documents\Courses\Kaggle Datasets\complaints.csv'
+FROM 'your_path\complaints.csv'
 null 'NULL'
 DELIMITER ','
 CSV HEADER
