@@ -99,15 +99,15 @@ Go to Kaggle and get the API Key. Proceed as follows:
 pip install kaggle
 ```
 * Import Kaggle
-```
+```python
 import kaggle
 ```
 * Now, we need to check if we have access to the dataset.
-```
+```python
 !kaggle datasets list
 ```
 * Next, we go back to the consumer complaints page on Kaggle and copy the path (text between the double quotes) from the code I mentioned in the second bullet on the **Data information** section. Go to VS Code and write the following to download the dataset:
-```
+```python
 !kaggle datasets download -d utkarshx27/consumer-complaint --unzip
 ```
 > [!Note]
@@ -145,7 +145,7 @@ The data downloaded was stored in a .csv file. Each column in the file is descri
 
 ## Creating the Database
 Since I already have the database available, I will just go ahead and create my table to store the data. If not, the following query can be used: 
-```
+```sql
 CREATE DATABASE sql_projects
 ;
 ```
@@ -154,14 +154,14 @@ In this query, **sql_projects** represents the name of the database.
 ## Creating the Table
 
 ### Dropping the Table if it Exists
-```
+```sql
 DROP TABLE complaints_raw
 ;
 ```
 
 ### Creating Columns in the Table 
 The query below was written to create columns in the table called **complaints_raw**, which will be populated using the downloaded table. If we were working with **MS SQL Server**, we will just import the downloaded **.csv** file without stress.
-```
+```sql
 CREATE TABLE complaints_raw (
 	date_received DATE,
 	Product TEXT,
@@ -187,7 +187,7 @@ CREATE TABLE complaints_raw (
 
 ### Loading the Data in the New Columns
 To populate the created column with data, we used the table from the **.csv** file. The query read as follows:
-```
+```sql
 COPY complaints_raw
 FROM 'C:\Users\edwig\Documents\Courses\Kaggle Datasets\complaints.csv'
 null 'NULL'
@@ -197,7 +197,7 @@ CSV HEADER
 ```
 
 ### Retrieving all the Data from the Table
-```
+```sql
 SELECT * 
 FROM complaints_raw
 ;
@@ -205,7 +205,7 @@ FROM complaints_raw
 This returned `3585952` rows.
 
 ## Creating a New Table 
-```
+```sql
 CREATE TABLE complaints AS
 SELECT * FROM complaints_raw
 ;
@@ -215,7 +215,7 @@ SELECT * FROM complaints_raw
 > The raw data can be referred to at any stage of the data cleaning or analysis process if needed.
 
 Now, we write the following query to retrieve the data from the newly copied table.
-```
+```sql
 SELECT * 
 FROM complaints
 ;
@@ -224,14 +224,14 @@ This also returned `3585952` rows as expected.
 
 ## Exploratory Data Analysis
 After previewing the data, I realized that the column named _Consumer_complaint_narrative_ was not needed in for the analysis. So, I wrote the following query to delete it.
-```
+```sql
 ALTER TABLE complaints
 DROP COLUMN consumer_complaint_narrative
 ; 
 ```
 
 ### Counting the number of companies.
-```
+```sql
 SELECT 
 	DISTINCT company,
 	COUNT(*) AS total
@@ -243,7 +243,7 @@ ORDER BY total DESC
 This returned `6731` rows with **EQUIFAX, INC.** as the leading company
 
 ### Counting the Total Quantity for Each Product
-```
+```sql
 SELECT 
 	product,
 	COUNT(*) AS total_each_product
@@ -255,7 +255,7 @@ ORDER BY total_each_product DESC
 This returned `18` rows, with **Credit report, credit ...** as the leading product.
 
 ### Returning the percentage of dispute
-```
+```sql
 WITH null_from_disputes AS (
 	SELECT
 		COUNT(*) null_disputes 
@@ -275,7 +275,7 @@ FROM null_from_disputes, total_disputes
 This returned `78.57`, which is very high.
 
 ### Checking data in the _Company_response_to_consumer_ column
-```
+```sql
 SELECT 
 	Company_response_to_consumer,
 	COUNT(*) AS responses
@@ -288,7 +288,7 @@ This returned `9` rows, with **Closed with explanation** having the highest amou
 
 ### Checking for NULL Values
 1. Checking for NULL values in the product column
-```
+```sql
 SELECT *
 FROM complaints
 WHERE product IS NULL
@@ -297,7 +297,7 @@ WHERE product IS NULL
 Zero row returned, indicating that there are no nulls.
 
 2. Checking for NULL values in the _consumer_disputed_all_ column
-```
+```sql
 SELECT 
 	COUNT(*) consumer_disputed_all
 FROM complaints
@@ -305,7 +305,7 @@ WHERE consumer_disputed IS NOT NULL
 ;
 ```
 This returned `3585952` rows, which is the total number of rows. This means that there are no null values. The following query also returned zero.
-```
+```sql
 SELECT 
 	COUNT(*) consumer_disputed_all
 FROM complaints
@@ -323,7 +323,7 @@ GROUP BY consumer_disputed
 -->
 
 ## Checking for the company with the highest disputes
-```
+```sql
 SELECT 
 	DISTINCT company,
 	COUNT(*) consumer_disputed_all
@@ -336,15 +336,14 @@ ORDER BY consumer_disputed_all DESC
 -- This returned `2475` rows with **BANK OF AMERICA, NATIONAL ASSOCIATION** on top with the total number of `14387` disputes.
 
 ### Checking and populating empty cells in the _Company_response_to_consumer_ column
-```
-SELECT 
-	*
+```sql
+SELECT *
 FROM complaints
 WHERE Company_response_to_consumer = ''
 ;
 ```
 This returned `4` rows.
-```
+```sql
 UPDATE complaints
 SET Company_response_to_consumer = 'Closed with explanation'
 WHERE Company_response_to_consumer = ''
@@ -363,7 +362,7 @@ WHERE company_public_response = 'Company has responded to the consumer and the C
 -->
 
 ### Checking and populating empty cells in the _company_public_response_ column
-```
+```sql
 SELECT
 	DISTINCT company_public_response,
 	COUNT(*)
@@ -373,15 +372,14 @@ ORDER BY count DESC
 ;
 ```
 This returned 12 rows with **N/A** on top with `1,981,357`. Then, we wrote the following query to retrieve empty cells. 
-```
-SELECT
-	*
+```sql
+SELECT *
 FROM complaints
 WHERE company_public_response = ''
 ; 
 ```
-This returned `1,981,357` rows, confirming the above number. Now we update the empty cells wit **N/A**.
-```
+This returned `1,981,357` rows, confirming the above number. Now we update the empty cells with **N/A**.
+```sql
 UPDATE complaints
 SET company_public_response = 'N/A'
 WHERE company_public_response = ''
@@ -390,9 +388,8 @@ WHERE company_public_response = ''
 This updated `1,981,357` cells.
 
 ### Checking for NULL values in the _State_ column
-```
-SELECT
-	*
+```sql
+SELECT	*
 FROM complaints
 WHERE state = ''
 ;
@@ -400,7 +397,7 @@ WHERE state = ''
 This returned `41,219` rows.
 
 Filling the empty cells with **N/A**.
-```
+```sql
 UPDATE complaints
 SET state = 'N/A'
 WHERE state = ''
@@ -409,9 +406,8 @@ WHERE state = ''
 This query updated `41,219` cells.
 
 ### Checking for NULL values in the _Zip_code_ column
-```
-SELECT
-	*
+```sql
+SELECT	*
 FROM complaints
 WHERE zip_code = ''
 ; 
@@ -419,7 +415,7 @@ WHERE zip_code = ''
 This returned `41,756` rows.
 
 Filling the empty cells with **N/A**.
-```
+```sql
 UPDATE complaints
 SET zip_code = 'N/A'
 WHERE zip_code = ''
@@ -428,7 +424,7 @@ WHERE zip_code = ''
 This updated `41,756` values.
 
 ### Checking for NULL values in the _Tags_ column
-```
+```sql
 SELECT
 	tags,
 	COUNT(*)
@@ -437,7 +433,7 @@ GROUP BY tags
 ; 
 ```
 
-```
+```sql
 SELECT
 	*
 FROM complaints
@@ -447,7 +443,7 @@ WHERE tags = ''
 This returned `3,194,575` rows.
 
 Filling the empty cells with **N/A**.
-```
+```sql
 UPDATE complaints
 SET tags = 'N/A'
 WHERE tags = ''
@@ -456,7 +452,7 @@ WHERE tags = ''
 This updated `3,194,575` values
 
 ### Checking for NULL values in the _Sub_product_ column
-```
+```sql
 SELECT 
 	sub_product,
 	COUNT(*)
@@ -468,7 +464,7 @@ ORDER BY count
 This returned `77` rows with `235,291` nulls.
 
 Filling the empty cells with **N/A**.
-```
+```sql
 UPDATE complaints
 SET sub_product = 'N/A'
 WHERE sub_product = ''
@@ -477,9 +473,8 @@ WHERE sub_product = ''
 This updated `235,291` values.
 
 ### Checking for NULL values in the _Consumer_consent_provided_ column
-```
-SELECT 
-	*
+```sql
+SELECT	*
 FROM complaints
 WHERE consumer_consent_provided = '' 
 	OR consumer_consent_provided = 'NULL' 
@@ -487,7 +482,7 @@ WHERE consumer_consent_provided = ''
 ;
 ```
 This returned `146,563` rows.
-<!--- ```
+<!--- ```sql
 SELECT 
 	DISTINCT consumer_consent_provided,
 	COUNT(*)
@@ -498,7 +493,7 @@ GROUP BY consumer_consent_provided
 -->
 
 Filling the empty cells with **N/A**.
-```
+```sql
 UPDATE complaints
 SET consumer_consent_provided = 'N/A'
 WHERE consumer_consent_provided = ''
@@ -507,9 +502,8 @@ WHERE consumer_consent_provided = ''
 This updated `146,563` values.
 
 ### Checking for NULL values in the _Sub_issue_ column
-```
-SELECT 
-	*
+```sql
+SELECT *
 FROM complaints
 WHERE sub_issue = '' 
 	OR sub_issue = 'NULL' 
@@ -528,7 +522,7 @@ GROUP BY sub_issue
 -->
 
 Filling the empty cells with **N/A**.
-```
+```sql
 UPDATE complaints
 SET sub_issue = 'N/A'
 WHERE sub_issue = ''
@@ -538,15 +532,14 @@ This updated `704,472` values.
 
 
 ### Checking for NULL values in other columns
-```
-SELECT
-	*
+```sql
+SELECT	*
 FROM complaints
 WHERE issue = 'NULL'
 ;
 ```
 No null values found.
-<!-- ```
+<!-- ```sql
 SELECT 
 	DISTINCT issue
 FROM complaints
@@ -555,7 +548,7 @@ FROM complaints
 This returned 165 rows
 -->
 
-```
+```sql
 SELECT
 	*
 FROM complaints
@@ -564,7 +557,7 @@ WHERE timely_response IS NULL
 ```
 No null values found.
 
-```
+```sql
 SELECT 
 	DISTINCT date_received
 FROM complaints
@@ -573,7 +566,7 @@ WHERE date_received IS NULL
 ```
 No nulls found.
 
-```
+```sql
 SELECT 
 	*
 FROM complaints
@@ -582,7 +575,7 @@ WHERE company = '' OR company = 'NULL' OR company IS NULL
 ```
 No nulls found.
 
-```
+```sql
 SELECT 
 	*
 FROM complaints
@@ -593,7 +586,7 @@ WHERE submitted_via = ''
 ```
 No NULL found.
 
-```
+```sql
 SELECT 
 	*
 FROM complaints
@@ -602,7 +595,7 @@ WHERE date_sent_to_company IS NULL
 ```
 No NULL found.
 
-```
+```sql
 SELECT 
 	*
 FROM complaints
@@ -613,7 +606,7 @@ WHERE timely_response = ''
 ```
 No NULL found.
 
-```
+```sql
 SELECT 
 	*
 FROM complaints
@@ -624,7 +617,7 @@ WHERE consumer_disputed = ''
 ```
 No NULL found.
 
-```
+```sql
 SELECT 
 	*
 FROM complaints
@@ -637,7 +630,7 @@ No NULL found.
 
 
 ## Evaluating Response Time
-```
+```sql
 SELECT 
 	DISTINCT timely_response,
 	COUNT(*) AS total_timely_response
@@ -654,7 +647,7 @@ We can see from the results that most responses were given on time.
 
 ## Checking for Duplicate Values
 The _Complaint_ID_ is considered our **primary key**. So, we should check for duplicate values in it. The query reads as follows.
-```
+```sql
 SELECT
 	complaint_id,
 	COUNT(*)
