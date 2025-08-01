@@ -93,7 +93,7 @@ The data downloaded was stored in a .csv file. Each column in the file is descri
 
 ## Creating the Database
 This task is to create a database in PostgreSQL to store the new table that will contain the dataset. The query is as follows.
-```
+```sql
 CREATE DATABASE sql_projects
 ;
 ```
@@ -103,14 +103,14 @@ In this query, **sql_projects** represents the name of the database.
 This task involves creating a table to store the data. To begin with, it is necessary to drop the table if it already exists. This is to avoid any conflict.
 
 ### Dropping the Table if it Exists
-```
+```sql
 DROP TABLE spotify_history
 ;
 ```
 
 ### Creating Columns in the Table 
 In this task, several columns with their data types were created in the table named spotify_history. The query is given below.
-```
+```sql
 CREATE TABLE spotify_history (
 	spotify_track_url TEXT,
 	ts TIMESTAMP,
@@ -129,9 +129,9 @@ In this query, **spotify_history** represents the name of the table.
 
 ## Inserting Values in the Table
 Since the data was already contained in a .csv file, the query below was written to load the data in the table named **spotify_history** in PostgreSQL.
-```
+```sql
 COPY spotify_history 
-FROM 'C:\Users\edwig\Documents\Courses\SQL\SQL Projects\Spotify Streaming Analysis\spotify_history.csv'
+FROM 'your_path\spotify_history.csv'
 DELIMITER ','
 CSV HEADER
 ;
@@ -139,7 +139,7 @@ CSV HEADER
 
 ### Retrieving all the Data from the Table
 Here, we write a query to retrieve all the data from the table named spotify_history. This is necessary to see if all the data were loaded correctly.
-```
+```sql
 SELECT *
 FROM spotify_history
 ;
@@ -148,14 +148,14 @@ This returned 149860 rows.
 
 ## Creating a New Table 
 It is important to always keep the raw data and copy it to a new table to do the cleaning and transformation. This way, we can refer to that initial table at any stage of the project if we need more information. So, the table named **spotify_history** was copied to a new table named **spotify_streams** to perform the cleaning. The query below was used.
-```
+```sql
 CREATE TABLE spotify_streams AS
-SELECT * 
-FROM spotify_history
+	SELECT * 
+	FROM spotify_history
 ;
 ```
 After creating the new table named **spotify_streams** from the initial table, we then wrote the query below to retrieve all the data.
-```
+```sql
 SELECT *
 FROM spotify_streams
 ; 
@@ -166,7 +166,7 @@ This returned 149860 rows.
 
 ### Renaming Columns in the Table
 The column named **spotify_track_url** was renamed to **track_url** using the query below.
-```
+```sql
 ALTER TABLE spotify_streams
 RENAME COLUMN spotify_track_url TO track_url
 ;
@@ -175,23 +175,28 @@ RENAME COLUMN spotify_track_url TO track_url
 ### Checking and Removing Duplicates
 
 #### Checking for Duplicates
-To check for duplicate values in the table, I used the `ROW_NUMBER()` window function and partitioned by all the columns. The reason behind partitioning by all columns was to ensure that rows counted as duplicates will have the same entries, otherwise, some rows may be skipped. The query reads as follows.
-```
+To check for duplicate values in the table, I used the `ROW_NUMBER()` window function and partitioned by all the columns. The reason behind partitioning by all columns was to ensure that rows counted as duplicates will have the same entries; otherwise, some rows may be skipped. The query reads as follows.
+```sql
 SELECT 
 	track_url,
-	ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+	ROW_NUMBER() OVER (PARTITION BY
+		track_url, ts, platform, ms_played, track_name, artist_name,
+		album_name, reason_start, reason_end, shuffle, skipped
+	) AS row_num
 FROM spotify_streams
 ;
 ```
 
 #### Returning Duplicates based on One Column
-After checking for duplicates using the above query, it is time to check and return the **track_url** column having `row_num > 1` which will be counted as duplicate values.
+After checking for duplicates using the above query, it is time to check and return the **track_url** column having `row_num > 1`, which will be counted as duplicate values.
 ```
 SELECT 
 	track_url FROM (
 		SELECT
 			track_url,
-			ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+			ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name,
+			artist_name, album_name, reason_start, reason_end, shuffle, skipped
+		) AS row_num
 		FROM spotify_streams
 	) track
 WHERE row_num > 1
@@ -199,7 +204,7 @@ WHERE row_num > 1
 ```
 This returned **1782** rows as duplicates.
 
-<!--- ```
+<!--- ```sql
 SELECT 
 	track_url,
 	COUNT(*)
@@ -210,8 +215,8 @@ HAVING COUNT(*) > 1
 ``` --->
 
 #### Returning all Rows with Duplicates
-Now, we return all rows that have the same entries in all columns more than once which duplicate values that must be deleted.
-```
+Now, we return all rows that have the same entries in all columns more than once, which duplicate values that must be deleted.
+```sql
 SELECT 
 	track_url, ts, platform, ms_played, track_name, artist_name, 
 	album_name, reason_start, reason_end, shuffle, skipped,
@@ -232,7 +237,7 @@ This returned 1782 rows.
 -- This is also to confirm that the duplicate rows returned earlier are actually duplicate values.
 -- ts + (ms_played/1000) * INTERVAL '1 second' converts the ts to seconds and stores it to stop_time.
 -- ms_played/60000.0 converts ms_played to minutes and stores it to minutes_played.
-```
+```sql
 SELECT 
 	track_url,
 	ts,
@@ -246,10 +251,13 @@ FROM spotify_streams
 
 #### Assigning A Unique Identifier to Each Row
 To facilitate the deleting process and ensure that we delete only duplicate rows from our table, we assign a unique number to each row in the table using `ctid`. Then, we can return rows with duplicate values before deleting them. The query reads as follows.
-```
+```sql
 SELECT 
 	ctid,
-	ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+	ROW_NUMBER() OVER (PARTITION BY
+		track_url, ts, platform, ms_played, track_name,	artist_name,
+		album_name, reason_start, reason_end, shuffle, skipped
+	) AS row_num
 FROM spotify_streams
 ;
 ```
@@ -258,13 +266,16 @@ FROM spotify_streams
 
 
 * **Returning rows with duplicate values based on the ctid column**
-```
+```sql
 SELECT 
 	ctid
 FROM (
 	SELECT 
 		ctid,
-		ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+		ROW_NUMBER() OVER (PARTITION BY
+			track_url, ts, platform, ms_played, track_name, artist_name,
+			album_name, reason_start, reason_end, shuffle, skipped
+		) AS row_num
 	FROM spotify_streams
 ) 
 WHERE row_num > 1
@@ -275,7 +286,7 @@ This returned 1782 rows, confirming what we saw earlier.
 
 #### Deleting Duplicate Values 
 Now that we have identified rows with duplicate values and inspected as many of them to confirm that they are really duplicate values, we can delete these rows from the data without any doubt. The query is as follows.
-```
+```sql
 DELETE FROM spotify_streams
 WHERE ctid IN (
 	SELECT 
@@ -283,35 +294,44 @@ WHERE ctid IN (
 	FROM (
 		SELECT 
 			ctid,
-			ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+			ROW_NUMBER() OVER (PARTITION BY
+				track_url, ts, platform, ms_played, track_name,	artist_name,
+				album_name, reason_start, reason_end, shuffle, skipped
+			) AS row_num
 		FROM spotify_streams
-	) 
+	) dup_rows
 	WHERE row_num > 1
 )
 ;
 ```
-This deleted 1782 rows. 
+This deleted `1782` rows. 
 
 > [!Note]
 > Instead of assigning a unique identifier to each row as we did using **ctid** and deleting duplicate values based on that ctid column, we could have started by writing different queries as shown below to return all rows with duplicate values.
-```
+```sql
 SELECT 
 	row_num FROM (
 		SELECT
 			track_url,
-			ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+			ROW_NUMBER() OVER (PARTITION BY
+				track_url, ts, platform, ms_played, track_name, artist_name,
+				album_name, reason_start, reason_end, shuffle, skipped
+			) AS row_num
 		FROM spotify_streams
 	) dup_rows
 WHERE row_num > 1
 ;
 ```
 Then, use the following query to copy all rows without duplicate values where `row_num = 1` to a new table named **spotify_streams_1**. Therefore, the other tasks will be completed based on the data in this new table.
-```
+```sql
 SELECT * INTO spotify_streams_1
 FROM (
 	SELECT
 		*, 
-		ROW_NUMBER() OVER (PARTITION BY track_url, ts, platform, ms_played, track_name, artist_name, album_name, reason_start, reason_end, shuffle, skipped) AS row_num
+		ROW_NUMBER() OVER (PARTITION BY
+			track_url, ts, platform, ms_played, track_name, artist_name,
+			album_name, reason_start, reason_end, shuffle, skipped
+		) AS row_num
 	FROM spotify_streams
 	) rem_dup
 WHERE row_num = 1
@@ -319,7 +339,7 @@ WHERE row_num = 1
 ```
 
 Using this second method, you will have to delete the **row_num** column from the table since it will not be needed further. This can be done using the query below.
-```
+```sql
 ALTER TABLE spotify_streams_1
 DROP COLUMN row_num
 ;
@@ -333,11 +353,12 @@ In this task, we explore and query the data further to check for NULL values in 
 
 #### Checking for NULL Values
 The queries below were written to check for NULL values.
-```
+```sql
 SELECT
   *
 FROM spotify_streams
-WHERE track_url IS NULL OR ts IS NULL OR platform IS NULL 
+WHERE track_url IS NULL
+	OR ts IS NULL OR platform IS NULL 
 	OR ms_played IS NULL OR track_name IS NULL 
 	OR artist_name IS NULL OR album_name IS NULL 
 	OR reason_start IS NULL OR reason_end IS NULL 
@@ -348,7 +369,7 @@ This returned **212** rows.
 
 
 * **Checking for NULL values in some columns**
-```
+```sql
 SELECT 
 	track_url,
 	ts AS start_time,
@@ -356,7 +377,8 @@ SELECT
 	ROUND(ms_played/60000.0, 2) AS minutes_played,
 	reason_start, reason_end, shuffle, skipped
 FROM spotify_streams
-WHERE track_url IS NULL OR ts IS NULL OR platform IS NULL 
+WHERE track_url IS NULL
+	OR ts IS NULL OR platform IS NULL 
 	OR ms_played IS NULL OR track_name IS NULL 
 	OR artist_name IS NULL OR album_name IS NULL 
 	OR reason_start IS NULL OR reason_end IS NULL 
@@ -367,7 +389,7 @@ This also returned **212** rows. After writing the above two queries and explori
 
 
 * **Checking details for a specific track_url**  
-```
+```sql
 SELECT 
 	track_url,
 	platform,
@@ -383,7 +405,7 @@ WHERE track_url = '0Cng3O0fIHllQx3S78RvmL'
 
 * **Returning distinct values for the reason_start column**  
 This task was done to further explore the reason_start column to understand why there are so many NULLS in the column.
-```
+```sql
 SELECT 
 	DISTINCT reason_start
 FROM spotify_streams
@@ -391,7 +413,7 @@ FROM spotify_streams
 ```
 
 * **Checking for NULL values in the reason_start and reason_end columns**    
-```
+```sql
 SELECT 
 	track_url,
 	ts AS start_time,
@@ -409,7 +431,7 @@ This also returned **212** rows.
 
 
 * **Checking for NULL values in the reason_start column**
-```
+```sql
 SELECT 
 	track_url,
 	ts AS start_time,
@@ -417,15 +439,14 @@ SELECT
 	ROUND(ms_played/60000.0, 2) AS minutes_played,
 	reason_start, reason_end, shuffle, skipped
 FROM spotify_streams
-WHERE 
-	reason_start IS NULL 
+WHERE reason_start IS NULL 
 ;
 ```
 This returned **143** rows.
 
 
 * **Checking for NULL values in the reason_end column**
-```
+```sql
 SELECT 
 	track_url,
 	ts AS start_time,
@@ -433,8 +454,7 @@ SELECT
 	ROUND(ms_played/60000.0, 2) AS minutes_played,
 	reason_start, reason_end, shuffle, skipped
 FROM spotify_streams
-WHERE 
-	reason_end IS NULL 
+WHERE reason_end IS NULL 
 ;
 ```
 This returned **117** rows.  
@@ -443,31 +463,28 @@ Since we now know the number of NULL values in the *reason_start* and *reason_en
 
 
 * **Checking for unknown values in the reason_start column**  
-```
+```sql
 SELECT 
 	*
 FROM spotify_streams
-WHERE 
-	reason_start = 'unknown' 
+WHERE reason_start = 'unknown' 
 ;
 ```
 This returned **23** rows.
 
 
 * **Checking for unknown values in the reason_end column**  
-```
-SELECT 
-	*
+```sql
+SELECT *
 FROM spotify_streams
-WHERE 
-	reason_end = 'unknown' 
+WHERE reason_end = 'unknown' 
 ;
 ```
 This returned **267** rows.
 
 
 * **Checking for NULL values for a specific track_url**  
-```
+```sql
 SELECT 
 	track_url,
 	ts AS start_time,
@@ -475,8 +492,7 @@ SELECT
 	ROUND(ms_played/60000.0, 2) AS minutes_played,
 	reason_start, reason_end, shuffle, skipped
 FROM spotify_streams
-WHERE 
-	track_url = '5Ux410GeRXrojeP0vUPx6v'
+WHERE track_url = '5Ux410GeRXrojeP0vUPx6v'
 ;
 ```
 This returned **10** rows.  
@@ -485,14 +501,15 @@ Since there is not enough data (far less than 100), and we do not have much info
 
 #### Replacing NULL Values
 With the information we now know regarding entries in the *reason_start* and *reason_end* columns, we can go ahead and fill them with _unknown_. The query is written as follows. 
-```
+```sql
 UPDATE spotify_streams
-SET reason_start =
+SET
+	reason_start =
 		CASE 
 			WHEN reason_start IS NULL THEN 'unknown' 
 			ELSE reason_start 
 		END,
-reason_end = 
+	reason_end = 
 		CASE 
 			WHEN reason_end IS NULL THEN 'unknown' 
 			ELSE reason_end 
@@ -503,9 +520,8 @@ This updated **143** rows in the _reason_start_ column and **117** rows in the _
 
 
 * **Returning all rows from cleaned data**  
-```
-SELECT 
-	*
+```sql
+SELECT *
 FROM spotify_streams
 ;
 ```
@@ -518,7 +534,7 @@ In this task, we created new columns in the table. These columns will be useful 
 
 1. **Adding a column named start_time**
 This is done by using the `ALTER TABLE` statement, which is used to modify the structure of an existing table. 
-```
+```sql
 ALTER TABLE spotify_streams
 ADD COLUMN start_time TIME
 ;
@@ -526,7 +542,7 @@ ADD COLUMN start_time TIME
 
 2. **Populating the column start_time**
 Here, we populate the _start_time_ column using the time extracted from the _ts_ column.
-```
+```sql
 UPDATE spotify_streams
 SET start_time = ts::TIME
 ;
@@ -535,7 +551,7 @@ SET start_time = ts::TIME
 #### Adding and Populating the Column end_time
 
 1. **Adding a column named end_time**  
-```
+```sql
 ALTER TABLE spotify_streams
 ADD COLUMN end_time TIME
 ;
@@ -543,7 +559,7 @@ ADD COLUMN end_time TIME
 
 2. **Populating the column end_time**  
 Here, we populate the _end_time_ column using both the _ts_ and the _ms_played_ columns. First, the _ms_played_ column is converted to seconds using `(ms_played/1000) * INTERVAL '1 second'` before adding it to the _ts_ column. Next, the time is extracted from the result to populate the _end_time_ column.
-```
+```sql
 UPDATE spotify_streams
 SET end_time = (ts + (ms_played/1000) * INTERVAL '1 second')::TIME
 ;
@@ -552,7 +568,7 @@ SET end_time = (ts + (ms_played/1000) * INTERVAL '1 second')::TIME
 #### Adding and Populating the Column minutes_played
 
 1. **Adding a column named minutes_played**  
-```
+```sql
 ALTER TABLE spotify_streams
 ADD COLUMN minutes_played NUMERIC
 ;
@@ -560,7 +576,7 @@ ADD COLUMN minutes_played NUMERIC
 
 2. **Populating the column minutes_played**
 Here, we populate the column named _minutes_played_ using the _ms_played_ column and converting it to minutes. The query is as follows.
-```
+```sql
 UPDATE spotify_streams
 SET minutes_played = ROUND(ms_played/60000.0, 2) 
 ;
@@ -569,7 +585,7 @@ SET minutes_played = ROUND(ms_played/60000.0, 2)
 #### Adding and Populating the Column date_played
 
 1. **Adding a column named date_played**
-```
+```sql
 ALTER TABLE spotify_streams
 ADD COLUMN date_played DATE
 ;
@@ -577,21 +593,21 @@ ADD COLUMN date_played DATE
 
 2. **Populating the column date_played**  
 To populate the column named _date_played_, we used the _ts_ column and extracted the date from it.
-```
+```sql
 UPDATE spotify_streams
 SET date_played = ts::DATE
 ;
 ```
 
 ## Part II: Answering the Business Questions
-In this second part, We answer the business questions highlighted earlier. The answers provided here will be useful in the recommendations.
+In this second part, we answer the business questions highlighted earlier. The answers provided here will be useful in the recommendations.
 
 ### A. Impact of Shuffle Mode on Listening Behavior 
 The first question to address here is:  
 
 #### 1. Do users play a more diverse range of tracks when shuffle mode is enabled?  
-First, we write a query to check the amount of tracks with and without shuffle. Note that the shuffle column only contains the Boolean values True and False. The former refers to the shuffle mode being enabled and the second is when the shuffle is not enabled. The query is given below.
-```
+First, we write a query to check the number of tracks with and without shuffle. Note that the shuffle column only contains the Boolean values True and False. The former refers to the shuffle mode being enabled and the second is when the shuffle is not enabled. The query is given below.
+```sql
 SELECT 
 	shuffle AS mode,
 	COUNT(DISTINCT track_url) AS unique_tracks
@@ -604,7 +620,7 @@ This returned:
 * **True**: 11095  
 
 Now, we write a query to find the average plays when shuffle mode is enabled. 
-```
+```sql
 SELECT 
 	CASE 
 		WHEN shuffle = 'true' 
@@ -635,7 +651,7 @@ The second question to address here is:
 
 #### 2. What percentage of tracks played in shuffle mode are interrupted (reason_end)?
 Here, we are interested in seeing the number of tracks interrupted when shuffle mode was enabled. For that to be done, we first inspect the _reason_end_ column, which contains information about the track ended. First, we write a query to return all distinct entries from the _reason_end_ column as follows.
-```
+```sql
 SELECT
 	DISTINCT reason_end
 FROM spotify_streams
@@ -644,7 +660,7 @@ FROM spotify_streams
 This returned **15** rows.
 
 Now, we write a query to check the amount of completed and interrupted tracks with shuffle mode enabled as follows.
-```
+```sql
 SELECT 
 	DISTINCT reason_end,
 	CASE 
@@ -675,7 +691,7 @@ WHERE reason_end = 'trackdone' AND shuffle = 'true'
 ; -- This returned 51143 rows --->
 
 To complete this question, we wrote a query to return the percentage of tracks interrupted when shuffle mode was enabled. The query reads as follows.
-```
+```sql
 SELECT 
 	CASE 
 		WHEN ms_played / 60000 < 1 THEN 'short (<1 min)'
@@ -710,7 +726,7 @@ The third and last question to address here is:
 
 #### 3. Which platforms have the highest shuffle mode usage? 
 First, we write a query to return all distinct platforms as given by:
-```
+```sql
 SELECT
 	DISTINCT platform
 FROM spotify_streams
@@ -719,7 +735,7 @@ FROM spotify_streams
 This returned **6** rows with Android, Cast to device, IOS, Mac, Web player, and Windows.  
 
 The next thing to do is to write another query to count the number of shuffles for each platform when the shuffle mode is enabled. The query reads as follows.
-```
+```sql
 SELECT 
 	DISTINCT platform,
 	COUNT(shuffle)
@@ -729,8 +745,8 @@ GROUP BY platform
 ;
 ```
 Lastly, we write a query to return the platform with the highest shuffle mode usage.
-```
-Solution 1
+```sql
+-- Solution 1
 SELECT 
 	platform,
 	COUNT(
@@ -751,8 +767,9 @@ GROUP BY platform
 ORDER BY shuffle_percentage DESC
 ;
 ```
-Another way of writing the solution:
-```
+
+```sql
+-- Solution 2
 WITH cte AS (
 	SELECT 
 		platform,
@@ -781,7 +798,7 @@ From this query, the results read as follows:
 * Windows: out of 1690 tracks in total, 1007 were shuffled, giving a percentage of **59.59%**.
 * Mac: out of 1176 tracks in total, 639 were shuffled, giving a percentage of **54.34%**.
 * Cast to device: out of 2981 tracks in total, 5 were shuffled, giving a percentage of **0.17%**.
-* Web player: out of 181 tracks in total, 0 track was shuffled, giving a percentage of **0.00%**. 
+* Web player: out of 181 tracks in total, no track was shuffled, giving a percentage of **0.00%**. 
 
 Clearly, Android was the platform with the highest shuffle mode usage.
 
@@ -791,7 +808,7 @@ The first question to be answered here is:
 
 #### 1. What percentage of tracks are stopped early versus completed?
 Here we write a query to determine the percentage of completed played tracks and that of interrupted tracks. The query reads as follows:
-```
+```sql
 WITH cte AS (
 	SELECT 
 		COUNT(
@@ -827,7 +844,7 @@ The second question to be addressed here is:
 Here, we write queries to return the tracks or artists with a higher percentage of interruptions.  
 
 ##### a) For Artists 
-```
+```sql
 WITH cte AS (
 	SELECT 
 		artist_name,
@@ -862,7 +879,7 @@ In this query, we returned the artists with a total interruption greater than 10
 * Fetty Wap: Number of interruptions: 12  
 
 ##### b) For Tracks
-```
+```sql
 WITH cte AS (
 	SELECT 
 		track_name,
@@ -904,7 +921,7 @@ So, the answer is **Yes**. There are specific tracks or artists with consistentl
 The third question to be addressed here is:
 
 #### 3. Does the platform or shuffle mode influence track completion rates?
-```
+```sql
 SELECT 
 	platform,
 	shuffle,
@@ -920,7 +937,7 @@ GROUP BY platform, shuffle
 ORDER BY percent_rate DESC
 ;
 ```
-From this query, we could see that when shuffle mode is enabled, the track completion rate is lesser than when shuffle mode is not enabled, as shown in the table below.
+From this query, we could see that when shuffle mode is enabled, the track completion rate is lower than when shuffle mode is not enabled, as shown in the table below.
 | platform	| shuffle	| unique_tracks	     | percent_rate |
 |:--------------|:--------------|:--------------|:--------------|
 | mac 	| FALSE	|259	|91.06 |
@@ -940,7 +957,7 @@ From this query, we could see that when shuffle mode is enabled, the track compl
 In this last part, we analyze the platform usage trends. The first question to be addressed is:  
 
 #### 1. Which platforms have the longest average playback duration?
-```
+```sql
 SELECT 
 	platform,
 	-- SUM(ms_played) AS mins,
@@ -971,9 +988,9 @@ From the above table, if we look at the average playback (milliseconds), we will
 
 The second question to be addressed here is:
 
-#### Are there specific hours or days where platform usage peaks?
+#### Are there specific hours or days when platform usage peaks?
 ##### a) Peak Usage by Hour
-```
+```sql
 SELECT 
     EXTRACT(HOUR FROM  ts) AS hour_peak, 
     platform, 
@@ -990,14 +1007,14 @@ ORDER BY
 ```
 The results show the following:  
 * For Android: Usage peaks at night.
-* For Cast to device: Usage peaks at late in the afternoon.
+* For Cast to device: Usage peaks late in the afternoon.
 * For IOS: Usage peaks early in the evening.
 * For Mac: Usage peaks late in the afternoon.
 * For Web player: There is no specific peak time.
 * For Windows: Usage peaks early in the morning.  
 
 ##### b) Peak Usage by Day
-```
+```sql
 SELECT 
     EXTRACT(DOW FROM ts) AS day_of_week, 
     platform, 
@@ -1012,16 +1029,16 @@ ORDER BY
 ; 
 ```
 The results show the following:  
-* For Android: Usage peaks on Fridays, followed by Wednesdays. Sundays have lesser usage.
-* For Cast to device: Usage peaks on Tuesdays, followed by Thursdays. Sundays have lesser usage.
-* For IOS: Usage peaks on Wednesdays, followed by Fridays. Saturdays have lesser usage.
-* For Mac: Usage peaks on Wednesdays, followed by Tuesdays. Sundays have lesser usage.
-* For Web player: Usage peaks on Mondays, followed by Tuesdays. Wednesdays and Fridays have lesser usage.
-* For Windows: Usage peaks on Fridays, followed by Thursdays. Sundays have lesser usage.  
+* For Android: Usage peaks on Fridays, followed by Wednesdays. Sundays have less usage.
+* For Cast to device: Usage peaks on Tuesdays, followed by Thursdays. Sundays have less usage.
+* For IOS: Usage peaks on Wednesdays, followed by Fridays. Saturdays have less usage.
+* For Mac: Usage peaks on Wednesdays, followed by Tuesdays. Sundays have less usage.
+* For Web player: Usage peaks on Mondays, followed by Tuesdays. Wednesdays and Fridays have lower usage.
+* For Windows: Usage peaks on Fridays, followed by Thursdays. Sundays have less usage.  
 
 
 ##### c) Peak Hour for Each Platform
-```
+```sql
 WITH platform_peak AS (
     SELECT 
         platform, 
