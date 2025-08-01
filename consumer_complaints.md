@@ -95,7 +95,7 @@ Go to Kaggle and get the API Key. Proceed as follows:
 3. Create a new file with the extension `.ipynb` (This is a Jupyter notebook.)
 4. Write the following lines of code and run them:  
 * Install Kaggle
-```py
+```python
 pip install kaggle
 ```
 * Import Kaggle
