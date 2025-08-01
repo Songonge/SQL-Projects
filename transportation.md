@@ -569,7 +569,7 @@ GROUP BY
 -- 	gps_provider,
 -- 	COUNT(*)
 -- FROM transport
--- -- WHERE material_shipped LIKE '%Rectifier%'
+-- WHERE material_shipped LIKE '%Rectifier%'
 -- GROUP BY gps_provider
 -- ;
 ```
@@ -616,7 +616,7 @@ This returned `933` rows.
 SELECT DISTINCT current_location
 FROM transport
 -- WHERE 
---     current_location = 'Null'
+-- current_location = 'Null'
 ORDER BY current_location ASC
 ; 
 ```
