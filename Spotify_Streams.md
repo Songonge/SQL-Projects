@@ -1073,10 +1073,10 @@ This project involved cleaning the Spotify Streams dataset to prepare it for ana
 
 From the above tasks, we could uncover the following insights:  
 * Most tracks are interrupted when shuffle mode is enabled
-* **Android** is the platform with the highest shuffle mode usage, while **Web player** has the lowest shuffle mode usage followed by **Cast to device**.
+* **Android** is the platform with the highest shuffle mode usage, while **Web player** has the lowest shuffle mode usage, followed by **Cast to device**.
 * The percentage of completed tracks is 51.45% compared to 48.55% for interrupted tracks.
 * The artist named **Les Misérables - International Cast** and the track named **Sister Ray** both have the highest number of interruptions.
-* The shuffle mode influences the track completion rates: when shuffle mode is enabled, the track completion rate is lesser than when shuffle mode is not enabled.
+* The shuffle mode influences the track completion rates: when shuffle mode is enabled, the track completion rate is lower than when shuffle mode is not enabled.
 * **Android** has the longest average playback duration and the highest usage count.
 * The usage peak differs from one platform to another.  
 
