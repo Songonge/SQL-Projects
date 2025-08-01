@@ -42,7 +42,7 @@ The data provided contained the following information:
 
 > [!Important]
 > I copied my raw data to a new table before starting the cleaning process. This was to ensure I have the original data to refer back to if you make a mistake or need to validate your changes later and to maintain data integrity! The following query was used:
-```
+```sql
 DROP TABLE IF EXISTS [Learn SQL].dbo.tech_solutions_data1
 SELECT * INTO [Learn SQL].dbo.tech_solutions_data1
 FROM [Learn SQL].dbo.tech_solutions_data;
