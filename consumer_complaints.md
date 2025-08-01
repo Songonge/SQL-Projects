@@ -1,4 +1,4 @@
-# Project: Consumer Complaints Analysis 
+# Project: Consumer Complaints Data Cleaning in PostgreSQL and Preliminary Insights 
 ----
 
 ## Table of Contents
@@ -21,7 +21,7 @@
     * [Renaming Columns in the Table](#Renaming-Columns-in-the-Table)
     * [Checking and Removing Duplicates](#Checking-and-Removing-Duplicates)
       * [Checking for Duplicates](#Checking-for-Duplicates)
-      * [Returning Duplicates based one Column](#Returning-Duplicates-based-on-One-Column)
+      * [Returning Duplicates based on One Column](#Returning-Duplicates-based-on-One-Column)
       * [Returning all Rows with Duplicates](#Returning-all-Rows-with-Duplicates)
       * [Assigning A Unique Identifier to Each Row](#Assigning-A-Unique-Identifier-to-Each-Row)
     * [Checking and Replacing NULL Values](#Checking-and-Replacing-NULL-Values)
@@ -95,7 +95,7 @@ Go to Kaggle and get the API Key. Proceed as follows:
 3. Create a new file with the extension `.ipynb` (This is a Jupyter notebook.)
 4. Write the following lines of code and run them:  
 * Install Kaggle
-```
+```py
 pip install kaggle
 ```
 * Import Kaggle
