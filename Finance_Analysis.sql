@@ -13,7 +13,7 @@ CREATE TABLE fact_spends(
 );
 
 COPY fact_spends 
-FROM 'C:\Users\edwig\Documents\Courses\Challenges\Some projects\Finance\finance_fact_spends.csv'
+FROM 'path to your file'
 DELIMITER ','
 CSV HEADER
 ;
@@ -38,7 +38,7 @@ CREATE TABLE dim_customers(
 );
 
 COPY dim_customers
-FROM 'C:\Users\edwig\Documents\Courses\Challenges\Some projects\Finance\finance_dim_customers.csv'
+FROM 'path to your file'
 DELIMITER ','
 CSV HEADER
 ;
@@ -47,10 +47,6 @@ SELECT *
 FROM dim_customers
 ; -- This returned 4000 rows and 10 columns
 
-
--------------------------------------------------------------------
--- Utilities / Common CTEs used by many queries
--------------------------------------------------------------------
 
 -------------------------------------------------------------------
 -- Checking for NULL Values in the fact_spend table
@@ -65,20 +61,6 @@ WHERE customer_id IS NULL OR
 	spend IS NULL
 ;	-- No NULL values found
 
--- -- 0. sanitized spends (treat NULL as 0) and unique customers list
-
--- WITH fact_spends_new AS (
---   SELECT
---     customer_id,
---     month,
---     category,
---     payment_type,
---     COALESCE(spends, 0)::NUMERIC AS spends
---   FROM fact_spends
--- ),
--- customers AS (
---   SELECT * FROM dim_customers
--- )
 
 -------------------------------------------------------------------
 -- 1. Get all customers who are married.
@@ -97,11 +79,11 @@ SELECT
 FROM dim_customers
 GROUP BY city
 ORDER BY num_customers DESC
-; -- This returned 384 rows with New York City leading (384), followed by Los Angeles (276), Philadelphia (234) and San Francisco (206).
+; -- This returned 384 rows with New York City leading (384), followed by Los Angeles (276), Philadelphia (234), and San Francisco (206).
 
 
 -------------------------------------------------------------------
--- 2. Show the total spends for each customer
+-- 2. Show the total spend for each customer
 -------------------------------------------------------------------
 SELECT 
 	customer_id,
@@ -182,7 +164,7 @@ WHERE age_group = '25-34';
 
 
 -------------------------------------------------------------------
--- 8. List all customers who spent using Debit Card
+-- 8. List all customers who used using Debit Card
 -------------------------------------------------------------------
 SELECT 
 	DISTINCT c.customer_id
@@ -196,10 +178,12 @@ WHERE payment_type = 'Debit Card'
 -------------------------------------------------------------------
 -- 9. Total spend for each age group in the Entertainment category
 -------------------------------------------------------------------
+-- Renaming the age_group column to age_interval
 ALTER TABLE dim_customers 
 RENAME COLUMN age_group TO age_interval
 ;
 
+-- Putting age_interval into groups
 SELECT 
 	age_interval,
 	CASE 
@@ -207,14 +191,16 @@ SELECT
 		WHEN age_interval = '25-34' THEN 'Young Adult'
 		WHEN age_interval = '35-45' THEN 'Adult'
 		ELSE 'Senior'
-	END AS age_goup
+	END AS age_group
 FROM dim_customers
 ;
 
+-- Adding the age_group column to the dim_customers table
 ALTER TABLE dim_customers
 ADD COLUMN age_group TEXT
 ;
 
+-- Filling the age_group column based on the age_interval column
 UPDATE dim_customers
 SET age_group = 
 	CASE 
@@ -224,9 +210,8 @@ SET age_group =
 		ELSE 'Senior'
 	END 
 ;
-SELECT *
-FROM fact_spends;
 
+-- Determining total spend for each age group in the Entertainment category
 SELECT 
 	c.age_group,
 	SUM(s.spend) AS total_spend_entertainment
@@ -240,7 +225,7 @@ ORDER BY total_spend_entertainment DESC
 
 
 -------------------------------------------------------------------
--- 10. Highest spend by a customer in 'Food' category in October
+-- 10. The highest spend by a customer in the 'Food' category in October
 -------------------------------------------------------------------
 -- Total per customer in Food during October, then top 1
 SELECT 
@@ -257,7 +242,7 @@ LIMIT 1
 
 
 -------------------------------------------------------------------
--- 11. Average income of customers in each occupation
+-- 11. The average income of customers in each occupation
 -------------------------------------------------------------------
 SELECT *
 FROM dim_customers;
@@ -271,8 +256,7 @@ GROUP BY occupation
 
 
 -------------------------------------------------------------------
--- 12. All customers who spent in 'Electronics' category, including age group
--- (If you have a name column, add it to SELECT)
+-- 12. All customers who spent in the 'Electronics' category, including the age group
 -------------------------------------------------------------------
 SELECT 
 	DISTINCT c.customer_id,
@@ -341,6 +325,7 @@ LEFT JOIN dim_customers c
 Group BY age_group, category
 ;
 
+-- Another way to write the query
 SELECT
   c.age_group,
   s.category,
@@ -364,6 +349,7 @@ WITH month_payment_type AS (
 	FROM fact_spends
 	GROUP BY customer_id, month, payment_type
 )
+-- Step 2: join occupation and compute average monthly spend per occupation/payment_type
 SELECT
 	c.occupation,
 	mpt.payment_type,
@@ -375,6 +361,8 @@ GROUP BY c.occupation, mpt.payment_type
 ORDER BY c.occupation, avg_monthly_spend DESC
 ;
 
+-- Another way to write the query
+-- Step 1: compute monthly spend per customer & payment_type
 WITH cust_month_payment AS (
   SELECT
     customer_id,
@@ -398,7 +386,7 @@ ORDER BY c.occupation, avg_monthly_spend DESC;
 
 -------------------------------------------------------------------
 -- 17.b Identify preferred payment type in each occupation group
--- (computed as share of total spends within occupation)
+-- (computed as a share of total spends within occupation)
 -------------------------------------------------------------------
 WITH occ_payment AS (
 	SELECT
@@ -429,90 +417,9 @@ ORDER BY op.occupation, pct_share_within_occupation DESC;
 
 
 -------------------------------------------------------------------
--- 18.a How do spending patterns differ among customers from various income brackets (city & age group)?
--- Create income brackets (tertiles) and compute avg spend per bracket × city × age_group
--- NOTE: NTILE(3) used here (Postgres / SQL Server). For MySQL use variables or CASE logic.
--------------------------------------------------------------------
-WITH cust_bracket AS (
-  SELECT
-    customer_id,
-    average_income,
-    city,
-    age_group,
-    NTILE(3) OVER (ORDER BY average_income) AS income_tertile  -- 1=low,2=mid,3=high
-  FROM dim_customers
-),
-merged_spend AS (
-  SELECT
-    cb.income_tertile,
-    cb.city,
-    cb.age_group,
-    s.customer_id,
-    SUM(s.spends) AS total_spend_by_customer   -- total across all months/categories
-  FROM cust_bracket cb
-  LEFT JOIN fact_spends s ON cb.customer_id = s.customer_id
-  GROUP BY cb.income_tertile, cb.city, cb.age_group, s.customer_id
-)
-SELECT
-  income_tertile,
-  city,
-  age_group,
-  AVG(total_spend_by_customer) AS avg_total_spend_per_customer,
-  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY total_spend_by_customer) AS median_spend,
-  COUNT(DISTINCT customer_id) FILTER (WHERE total_spend_by_customer IS NOT NULL) AS num_spending_customers
-FROM merged_spend
-GROUP BY income_tertile, city, age_group
-ORDER BY income_tertile, city, age_group;
-
-
--------------------------------------------------------------------
--- 18.b Are there specific categories or cities where higher-income customers spend significantly more?
--- Compute avg spend by category × income_tertile × city; then compute difference high - low
--------------------------------------------------------------------
-WITH cust_bracket AS (
-  SELECT
-    customer_id,
-    NTILE(3) OVER (ORDER BY average_income) AS income_tertile  -- 1=low, 3=high
-  FROM dim_customers
-),
-merged AS (
-  SELECT
-    cb.income_tertile,
-    c.city,
-    s.category,
-    SUM(s.spends) AS total_spend
-  FROM cust_bracket cb
-  JOIN fact_spends s ON cb.customer_id = s.customer_id
-  JOIN dim_customers c ON c.customer_id = s.customer_id
-  GROUP BY cb.income_tertile, c.city, s.category
-),
-agg_by_cat AS (
-  SELECT
-    category,
-    city,
-    income_tertile,
-    AVG(total_spend) AS avg_spend_by_bracket
-  FROM merged
-  GROUP BY category, city, income_tertile
-)
--- Pivot-ish result: show low vs high differences (income_tertile 1 vs 3)
-SELECT
-  a.category,
-  a.city,
-  COALESCE(MAX(CASE WHEN a.income_tertile = 1 THEN a.avg_spend_by_bracket END),0) AS avg_spend_low,
-  COALESCE(MAX(CASE WHEN a.income_tertile = 3 THEN a.avg_spend_by_bracket END),0) AS avg_spend_high,
-  (COALESCE(MAX(CASE WHEN a.income_tertile = 3 THEN a.avg_spend_by_bracket END),0)
-   - COALESCE(MAX(CASE WHEN a.income_tertile = 1 THEN a.avg_spend_by_bracket END),0)
-  ) AS diff_high_minus_low
-FROM agg_by_cat a
-GROUP BY a.category, a.city
-ORDER BY diff_high_minus_low DESC
-LIMIT 100;  -- remove or adjust limit as needed
-
-
--------------------------------------------------------------------
 -- End 
 -------------------------------------------------------------------
+
 
 
 
