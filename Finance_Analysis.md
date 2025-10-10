@@ -80,7 +80,8 @@ SELECT
 FROM dim_customers
 GROUP BY city
 ORDER BY num_customers DESC
-; -- This returned 384 rows with New York City leading (384), followed by Los Angeles (276), Philadelphia (234), and San Francisco (206).
+; -- This returned 384 rows with New York City leading (384), followed by
+  -- Los Angeles (276), Philadelphia (234), and San Francisco (206).
 
 
 -------------------------------------------------------------------
