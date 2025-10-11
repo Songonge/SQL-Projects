@@ -14,7 +14,7 @@ CREATE TABLE fact_spends(
 );
 
 COPY fact_spends 
-FROM 'path to your file'
+FROM 'path to your file\fact_spends.csv'
 DELIMITER ','
 CSV HEADER
 ;
@@ -39,7 +39,7 @@ CREATE TABLE dim_customers(
 );
 
 COPY dim_customers
-FROM 'path to your file'
+FROM 'path to your file\dim_customers.csv'
 DELIMITER ','
 CSV HEADER
 ;
