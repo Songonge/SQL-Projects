@@ -136,7 +136,7 @@ DELIMITER ','
 CSV HEADER
 ;
 ```
-
+🔗 [Back to TOC](#-table-of-contents)
 ### Retrieving all the Data from the Table
 Here, we write a query to retrieve all the data from the table named spotify_history. This is necessary to see if all the data were loaded correctly.
 ```sql
