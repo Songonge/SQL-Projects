@@ -136,7 +136,7 @@ DELIMITER ','
 CSV HEADER
 ;
 ```
-🔗 [Back to TOC](#table-of-contents)
+
 ### Retrieving all the Data from the Table
 Here, we write a query to retrieve all the data from the table named spotify_history. This is necessary to see if all the data were loaded correctly.
 ```sql
@@ -146,6 +146,7 @@ FROM spotify_history
 ```
 This returned 149860 rows.
 
+🔗 [Back to TOC](#table-of-contents)
 ## Creating a New Table 
 It is important to always keep the raw data and copy it to a new table to do the cleaning and transformation. This way, we can refer to that initial table at any stage of the project if we need more information. So, the table named **spotify_history** was copied to a new table named **spotify_streams** to perform the cleaning. The query below was used.
 ```sql
@@ -162,6 +163,7 @@ FROM spotify_streams
 ```
 This returned 149860 rows.
 
+🔗 [Back to TOC](#table-of-contents)
 ## Part 1: Data Cleaning
 
 ### Renaming Columns in the Table
@@ -599,6 +601,7 @@ SET date_played = ts::DATE
 ;
 ```
 
+🔗 [Back to TOC](#table-of-contents)
 ## Part II: Answering the Business Questions
 In this second part, we answer the business questions highlighted earlier. The answers provided here will be useful in the recommendations.
 
@@ -606,7 +609,7 @@ In this second part, we answer the business questions highlighted earlier. The a
 The first question to address here is:  
 
 #### 1. Do users play a more diverse range of tracks when shuffle mode is enabled?  
-First, we write a query to check the number of tracks with and without shuffle. Note that the shuffle column only contains the Boolean values True and False. The former refers to the shuffle mode being enabled and the second is when the shuffle is not enabled. The query is given below.
+First, we write a query to check the number of tracks with and without shuffle. Note that the shuffle column only contains the Boolean values True and False. The former refers to the shuffle mode being enabled, and the second is when the shuffle is not enabled. The query is given below.
 ```sql
 SELECT 
 	shuffle AS mode,
@@ -650,7 +653,7 @@ From these results, we can conclude that more tracks are listened to when shuffl
 The second question to address here is: 
 
 #### 2. What percentage of tracks played in shuffle mode are interrupted (reason_end)?
-Here, we are interested in seeing the number of tracks interrupted when shuffle mode was enabled. For that to be done, we first inspect the _reason_end_ column, which contains information about the track ended. First, we write a query to return all distinct entries from the _reason_end_ column as follows.
+Here, we are interested in seeing the number of tracks interrupted when shuffle mode was enabled. For that to be done, we first inspect the _reason_end_ column, which contains information about when the track ended. First, we write a query to return all distinct entries from the _reason_end_ column as follows.
 ```sql
 SELECT
 	DISTINCT reason_end
@@ -802,7 +805,7 @@ From this query, the results read as follows:
 
 Clearly, Android was the platform with the highest shuffle mode usage.
 
-
+🔗 [Back to TOC](#table-of-contents)
 ### B. Track Completion Rates 
 The first question to be answered here is:
 
@@ -952,7 +955,7 @@ From this query, we could see that when shuffle mode is enabled, the track compl
 | web player	| FALSE	| 156	| 34.81 |
 | cast to device	| TRUE |	5 |	20 |
 
-
+🔗 [Back to TOC](#table-of-contents)
 ### C. Platform Usage Trends
 In this last part, we analyze the platform usage trends. The first question to be addressed is:  
 
