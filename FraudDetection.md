@@ -81,9 +81,10 @@ FROM players
 <!---
 SELECT 
 	(logout_time - login_time) AS session_duration
-FROM gaming_sessions;
+FROM gaming_sessions; -->
 
--- ===== Detect Overlapping Sessions ===== --
+* Detecting Overlapping Sessions
+```sql
 SELECT 
 	s1.session_id AS session1,
 	s2.session_id AS session2,
@@ -98,10 +99,13 @@ JOIN gaming_sessions s2
 	AND s1.session_id < s2.session_id
 	AND s1.login_time < s2.logout_time
 	AND s1.logout_time > s2.login_time
-; -- This returns 3867 rows, all overlaping
+;
+```
+This returns 3867 rows, all overlapping sessions
 
 
--- Another way of writing the query to display overlap
+* Another way of writing the query to display overlap
+```sql
 SELECT 
 	s1.session_id AS session1,
 	s2.session_id AS session2,
@@ -121,8 +125,10 @@ JOIN gaming_sessions s2
 	AND s1.session_id < s2.session_id
 	AND s1.login_time < s2.logout_time
 	AND s1.logout_time > s2.login_time
-; -- This returns 3867 rows, all overlaping
+;
+```
 
+<!---
 -- Another way of writing the query to display overlap and no overlaps
 SELECT 
 	s1.session_id AS session1,
