@@ -72,6 +72,7 @@ DELIMITER ','
 CSV HEADER
 ;
 ```
+
 * Retrieving all rows from the players table
 ```sql
 SELECT *
@@ -101,9 +102,9 @@ JOIN gaming_sessions s2
 	AND s1.logout_time > s2.login_time
 ;
 ```
-This returns 3867 rows, all overlapping sessions
+This returns `3867` rows, all overlapping sessions
 
-
+<!--
 * Another way of writing the query to display overlap
 ```sql
 SELECT 
@@ -128,8 +129,9 @@ JOIN gaming_sessions s2
 ;
 ```
 
-<!---
--- Another way of writing the query to display overlap and no overlaps
+
+* Another way of writing the query to display overlap and no overlaps
+```sql
 SELECT 
 	s1.session_id AS session1,
 	s2.session_id AS session2,
@@ -147,9 +149,12 @@ FROM gaming_sessions s1
 JOIN gaming_sessions s2
 	ON s1.player_id = s2.player_id
 	AND s1.session_id < s2.session_id
-; -- This returns 40915 rows with mix of overlap and no overlap
+;
+```
+This returns 40915 rows with a mix of overlap and no overlap
 
--- Counting the number of overalpping sessions
+* Counting the number of overlapping sessions
+```sql
 WITH overlap_count AS (
 	SELECT 
 		s1.session_id AS session1,
@@ -173,10 +178,13 @@ SELECT
 	COUNT(overlap_status) AS total_overlap_sessions
 FROM overlap_count
 WHERE overlap_status = 'Overlap Found'
-; -- This returns 3867
+;
+``` 
+This returns `3867`
+-->
 
-
--- ===== Identify players who have overlapping session times on different devices ===== --
+* Identify players who have overlapping session times on different devices
+```sql
 SELECT 
     s1.player_id,
     s1.session_id AS session1,
@@ -190,9 +198,12 @@ JOIN gaming_sessions s2
      AND s1.device_id <> s2.device_id
      AND s1.login_time < s2.logout_time
      AND s2.login_time < s1.logout_time
-; -- This returned 3679 rows of overlapping sessions
+;
+```
+This returned 3679 rows of overlapping sessions
 
--- Another way of writing the solution
+* Another way of writing the solution
+```sql
 WITH overlap_count AS (
 	SELECT 
 		s1.session_id AS session1,
@@ -223,8 +234,10 @@ FROM players p
 JOIN overlap_count oc
 	ON p.player_id = oc.player_id
 WHERE overlap_status = 'Overlap Found'		
-; -- This returned 3679 rows of overlapping sessions
+; 
+```
 
+<!--
 -- SELECT 
 -- 	COUNT(overlap_status) AS total_overlap_sessions
 -- FROM overlap_count
